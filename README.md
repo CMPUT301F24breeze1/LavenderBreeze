@@ -53,6 +53,7 @@ Once your pull request is merged, you can delete your branch:
 
 - **Delete Local Branch**:
   ```bash
+  git checkout main
   git branch -d <branch_name>
   ```
 
