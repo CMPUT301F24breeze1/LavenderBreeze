@@ -1,0 +1,29 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Button to go to the Selected List -->
+    <Button
+        android:id="@+id/button_go_to_selected_list_from_org_event_waiting_lst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Selected List" />
+
+    <!-- Button to go to Notifications -->
+    <Button
+        android:id="@+id/button_go_to_notif_from_org_event_waiting_lst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Notifications" />
+
+    <!-- Button to go to Map -->
+    <Button
+        android:id="@+id/button_go_to_map_from_org_event_waiting_lst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Map" />
+
+</LinearLayout>

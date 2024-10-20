@@ -12,10 +12,10 @@ import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_events_lst#newInstance} factory method to
+ * Use the {@link org_event#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_events_lst extends Fragment {
+public class org_event extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class org_events_lst extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_events_lst() {
+    public org_event() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class org_events_lst extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_events_lst.
+     * @return A new instance of fragment org_event.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_events_lst newInstance(String param1, String param2) {
-        org_events_lst fragment = new org_events_lst();
+    public static org_event newInstance(String param1, String param2) {
+        org_event fragment = new org_event();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,29 +60,33 @@ public class org_events_lst extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_org_events_lst, container, false);
+        View view = inflater.inflate(R.layout.fragment_org_event, container, false);
 
-        Button button_go_to_home_from_org_event_list = view.findViewById(R.id.button_go_to_home_from_org_event_list);
-        button_go_to_home_from_org_event_list.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_home)
-        );
-
-// Button to navigate to Event Details
-        Button button_go_to_event_from_org_event_list = view.findViewById(R.id.button_go_to_event_from_org_event_list);
-        button_go_to_event_from_org_event_list.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_event)
-        );
-        Button buttonGoToAddEvent = view.findViewById(R.id.button_go_to_add_event_from_org_events_lst);
-        buttonGoToAddEvent.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_add_event)
-        );
-        Button buttonGoToEditOrganizer = view.findViewById(R.id.button_go_to_edit_organizer_from_org_events_lst);
-        buttonGoToEditOrganizer.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_edit_organizer)
+        // Button to navigate to the QR code fragment
+        Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
+        buttonGoToQRCode.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_view_event_qrcode)
         );
 
+        // Button to navigate to the Edit Event fragment
+        Button buttonGoToEditEvent = view.findViewById(R.id.button_go_to_edit_event_from_org_event);
+        buttonGoToEditEvent.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_edit_event2)
+        );
+
+        // Button to navigate to the Waiting List fragment
+        Button buttonGoToWaitingList = view.findViewById(R.id.button_go_to_waiting_list_from_org_event);
+        buttonGoToWaitingList.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_waiting_lst)
+        );
+
+        // Button to navigate to the Selected List fragment
+        Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event);
+        buttonGoToSelectedList.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst)
+        );
 
         return view;
+
     }
 }
