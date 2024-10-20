@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/button_go_to_entrant_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Entrant Profile" />
+    <Button
+        android:id="@+id/button_go_to_entrant_event_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Entrant Event Page" />
+    <Button
+        android:id="@+id/button_go_to_qr_scanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Entrant QR Scanner" />
+    <Button
+        android:id="@+id/button_go_to_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Home" />
+
+
+</LinearLayout>

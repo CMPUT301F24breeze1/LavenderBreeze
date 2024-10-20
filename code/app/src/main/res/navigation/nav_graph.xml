@@ -13,12 +13,87 @@
         <action
             android:id="@+id/action_home_to_org_events_lst"
             app:destination="@id/org_events_lst" />
+        <action
+            android:id="@+id/action_home_to_entrantProfile3"
+            app:destination="@id/entrantProfile3" />
     </fragment>
     <fragment
         android:id="@+id/org_events_lst"
         android:name="com.example.myapplication.org_events_lst"
         android:label="fragment_org_events_lst"
         tools:layout="@layout/fragment_org_events_lst" />
+    <fragment
+        android:id="@+id/entrantProfile3"
+        android:name="com.example.myapplication.EntrantProfile"
+        android:label="fragment_entrant_profile"
+        tools:layout="@layout/fragment_entrant_profile" >
+        <action
+            android:id="@+id/action_entrantProfile3_to_entrantNotification"
+            app:destination="@id/entrantNotification" />
+        <action
+            android:id="@+id/action_entrantProfile3_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+        <action
+            android:id="@+id/action_entrantProfile3_to_entrantEditProfile"
+            app:destination="@id/entrantEditProfile" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantNotification"
+        android:name="com.example.myapplication.EntrantNotification"
+        android:label="fragment_entrant_notification"
+        tools:layout="@layout/fragment_entrant_notification" >
+        <action
+            android:id="@+id/action_entrantNotification_to_entrantProfile3"
+            app:destination="@id/entrantProfile3" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantEventPage"
+        android:name="com.example.myapplication.EntrantEventPage"
+        android:label="fragment_entrant_event_page"
+        tools:layout="@layout/fragment_entrant_event_page" >
+        <action
+            android:id="@+id/action_entrantEventPage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantEventsList"
+        android:name="com.example.myapplication.EntrantEventsList"
+        android:label="fragment_entrant_events_list"
+        tools:layout="@layout/fragment_entrant_events_list" >
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantProfile3"
+            app:destination="@id/entrantProfile3" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantEventPage"
+            app:destination="@id/entrantEventPage" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantQrScan"
+            app:destination="@id/entrantQrScan" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantQrScan"
+        android:name="com.example.myapplication.EntrantQrScan"
+        android:label="fragment_entrant_qr_scan"
+        tools:layout="@layout/fragment_entrant_qr_scan" >
+        <action
+            android:id="@+id/action_entrantQrScan_to_entrantEventPage"
+            app:destination="@id/entrantEventPage" />
+        <action
+            android:id="@+id/action_entrantQrScan_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantEditProfile"
+        android:name="com.example.myapplication.EntrantEditProfile"
+        android:label="fragment_entrant_edit_profile"
+        tools:layout="@layout/fragment_entrant_edit_profile" >
+        <action
+            android:id="@+id/action_entrantEditProfile_to_entrantProfile3"
+            app:destination="@id/entrantProfile3" />
+    </fragment>
 
 
 </navigation>

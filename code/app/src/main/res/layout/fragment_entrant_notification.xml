@@ -7,11 +7,6 @@
 
 
     <Button
-        android:id="@+id/button_go_to_org_event_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Organizer Event List" />
-    <Button
         android:id="@+id/button_go_to_entrant_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

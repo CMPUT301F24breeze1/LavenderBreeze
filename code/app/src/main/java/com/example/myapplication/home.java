@@ -26,9 +26,14 @@ public class home extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
-        Button button = view.findViewById(R.id.button_go_to_org_event_list);
-        button.setOnClickListener(v ->
+        Button org = view.findViewById(R.id.button_go_to_org_event_list);
+        org.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_home_to_org_events_lst)
+        );
+
+        Button entrant = view.findViewById(R.id.button_go_to_entrant_profile);
+        entrant.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_home_to_entrantProfile3)
         );
 
         return view;
