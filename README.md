@@ -45,4 +45,29 @@ If you're coming back to add new features, follow these steps:
 6. **Create a Pull Request**
    - Go to the GitHub repository.
    - Click on "Pull Request."
-   - Click on "Merge" and create the pull request.
+   - Click on compare and merge
+
+### Deleting the Branch
+
+Once your pull request is merged, you can delete your branch:
+
+- **Delete Local Branch**:
+  ```bash
+  git branch -d <branch_name>
+  ```
+
+- **Delete Remote Branch**:
+  ```bash
+  git push origin --delete <branch_name>
+  ```
+
+
+### If you are confused about something
+
+- **What branch you are on**:
+```bash
+git status
+```
+
+
+
