@@ -3,18 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home">
+    tools:context=".org_events_lst">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
-
-    <Button
-        android:id="@+id/button_go_to_org_event_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Organizer Event List" />
 
 </FrameLayout>
