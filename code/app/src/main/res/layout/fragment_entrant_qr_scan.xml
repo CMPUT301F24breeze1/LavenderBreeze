@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/button_go_to_entrant_event_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Entrant Event Page" />
+    <Button
+        android:id="@+id/button_go_to_entrant_event_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Entrant Event List" />
 
-    <Button
-        android:id="@+id/button_go_to_org_event_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Organizer Event List" />
-    <Button
-        android:id="@+id/button_go_to_entrant_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Entrant Profile" />
 
 </LinearLayout>

@@ -7,14 +7,19 @@
 
 
     <Button
-        android:id="@+id/button_go_to_org_event_list"
+        android:id="@+id/button_go_to_entrant_edit_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Organizer Event List" />
+        android:text="Go to Entrant Edit Profile" />
     <Button
-        android:id="@+id/button_go_to_entrant_profile"
+        android:id="@+id/button_go_to_entrant_notifications"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Entrant Profile" />
+        android:text="Go to Entrant Notifications" />
+    <Button
+        android:id="@+id/button_go_to_entrant_event_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Entrant Event List" />
 
 </LinearLayout>
