@@ -1,43 +1,48 @@
-# LavenderBreeze
 
-If you don't have anything on your computer, then do
+# LavenderBreeze Git Workflow
 
-'''
+### Cloning the Repository
+If you don't have anything on your computer, clone the repository:
+```bash
 git clone https://github.com/CMPUT301F24breeze1/LavenderBreeze.git
-'''
+```
 
+### Adding Features
 
-If you are coming back to add features
+If you're coming back to add new features, follow these steps:
 
-Pull the changes from the main branch (essentially getting everything that got changed)
-'''
-git pull origin main
-'''
+1. **Pull the Latest Changes**
+   - Pull the changes from the main branch (this will get everything that got changed):
+   ```bash
+   git pull origin main
+   ```
 
-Create our own branch to work on our own feature
-'''
-git checkout -b <branch name> 
-'''
-checkout is just switching branches
+2. **Create Your Own Branch**
+   - Create a new branch to work on your own feature:
+   ```bash
+   git checkout -b <branch_name>
+   ```
+   - `checkout` is just switching branches.
 
-add all the files to track
-'''
-git add . 
-'''
+3. **Add Files to Track**
+   - Add all the files to stage for commit:
+   ```bash
+   git add .
+   ```
 
-commit your changes 
-'''
-git commit -m "msg"
-'''
+4. **Commit Your Changes**
+   - Commit your changes with a message:
+   ```bash
+   git commit -m "your_commit_message"
+   ```
 
-push to your own branch
-'''
-git push origin <branch name>
-'''
+5. **Push to Your Own Branch**
+   - Push the changes to your branch:
+   ```bash
+   git push origin <branch_name>
+   ```
 
-go to github repo, then click on pull request
-click on merge and create a pull request
-
-
-
-
+6. **Create a Pull Request**
+   - Go to the GitHub repository.
+   - Click on "Pull Request."
+   - Click on "Merge" and create the pull request.
