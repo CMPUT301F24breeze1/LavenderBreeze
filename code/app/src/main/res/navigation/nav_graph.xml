@@ -3,11 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home2">
+    app:startDestination="@id/home">
 
     <fragment
-        android:id="@+id/home2"
+        android:id="@+id/home"
         android:name="com.example.myapplication.home"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_home_to_org_events_lst"
+            app:destination="@id/org_events_lst" />
+    </fragment>
+    <fragment
+        android:id="@+id/org_events_lst"
+        android:name="com.example.myapplication.org_events_lst"
+        android:label="fragment_org_events_lst"
+        tools:layout="@layout/fragment_org_events_lst" />
+
+
 </navigation>
