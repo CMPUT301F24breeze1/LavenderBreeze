@@ -18,11 +18,6 @@
             app:destination="@id/entrantProfile3" />
     </fragment>
     <fragment
-        android:id="@+id/org_events_lst"
-        android:name="com.example.myapplication.org_events_lst"
-        android:label="fragment_org_events_lst"
-        tools:layout="@layout/fragment_org_events_lst" />
-    <fragment
         android:id="@+id/entrantProfile3"
         android:name="com.example.myapplication.EntrantProfile"
         android:label="fragment_entrant_profile"
@@ -94,6 +89,8 @@
             android:id="@+id/action_entrantEditProfile_to_entrantProfile3"
             app:destination="@id/entrantProfile3" />
     </fragment>
+    <fragment
+        android:id="@+id/org_events_lst"
         tools:layout="@layout/fragment_org_events_lst" >
         <action
             android:id="@+id/action_org_events_lst_to_home"
