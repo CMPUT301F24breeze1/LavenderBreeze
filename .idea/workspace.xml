@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97c66a3f-e0c8-490e-8249-3d10f036512a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/doc/team.txt" beforeDir="false" afterPath="$PROJECT_DIR$/doc/team.txt" afterDir="false" />
-    </list>
+    <list default="true" id="97c66a3f-e0c8-490e-8249-3d10f036512a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,9 +44,9 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "app",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/peter/OneDrive/Documents/School/CMPUT 301/ProjectPart1/LavenderBreeze",
+    "last_opened_file_path": "/Users/lucasouellette/Desktop/Programming/GitHub/LavenderBreeze",
     "settings.editor.selected.configurable": "editor.preferences.import"
   }
 }]]></component>
