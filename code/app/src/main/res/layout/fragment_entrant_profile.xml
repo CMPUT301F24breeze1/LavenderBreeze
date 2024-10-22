@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <Button
         android:id="@+id/button_go_to_entrant_edit_profile"
         android:layout_width="wrap_content"
@@ -21,5 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go to Entrant Event List" />
+    <Button
+        android:id="@+id/button_go_to_home_from_entrant_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Home" />
 
 </LinearLayout>

@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_entrantProfile3_to_entrantEditProfile"
             app:destination="@id/entrantEditProfile" />
+        <action
+            android:id="@+id/action_entrantProfile3_to_home"
+            app:destination="@id/home" />
     </fragment>
     <fragment
         android:id="@+id/entrantNotification"
@@ -127,12 +130,14 @@
         android:id="@+id/org_edit_event"
         android:name="com.example.myapplication.org_edit_event"
         android:label="fragment_org_edit_event"
-        tools:layout="@layout/fragment_org_edit_event" />
+        tools:layout="@layout/fragment_org_edit_event" >
+    </fragment>
     <fragment
         android:id="@+id/org_view_event_qrcode"
         android:name="com.example.myapplication.org_view_event_qrcode"
         android:label="fragment_org_view_event_qrcode"
-        tools:layout="@layout/fragment_org_view_event_qrcode" />
+        tools:layout="@layout/fragment_org_view_event_qrcode" >
+    </fragment>
     <fragment
         android:id="@+id/org_event_waiting_lst"
         android:name="com.example.myapplication.org_event_waiting_lst"
@@ -152,27 +157,32 @@
         android:id="@+id/org_event_selected_lst"
         android:name="com.example.myapplication.org_event_selected_lst"
         android:label="fragment_org_event_selected_lst"
-        tools:layout="@layout/fragment_org_event_selected_lst" />
+        tools:layout="@layout/fragment_org_event_selected_lst" >
+    </fragment>
     <fragment
         android:id="@+id/org_add_event"
         android:name="com.example.myapplication.org_add_event"
         android:label="fragment_org_add_event"
-        tools:layout="@layout/fragment_org_add_event" />
+        tools:layout="@layout/fragment_org_add_event" >
+    </fragment>
     <fragment
         android:id="@+id/org_notif_waiting_lst"
         android:name="com.example.myapplication.org_notif_waiting_lst"
         android:label="fragment_org_notif_waiting_lst"
-        tools:layout="@layout/fragment_org_notif_waiting_lst" />
+        tools:layout="@layout/fragment_org_notif_waiting_lst" >
+    </fragment>
     <fragment
         android:id="@+id/org_map"
         android:name="com.example.myapplication.org_map"
         android:label="fragment_org_map"
-        tools:layout="@layout/fragment_org_map" />
+        tools:layout="@layout/fragment_org_map" >
+    </fragment>
     <fragment
         android:id="@+id/org_edit_organizer"
         android:name="com.example.myapplication.org_edit_organizer"
         android:label="fragment_org_edit_organizer"
-        tools:layout="@layout/fragment_org_edit_organizer" />
+        tools:layout="@layout/fragment_org_edit_organizer" >
+    </fragment>
 
 
 </navigation>

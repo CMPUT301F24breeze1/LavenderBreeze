@@ -68,6 +68,6 @@ public class EntrantEventPage extends Fragment {
         events.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantEventPage_to_entrantEventsList)
         );
-        return inflater.inflate(R.layout.fragment_entrant_event_page, container, false);
+        return view;
     }
 }

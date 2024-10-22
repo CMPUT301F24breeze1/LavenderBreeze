@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,7 @@ public class EntrantEventsList extends Fragment {
         home.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_home)
         );
-        return inflater.inflate(R.layout.fragment_entrant_events_list, container, false);
+        Log.d("Kenny", "We are hereee");
+        return view;
     }
 }

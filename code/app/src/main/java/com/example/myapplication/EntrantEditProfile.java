@@ -68,6 +68,6 @@ public class EntrantEditProfile extends Fragment {
         profile.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3)
         );
-        return inflater.inflate(R.layout.fragment_entrant_edit_profile, container, false);
+        return view;
     }
 }
