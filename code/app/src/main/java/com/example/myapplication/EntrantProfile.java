@@ -79,6 +79,6 @@ public class EntrantProfile extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEventsList)
         );
 
-        return inflater.inflate(R.layout.fragment_entrant_profile, container, false);
+        return view;
     }
 }
