@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home">
+    app:startDestination="@id/org_events_lst">
 
     <fragment
         android:id="@+id/home"
@@ -91,7 +91,9 @@
     </fragment>
     <fragment
         android:id="@+id/org_events_lst"
-        tools:layout="@layout/fragment_org_events_lst" >
+        android:name="com.example.myapplication.org_events_lst"
+        android:label="fragment_org_events_lst"
+        tools:layout="@layout/fragment_org_events_lst">
         <action
             android:id="@+id/action_org_events_lst_to_home"
             app:destination="@id/home" />
