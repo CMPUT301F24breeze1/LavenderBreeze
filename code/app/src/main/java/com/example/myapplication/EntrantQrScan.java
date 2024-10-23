@@ -72,6 +72,6 @@ public class EntrantQrScan extends Fragment {
         eventList.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantQrScan_to_entrantEventsList)
         );
-        return inflater.inflate(R.layout.fragment_entrant_qr_scan, container, false);
+        return view;
     }
 }

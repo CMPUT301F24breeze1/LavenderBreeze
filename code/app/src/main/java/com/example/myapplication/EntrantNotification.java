@@ -68,6 +68,6 @@ public class EntrantNotification extends Fragment {
         profile.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantNotification_to_entrantProfile3)
         );
-        return inflater.inflate(R.layout.fragment_entrant_notification, container, false);
+        return view;
     }
 }
