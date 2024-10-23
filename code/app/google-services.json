@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1233188304",
+    "project_id": "lottery-breeze",
+    "storage_bucket": "lottery-breeze.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1233188304:android:72b53a88543a9d5fd7f5d5",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUsNIL6_VDxSHZX51Kf6gHSC7BPM1skmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
