@@ -7,11 +7,6 @@ android {
     namespace = "com.example.myapplication"
     compileSdk = 34
 
-    packaging {
-        resources {
-            pickFirsts += "META-INF/LICENSE.md"
-        }
-    }
 
     defaultConfig {
         applicationId = "com.example.myapplication"
@@ -20,7 +15,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -39,8 +33,6 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.multidex:multidex:2.0.1")
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-firestore")
