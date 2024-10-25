@@ -7,6 +7,12 @@ android {
     namespace = "com.example.myapplication"
     compileSdk = 34
 
+    packaging {
+        resources {
+            pickFirsts += "META-INF/LICENSE.md"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.example.myapplication"
         minSdk = 24
