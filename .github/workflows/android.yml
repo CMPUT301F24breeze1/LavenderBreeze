@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+defaults:
+  run:
+    working-directory: ./code
+
 jobs:
   build:
 
@@ -21,8 +25,8 @@ jobs:
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      run: chmod +x code/gradlew
+      run: chmod +x gradlew
     - name: Build with Gradle
-      run: code/gradle build
+      run: gradlew build
     - name: Run Unit Tests
-      run: code/gradlew test
+      run: gradlew test
