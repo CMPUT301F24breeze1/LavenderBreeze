@@ -1,7 +1,9 @@
+// From chatgpt, openai, "write a java implementation of User Class", 2024-10-25
 package com.example.myapplication;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -24,13 +26,16 @@ public class User {
     private Boolean isFacility;
     private String deviceID;
 
-    private FirebaseFirestore database = FireBaseHelper.getFirestoreInstance();
-    private CollectionReference users = database.collection("users");
+    private FirebaseFirestore database;
+    private CollectionReference users ;
 
     // Constructor
     public User(Context context) {
         // Extract the device ID
-        deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Log.d("Device ID", "Android ID: " + deviceID);
+        this.database = FirebaseFirestore.getInstance();
+        this.users = database.collection("users");
 
         // Check if user exists
         users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -71,63 +76,135 @@ public class User {
         userData.put("isOrganizer", false);
         userData.put("isAdmin", false);
         userData.put("isFacility", false);
-        userData.put("deviceID", deviceID);
 
         users.document(deviceID).set(userData);
+        // Set local attributes to default values
+        this.name = "Default Name";
+        this.email = "default@example.com";
+        this.phoneNumber = "0000000000";
+        this.isEntrant = false;
+        this.isOrganizer = false;
+        this.isAdmin = false;
+        this.isFacility = false;
     }
 
-    // Getter and Setter for 'name'
+    // Getters that return local values
+
+    /**
+     * Get the device ID
+     * @return the device ID
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Get the email
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Get the phone number
+     * @return the phone number
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Get the isEntrant
+     * @return the isEntrant
+     */
+    public Boolean getIsEntrant() {
+        return isEntrant;
+    }
+
+    /**
+     * Get the isOrganizer
+     * @return the isOrganizer
+     */
+    public Boolean getIsOrganizer() {
+        return isOrganizer;
+    }
+
+    /**
+     * Get the isAdmin
+     * @return the isAdmin
+     */
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    /**
+     * Get the isFacility
+     * @return the isFacility
+     */
+    public Boolean getIsFacility() {
+        return isFacility;
+    }
+
+    // Setters with validation
+
+    /**
+     * Set the name
+     * @param name
+     */
     public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
         this.name = name;
-        // Update Firebase
         users.document(deviceID).update("name", name);
     }
 
-    public void getName(final FirestoreCallback callback) {
-        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String name = document.getString("name");
-                        callback.onCallback(name);  // Pass the value to the callback
-                    } else {
-                        callback.onCallback(null);
-                    }
-                }
-            }
-        });
-    }
-
-    // Getter and Setter for 'email'
     public void setEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email address.");
+        }
         this.email = email;
-        // Update Firebase
         users.document(deviceID).update("email", email);
     }
 
-    public void getEmail(final FirestoreCallback callback) {
-        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String email = document.getString("email");
-                        callback.onCallback(email);  // Pass the value to the callback
-                    } else {
-                        callback.onCallback(null);
-                    }
-                }
-            }
-        });
+    public void setPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || !phoneNumber.matches("\\d{10}")) {
+            throw new IllegalArgumentException("Phone number must be a 10-digit number.");
+        }
+        this.phoneNumber = phoneNumber;
+        users.document(deviceID).update("phoneNumber", phoneNumber);
     }
 
-    // Similarly, you can create getter and setter for other fields like 'phoneNumber', 'isEntrant', etc.
+    public void setIsEntrant(Boolean isEntrant) {
+        if (isEntrant == null) {
+            throw new IllegalArgumentException("isEntrant cannot be null.");
+        }
+        this.isEntrant = isEntrant;
+        users.document(deviceID).update("isEntrant", isEntrant);
+    }
 
-    // Interface for Firestore callback to handle async get operations
-    public interface FirestoreCallback {
-        void onCallback(String value);
+    public void setIsOrganizer(Boolean isOrganizer) {
+        if (isOrganizer == null) {
+            throw new IllegalArgumentException("isOrganizer cannot be null.");
+        }
+        this.isOrganizer = isOrganizer;
+        users.document(deviceID).update("isOrganizer", isOrganizer);
+    }
+
+    public void setIsAdmin(Boolean isAdmin) {
+        if (isAdmin == null) {
+            throw new IllegalArgumentException("isAdmin cannot be null.");
+        }
+        this.isAdmin = isAdmin;
+        users.document(deviceID).update("isAdmin", isAdmin);
+    }
+
+    public void setIsFacility(Boolean isFacility) {
+        if (isFacility == null) {
+            throw new IllegalArgumentException("isFacility cannot be null.");
+        }
+        this.isFacility = isFacility;
+        users.document(deviceID).update("isFacility", isFacility);
     }
 }
