@@ -15,6 +15,9 @@ public class UserTest {
 
     private User user;
 
+    /**
+     * Set up the test environment
+     */
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();

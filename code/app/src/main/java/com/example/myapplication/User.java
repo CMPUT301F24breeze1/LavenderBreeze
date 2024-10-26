@@ -29,6 +29,10 @@ public class User {
     private FirebaseFirestore database;
     private CollectionReference users ;
 
+    /**
+     * Constructor of the user class
+     * @param context
+     */
     // Constructor
     public User(Context context) {
         // Extract the device ID
@@ -55,6 +59,10 @@ public class User {
         });
     }
 
+    /**
+     * Load user data from Firestore
+     * @param document
+     */
     // Load user data from Firestore
     private void loadUserData(DocumentSnapshot document) {
         this.name = document.getString("name");
@@ -66,6 +74,9 @@ public class User {
         this.isFacility = document.getBoolean("isFacility");
     }
 
+    /**
+     * Create new user with default values
+     */
     // Create new user with default values
     private void createNewUser() {
         Map<String, Object> userData = new HashMap<>();
@@ -151,6 +162,7 @@ public class User {
     /**
      * Set the name
      * @param name
+     * @throws IllegalArgumentException if name is null or empty
      */
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
@@ -160,6 +172,11 @@ public class User {
         users.document(deviceID).update("name", name);
     }
 
+    /**
+     * Set the email
+     * @param email
+     * @throws IllegalArgumentException if email is null or does not contain an "@"
+     */
     public void setEmail(String email) {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address.");
@@ -168,6 +185,11 @@ public class User {
         users.document(deviceID).update("email", email);
     }
 
+    /**
+     * Set the phone number
+     * @param phoneNumber
+     * @throws IllegalArgumentException if phoneNumber is null or does not contain 10 digits
+     */
     public void setPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || !phoneNumber.matches("\\d{10}")) {
             throw new IllegalArgumentException("Phone number must be a 10-digit number.");
@@ -176,6 +198,11 @@ public class User {
         users.document(deviceID).update("phoneNumber", phoneNumber);
     }
 
+    /**
+     * Set the isEntrant
+     * @param isEntrant
+     * @throws IllegalArgumentException if isEntrant is null
+     */
     public void setIsEntrant(Boolean isEntrant) {
         if (isEntrant == null) {
             throw new IllegalArgumentException("isEntrant cannot be null.");
@@ -184,6 +211,11 @@ public class User {
         users.document(deviceID).update("isEntrant", isEntrant);
     }
 
+    /**
+     * Set the isOrganizer
+     * @param isOrganizer
+     * @throws IllegalArgumentException if isOrganizer is null
+     */
     public void setIsOrganizer(Boolean isOrganizer) {
         if (isOrganizer == null) {
             throw new IllegalArgumentException("isOrganizer cannot be null.");
@@ -192,6 +224,11 @@ public class User {
         users.document(deviceID).update("isOrganizer", isOrganizer);
     }
 
+    /**
+     * Set the isAdmin
+     * @param isAdmin
+     * @throws IllegalArgumentException if isAdmin is null
+     */
     public void setIsAdmin(Boolean isAdmin) {
         if (isAdmin == null) {
             throw new IllegalArgumentException("isAdmin cannot be null.");
@@ -200,6 +237,11 @@ public class User {
         users.document(deviceID).update("isAdmin", isAdmin);
     }
 
+    /**
+     * Set the isFacility
+     * @param isFacility
+     * @throws IllegalArgumentException if isFacility is null
+     */
     public void setIsFacility(Boolean isFacility) {
         if (isFacility == null) {
             throw new IllegalArgumentException("isFacility cannot be null.");
