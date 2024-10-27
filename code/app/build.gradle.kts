@@ -30,9 +30,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    packaging {
-        resources.excludes.add("META-INF/LICENSE.md")
-    }
+    
 }
 
 dependencies {
