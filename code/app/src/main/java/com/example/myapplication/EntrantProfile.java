@@ -2,13 +2,19 @@ package com.example.myapplication;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,8 +55,12 @@ public class EntrantProfile extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view,savedInstanceState);
+         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
+         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+         //bottomNavigationView.setupWithNavController(navController);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
