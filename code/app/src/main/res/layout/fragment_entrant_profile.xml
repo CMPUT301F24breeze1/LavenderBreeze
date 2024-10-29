@@ -54,7 +54,6 @@
         android:id="@+id/contactInfoBox"
         android:layout_width="match_parent"
         android:layout_height="370dp"
-        android:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp"
         android:background="@color/Purple"
         android:orientation="vertical"
@@ -139,7 +138,6 @@
                 android:id="@+id/emailNotificationSwitch"
                 android:layout_width="222dp"
                 android:layout_height="wrap_content"
-                android:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="4dp" />
         </LinearLayout>
 
@@ -155,29 +153,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/user_bottom_menu" />
 
-    <Button
-        android:id="@+id/button_go_to_entrant_event_list"
-        android:layout_width="74dp"
-        android:layout_height="33dp"
-        android:text="Go to Entrant Event List"
-        tools:layout_editor_absoluteX="321dp"
-        tools:layout_editor_absoluteY="217dp" />
 
-    <Button
-        android:id="@+id/button_go_to_entrant_notifications"
-        android:layout_width="37dp"
-        android:layout_height="34dp"
-        android:text="Go to Entrant Notifications"
-        tools:layout_editor_absoluteX="350dp"
-        tools:layout_editor_absoluteY="130dp" />
-
-    <Button
-        android:id="@+id/button_go_to_entrant_edit_profile"
-        android:layout_width="98dp"
-        android:layout_height="32dp"
-        android:text="Go to Entrant Edit Profile"
-        tools:layout_editor_absoluteX="313dp"
-        tools:layout_editor_absoluteY="177dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

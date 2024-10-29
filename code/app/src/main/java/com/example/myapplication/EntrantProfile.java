@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -74,20 +75,20 @@ public class EntrantProfile extends Fragment {
         View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
 
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
-        Button edit = view.findViewById(R.id.button_go_to_entrant_edit_profile);
+        ImageButton edit = view.findViewById(R.id.editButton);
         edit.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile)
         );
 
-        Button notifications = view.findViewById(R.id.button_go_to_entrant_notifications);
+        ImageButton notifications = view.findViewById(R.id.notificationButton);
         notifications.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantNotification)
         );
 
-        Button events = view.findViewById(R.id.button_go_to_entrant_event_list);
-        events.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEventsList)
-        );
+//        Button events = view.findViewById(R.id.button_go_to_entrant_event_list);
+//        events.setOnClickListener(v ->
+//                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEventsList)
+//        );
 
         return view;
     }
