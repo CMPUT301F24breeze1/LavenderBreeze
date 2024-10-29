@@ -8,7 +8,7 @@
     <item
         android:id="@id/entrantProfile3"
         android:title="Profile"
-        android:icon="@drawable/baseline_person" />
+        android:icon="@drawable/ProfilePicture" />
     <item
         android:id="@id/entrantEventPage"
         android:title="Events"    android:icon="@drawable/baseline_library_books" />
