@@ -12,70 +12,67 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.io.ByteArrayOutputStream;
 
 /*
-    to generate a new code:
-        QRCodeGenerator qrCode = new QRCodeGenerator("event_ID", yourImageView);
-        qrGenerator.generateQRCode();
-
-    to convert to a string so we can store it in database:
-        String base64QRCode = qrCode.getQRCodeAsBase64();
-
-    to retrieve and display the QR code from a Base64 string:
-        qrGenerator.displayQRCodeFromBase64(base64QRCode);
 
  */
 
 public class QRCodeGenerator {
-    private String code;      // The code to be encoded as a QR code
-    private ImageView qrCodeIV; // ImageView to display the generated QR code
+    private final String code;      // Code to be encoded as a QR code
+    private ImageView qrCodeIV;     // Optional ImageView for displaying the QR code
 
-    // Constructor that initializes the code and ImageView
-    public QRCodeGenerator(String code, ImageView qrCodeIV) {
+    // Constructor that initializes only the code (optional ImageView can be set later)
+    public QRCodeGenerator(String code) {
         this.code = code;
+    }
+
+    // Optional method to set ImageView after creating the instance
+    public void setQrCodeImageView(ImageView qrCodeIV) {
         this.qrCodeIV = qrCodeIV;
     }
 
-    // Method to generate and display the QR code
-    public void generateQRCode() {
-        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+    // Method to generate the QR code as a Bitmap
+    public Bitmap generateQRCodeBitmap() {
         try {
-            // Generate the QR code as a Bitmap image with 512x512 pixels
-            Bitmap bitmap = barcodeEncoder.encodeBitmap(code, BarcodeFormat.QR_CODE, 512, 512);
-            qrCodeIV.setImageBitmap(bitmap); // Sets the Bitmap to ImageView
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Method to convert a Bitmap to a Base64 string
-    public String bitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream); // Compress the Bitmap to PNG format
-        byte[] byteArray = stream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT); // Encode the byte array to Base64
-    }
-
-    // Method to convert the generated QR code to a Base64 string
-    public String getQRCodeAsBase64() {
-        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-        try {
-            // Generate the QR code as a Bitmap image
-            Bitmap bitmap = barcodeEncoder.encodeBitmap(code, BarcodeFormat.QR_CODE, 512, 512);
-            return bitmapToBase64(bitmap); // Convert Bitmap to Base64
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            return barcodeEncoder.encodeBitmap(code, BarcodeFormat.QR_CODE, 512, 512);
         } catch (WriterException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    // Method to convert a Base64 string back to a Bitmap
-    public Bitmap base64ToBitmap(String base64String) {
-        byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT); // Decode Base64 to byte array
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length); // Convert byte array to Bitmap
+    // Method to display the QR code Bitmap in ImageView if set
+    public void displayQRCode() {
+        if (qrCodeIV != null) {
+            Bitmap bitmap = generateQRCodeBitmap();
+            qrCodeIV.setImageBitmap(bitmap);
+        }
     }
 
-    // Method to display a Base64 encoded QR code in the ImageView
+    // Convert Bitmap to Base64
+    private String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    // Convert Base64 to Bitmap
+    private Bitmap base64ToBitmap(String base64String) {
+        byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    // Generate the QR code and return as Base64 encoded string
+    public String getQRCodeAsBase64() {
+        Bitmap bitmap = generateQRCodeBitmap();
+        return bitmap != null ? bitmapToBase64(bitmap) : null;
+    }
+
+    // Display a Base64 encoded QR code in the ImageView if set
     public void displayQRCodeFromBase64(String base64String) {
-        Bitmap bitmap = base64ToBitmap(base64String); // Convert Base64 string to Bitmap
-        qrCodeIV.setImageBitmap(bitmap); // Display Bitmap in ImageView
+        if (qrCodeIV != null) {
+            Bitmap bitmap = base64ToBitmap(base64String);
+            qrCodeIV.setImageBitmap(bitmap);
+        }
     }
 }
