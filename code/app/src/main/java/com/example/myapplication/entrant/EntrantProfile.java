@@ -1,19 +1,23 @@
-package com.example.myapplication;
+package com.example.myapplication.entrant;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_map#newInstance} factory method to
+ * Use the {@link EntrantProfile#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_map extends Fragment {
+public class EntrantProfile extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +28,7 @@ public class org_map extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_map() {
+    public EntrantProfile() {
         // Required empty public constructor
     }
 
@@ -34,11 +38,11 @@ public class org_map extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_map.
+     * @return A new instance of fragment EntrantProfile.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_map newInstance(String param1, String param2) {
-        org_map fragment = new org_map();
+    public static EntrantProfile newInstance(String param1, String param2) {
+        EntrantProfile fragment = new EntrantProfile();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +63,24 @@ public class org_map extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_org_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
+
+        // Find the button and set an onClickListener to navigate to org_event_lst.xml
+        Button edit = view.findViewById(R.id.button_go_to_entrant_edit_profile);
+        edit.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile)
+        );
+
+        Button notifications = view.findViewById(R.id.button_go_to_entrant_notifications);
+        notifications.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantNotification)
+        );
+
+        Button events = view.findViewById(R.id.button_go_to_entrant_event_list);
+        events.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEventsList)
+        );
+
+        return view;
     }
 }

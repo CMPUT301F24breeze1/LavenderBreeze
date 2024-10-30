@@ -6,6 +6,9 @@ import static org.junit.Assert.assertThrows;
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.example.myapplication.model.User;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
