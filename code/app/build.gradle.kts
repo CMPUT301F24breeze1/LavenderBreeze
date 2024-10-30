@@ -36,11 +36,12 @@ android {
         resources.excludes.add("META-INF/NOTICE")
         resources.excludes.add("META-INF/NOTICE.txt")
         resources.excludes.add("META-INF/LICENSE.txt")
+
     }
 }
 
 dependencies {
-
+    implementation ("com.google.firebase:firebase-database:20.1.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-firestore")
     implementation ("com.google.android.material:material:1.9.0")
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.junit.jupiter)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

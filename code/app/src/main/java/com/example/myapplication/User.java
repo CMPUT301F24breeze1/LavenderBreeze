@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
+
+
     private String name;
     private String email;
     private String phoneNumber;
@@ -25,6 +27,7 @@ public class User {
     private Boolean isAdmin;
     private Boolean isFacility;
     private String deviceID;
+    private String profilePicture;
 
     private FirebaseFirestore database;
     private CollectionReference users ;
@@ -72,6 +75,7 @@ public class User {
         this.isOrganizer = document.getBoolean("isOrganizer");
         this.isAdmin = document.getBoolean("isAdmin");
         this.isFacility = document.getBoolean("isFacility");
+        this.profilePicture = document.getString("profilePicture");
     }
 
     /**
@@ -87,6 +91,7 @@ public class User {
         userData.put("isOrganizer", false);
         userData.put("isAdmin", false);
         userData.put("isFacility", false);
+        userData.put("profilePicture", "");
 
         users.document(deviceID).set(userData);
         // Set local attributes to default values
@@ -97,6 +102,7 @@ public class User {
         this.isOrganizer = false;
         this.isAdmin = false;
         this.isFacility = false;
+        this.profilePicture = "";
     }
 
     // Getters that return local values
@@ -248,5 +254,12 @@ public class User {
         }
         this.isFacility = isFacility;
         users.document(deviceID).update("isFacility", isFacility);
+    }
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
