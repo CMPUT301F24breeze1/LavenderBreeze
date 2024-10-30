@@ -26,4 +26,9 @@
         android:layout_height="wrap_content"
         android:text="Go to Map" />
 
+    <Button
+        android:id="@+id/button_select_entrants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Entrants" />
 </LinearLayout>

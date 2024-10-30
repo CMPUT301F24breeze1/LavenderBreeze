@@ -1,14 +1,30 @@
 package com.example.myapplication;
 
+import static com.google.common.collect.Iterators.removeAll;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,14 +33,20 @@ import android.widget.Button;
  */
 public class org_event_waiting_lst extends Fragment {
 
+    private ArrayList<Integer> entrants;
+    private ArrayList<Integer> chosen;
+    private int capacity;
+
+    private FirebaseFirestore db;
+    private CollectionReference events;
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "EventId";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int EventId;
 
     public org_event_waiting_lst() {
         // Required empty public constructor
@@ -43,7 +65,6 @@ public class org_event_waiting_lst extends Fragment {
         org_event_waiting_lst fragment = new org_event_waiting_lst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,9 +72,11 @@ public class org_event_waiting_lst extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        events = db.collection("Event");
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            EventId = getArguments().getInt(ARG_PARAM1);
         }
     }
 
@@ -61,6 +84,33 @@ public class org_event_waiting_lst extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
+
+        db = FirebaseFirestore.getInstance();
+        events = db.collection("Event");
+        DocumentReference eventRef = db.collection("Event").document(String.valueOf(EventId));
+        eventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Event event = documentSnapshot.toObject(Event.class);
+                //entrants = event.getSelectedEntrants();
+            }
+        });
+
+
+        Button select_entrants = view.findViewById(R.id.button_select_entrants);
+        select_entrants.setOnClickListener(view1 -> {
+            if(capacity >= entrants.size()){
+                chosen.addAll(entrants);
+                entrants.clear();
+            } else {
+                Collections.shuffle(entrants);
+                for(int i = 0; i < capacity; i++){
+                    chosen.add(entrants.get(0));
+                    entrants.remove(0);
+                }
+            }
+
+        });
 
         // Button to navigate to the Selected List
         Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);

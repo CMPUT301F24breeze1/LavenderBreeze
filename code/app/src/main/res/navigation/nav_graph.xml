@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/org_events_lst">
+    app:startDestination="@id/home">
 
     <fragment
         android:id="@+id/home"
@@ -112,6 +112,10 @@
         android:name="com.example.myapplication.org_event"
         android:label="fragment_org_event"
         tools:layout="@layout/fragment_org_event" >
+        <argument
+            android:name="eventId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_org_event_to_org_view_event_qrcode"
             app:destination="@id/org_view_event_qrcode" />
@@ -140,6 +144,10 @@
         android:name="com.example.myapplication.org_event_waiting_lst"
         android:label="fragment_org_event_waiting_lst"
         tools:layout="@layout/fragment_org_event_waiting_lst" >
+        <argument
+            android:name="eventId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_org_event_waiting_lst_to_org_event_selected_lst"
             app:destination="@id/org_event_selected_lst" />
