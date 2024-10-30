@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantProfile3"
-        android:name="com.example.myapplication.EntrantProfile"
+        android:name="com.example.myapplication.entrant.EntrantProfile"
         android:label="fragment_entrant_profile"
         tools:layout="@layout/fragment_entrant_profile" >
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantNotification"
-        android:name="com.example.myapplication.EntrantNotification"
+        android:name="com.example.myapplication.entrant.EntrantNotification"
         android:label="fragment_entrant_notification"
         tools:layout="@layout/fragment_entrant_notification" >
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantEventPage"
-        android:name="com.example.myapplication.EntrantEventPage"
+        android:name="com.example.myapplication.entrant.EntrantEventPage"
         android:label="fragment_entrant_event_page"
         tools:layout="@layout/fragment_entrant_event_page" >
         <action
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantEventsList"
-        android:name="com.example.myapplication.EntrantEventsList"
+        android:name="com.example.myapplication.entrant.EntrantEventsList"
         android:label="fragment_entrant_events_list"
         tools:layout="@layout/fragment_entrant_events_list" >
         <action
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantQrScan"
-        android:name="com.example.myapplication.EntrantQrScan"
+        android:name="com.example.myapplication.entrant.EntrantQrScan"
         android:label="fragment_entrant_qr_scan"
         tools:layout="@layout/fragment_entrant_qr_scan" >
         <action
@@ -82,7 +82,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantEditProfile"
-        android:name="com.example.myapplication.EntrantEditProfile"
+        android:name="com.example.myapplication.entrant.EntrantEditProfile"
         android:label="fragment_entrant_edit_profile"
         tools:layout="@layout/fragment_entrant_edit_profile" >
         <action
@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/org_events_lst"
-        android:name="com.example.myapplication.org_events_lst"
+        android:name="com.example.myapplication.organization.org_events_lst"
         android:label="fragment_org_events_lst"
         tools:layout="@layout/fragment_org_events_lst">
         <action
@@ -109,7 +109,7 @@
     </fragment>
     <fragment
         android:id="@+id/org_event"
-        android:name="com.example.myapplication.org_event"
+        android:name="com.example.myapplication.organization.org_event"
         android:label="fragment_org_event"
         tools:layout="@layout/fragment_org_event" >
         <action
@@ -127,17 +127,17 @@
     </fragment>
     <fragment
         android:id="@+id/org_edit_event"
-        android:name="com.example.myapplication.org_edit_event"
+        android:name="com.example.myapplication.organization.org_edit_event"
         android:label="fragment_org_edit_event"
         tools:layout="@layout/fragment_org_edit_event" />
     <fragment
         android:id="@+id/org_view_event_qrcode"
-        android:name="com.example.myapplication.org_view_event_qrcode"
+        android:name="com.example.myapplication.organization.org_view_event_qrcode"
         android:label="fragment_org_view_event_qrcode"
         tools:layout="@layout/fragment_org_view_event_qrcode" />
     <fragment
         android:id="@+id/org_event_waiting_lst"
-        android:name="com.example.myapplication.org_event_waiting_lst"
+        android:name="com.example.myapplication.organization.org_event_waiting_lst"
         android:label="fragment_org_event_waiting_lst"
         tools:layout="@layout/fragment_org_event_waiting_lst" >
         <action
@@ -152,27 +152,27 @@
     </fragment>
     <fragment
         android:id="@+id/org_event_selected_lst"
-        android:name="com.example.myapplication.org_event_selected_lst"
+        android:name="com.example.myapplication.organization.org_event_selected_lst"
         android:label="fragment_org_event_selected_lst"
         tools:layout="@layout/fragment_org_event_selected_lst" />
     <fragment
         android:id="@+id/org_add_event"
-        android:name="com.example.myapplication.org_add_event"
+        android:name="com.example.myapplication.organization.org_add_event"
         android:label="fragment_org_add_event"
         tools:layout="@layout/fragment_org_add_event" />
     <fragment
         android:id="@+id/org_notif_waiting_lst"
-        android:name="com.example.myapplication.org_notif_waiting_lst"
+        android:name="com.example.myapplication.organization.org_notif_waiting_lst"
         android:label="fragment_org_notif_waiting_lst"
         tools:layout="@layout/fragment_org_notif_waiting_lst" />
     <fragment
         android:id="@+id/org_map"
-        android:name="com.example.myapplication.org_map"
+        android:name="com.example.myapplication.organization.org_map"
         android:label="fragment_org_map"
         tools:layout="@layout/fragment_org_map" />
     <fragment
         android:id="@+id/org_edit_organizer"
-        android:name="com.example.myapplication.org_edit_organizer"
+        android:name="com.example.myapplication.organization.org_edit_organizer"
         android:label="fragment_org_edit_organizer"
         tools:layout="@layout/fragment_org_edit_organizer" />
 

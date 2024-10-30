@@ -1,5 +1,5 @@
 // From chatgpt, openai, "write a java implementation of User Class", 2024-10-25
-package com.example.myapplication;
+package com.example.myapplication.model;
 
 import android.content.Context;
 import android.provider.Settings;
