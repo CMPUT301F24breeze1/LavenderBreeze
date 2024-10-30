@@ -36,11 +36,11 @@ android {
         resources.excludes.add("META-INF/NOTICE")
         resources.excludes.add("META-INF/NOTICE.txt")
         resources.excludes.add("META-INF/LICENSE.txt")
-
     }
 }
 
 dependencies {
+    implementation(libs.qr.generator)
     implementation ("com.google.firebase:firebase-database:20.1.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-firestore")
