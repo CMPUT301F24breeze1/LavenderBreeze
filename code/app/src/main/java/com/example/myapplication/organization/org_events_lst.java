@@ -1,6 +1,4 @@
-package com.example.myapplication;
-
-import static android.content.ContentValues.TAG;
+package com.example.myapplication.organization;
 
 import android.os.Bundle;
 
@@ -16,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.myapplication.R;
+import com.example.myapplication.entrant.Event;
+import com.example.myapplication.entrant.EventsListAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,10 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,7 +87,7 @@ public class org_events_lst extends Fragment {
 
         //initialize database instance
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference eventsRef = db.collection("Event");
+        CollectionReference eventsRef = db.collection("events");
 
         //initialize event data list and array adapter
         eventDataList = new ArrayList<>();
@@ -106,8 +105,8 @@ public class org_events_lst extends Fragment {
                 if(value != null){
                     eventDataList.clear();
                     for(QueryDocumentSnapshot doc:value){
-                        String eventName = doc.getString("Name");
-                        String qrHash = doc.getString("QRHash");
+                        String eventName = doc.getString("eventName");
+                        String qrHash = doc.getString("qrCodeHash");
                         Log.d("Firestore", String.format("Event %s added",eventName));
                         // I set the event description as the doc ID to make it easier to pass when clicked
                         eventDataList.add(new Event(eventName, doc.getId(), new Date(), new Date(),

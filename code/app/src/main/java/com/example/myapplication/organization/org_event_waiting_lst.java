@@ -1,30 +1,25 @@
-package com.example.myapplication;
-
-import static com.google.common.collect.Iterators.removeAll;
+package com.example.myapplication.organization;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.myapplication.R;
+import com.example.myapplication.entrant.Event;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,8 +28,8 @@ import java.util.Collections;
  */
 public class org_event_waiting_lst extends Fragment {
 
-    private ArrayList<Integer> entrants;
-    private ArrayList<Integer> chosen;
+    private List<String> entrants;
+    private List<String> chosen;
     private int capacity;
 
     private FirebaseFirestore db;
@@ -74,7 +69,7 @@ public class org_event_waiting_lst extends Fragment {
         super.onCreate(savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
-        events = db.collection("Event");
+        events = db.collection("events");
         if (getArguments() != null) {
             EventId = getArguments().getInt(ARG_PARAM1);
         }
@@ -86,13 +81,13 @@ public class org_event_waiting_lst extends Fragment {
         View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
 
         db = FirebaseFirestore.getInstance();
-        events = db.collection("Event");
-        DocumentReference eventRef = db.collection("Event").document(String.valueOf(EventId));
+        events = db.collection("events");
+        DocumentReference eventRef = db.collection("events").document(String.valueOf(EventId));
         eventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Event event = documentSnapshot.toObject(Event.class);
-                //entrants = event.getSelectedEntrants();
+                entrants = event.getWaitlist();
             }
         });
 
@@ -110,6 +105,14 @@ public class org_event_waiting_lst extends Fragment {
                 }
             }
 
+
+        });
+        eventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Event event = documentSnapshot.toObject(Event.class);
+                event.setSelectedEntrants(chosen);
+            }
         });
 
         // Button to navigate to the Selected List
