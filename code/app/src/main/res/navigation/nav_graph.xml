@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/org_events_lst"
-        android:name="com.example.myapplication.organization.org_events_lst"
+        android:name="com.example.myapplication.organization.OrgEventLst"
         android:label="fragment_org_events_lst"
         tools:layout="@layout/fragment_org_events_lst">
         <action
@@ -109,7 +109,7 @@
     </fragment>
     <fragment
         android:id="@+id/org_event"
-        android:name="com.example.myapplication.organization.org_event"
+        android:name="com.example.myapplication.organization.OrgEvent"
         android:label="fragment_org_event"
         tools:layout="@layout/fragment_org_event" >
         <action
@@ -127,17 +127,17 @@
     </fragment>
     <fragment
         android:id="@+id/org_edit_event"
-        android:name="com.example.myapplication.organization.org_edit_event"
+        android:name="com.example.myapplication.organization.OrgEditEvent"
         android:label="fragment_org_edit_event"
         tools:layout="@layout/fragment_org_edit_event" />
     <fragment
         android:id="@+id/org_view_event_qrcode"
-        android:name="com.example.myapplication.organization.org_view_event_qrcode"
+        android:name="com.example.myapplication.organization.OrgViewEventQrCode"
         android:label="fragment_org_view_event_qrcode"
         tools:layout="@layout/fragment_org_view_event_qrcode" />
     <fragment
         android:id="@+id/org_event_waiting_lst"
-        android:name="com.example.myapplication.organization.org_event_waiting_lst"
+        android:name="com.example.myapplication.organization.OrgEventWaitingLst"
         android:label="fragment_org_event_waiting_lst"
         tools:layout="@layout/fragment_org_event_waiting_lst" >
         <action
@@ -152,27 +152,27 @@
     </fragment>
     <fragment
         android:id="@+id/org_event_selected_lst"
-        android:name="com.example.myapplication.organization.org_event_selected_lst"
+        android:name="com.example.myapplication.organization.OrgEventSelectedLst"
         android:label="fragment_org_event_selected_lst"
         tools:layout="@layout/fragment_org_event_selected_lst" />
     <fragment
         android:id="@+id/org_add_event"
-        android:name="com.example.myapplication.organization.org_add_event"
+        android:name="com.example.myapplication.organization.OrgAddEvent"
         android:label="fragment_org_add_event"
         tools:layout="@layout/fragment_org_add_event" />
     <fragment
         android:id="@+id/org_notif_waiting_lst"
-        android:name="com.example.myapplication.organization.org_notif_waiting_lst"
+        android:name="com.example.myapplication.organization.OrgNotifWaitingLst"
         android:label="fragment_org_notif_waiting_lst"
         tools:layout="@layout/fragment_org_notif_waiting_lst" />
     <fragment
         android:id="@+id/org_map"
-        android:name="com.example.myapplication.organization.org_map"
+        android:name="com.example.myapplication.organization.OrgMap"
         android:label="fragment_org_map"
         tools:layout="@layout/fragment_org_map" />
     <fragment
         android:id="@+id/org_edit_organizer"
-        android:name="com.example.myapplication.organization.org_edit_organizer"
+        android:name="com.example.myapplication.organization.OrgEditOrganizer"
         android:label="fragment_org_edit_organizer"
         tools:layout="@layout/fragment_org_edit_organizer" />
 
