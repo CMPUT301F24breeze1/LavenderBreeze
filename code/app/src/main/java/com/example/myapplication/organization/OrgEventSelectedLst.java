@@ -12,10 +12,10 @@ import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_edit_organizer#newInstance} factory method to
+ * Use the {@link OrgEventSelectedLst#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_edit_organizer extends Fragment {
+public class OrgEventSelectedLst extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class org_edit_organizer extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_edit_organizer() {
+    public OrgEventSelectedLst() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class org_edit_organizer extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_edit_organizer.
+     * @return A new instance of fragment org_event_selected_lst.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_edit_organizer newInstance(String param1, String param2) {
-        org_edit_organizer fragment = new org_edit_organizer();
+    public static OrgEventSelectedLst newInstance(String param1, String param2) {
+        OrgEventSelectedLst fragment = new OrgEventSelectedLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class org_edit_organizer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_org_edit_organizer, container, false);
+        return inflater.inflate(R.layout.fragment_org_event_selected_lst, container, false);
     }
 }

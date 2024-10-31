@@ -12,10 +12,10 @@ import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_notif_waiting_lst#newInstance} factory method to
+ * Use the {@link OrgAddEvent#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_notif_waiting_lst extends Fragment {
+public class OrgAddEvent extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class org_notif_waiting_lst extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_notif_waiting_lst() {
+    public OrgAddEvent() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class org_notif_waiting_lst extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_notif_waiting_lst.
+     * @return A new instance of fragment org_add_event.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_notif_waiting_lst newInstance(String param1, String param2) {
-        org_notif_waiting_lst fragment = new org_notif_waiting_lst();
+    public static OrgAddEvent newInstance(String param1, String param2) {
+        OrgAddEvent fragment = new OrgAddEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class org_notif_waiting_lst extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_org_notif_waiting_lst, container, false);
+        return inflater.inflate(R.layout.fragment_org_add_event, container, false);
     }
 }

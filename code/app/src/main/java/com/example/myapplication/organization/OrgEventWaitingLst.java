@@ -3,19 +3,21 @@ package com.example.myapplication.organization;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_map#newInstance} factory method to
+ * Use the {@link OrgEventWaitingLst#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_map extends Fragment {
+public class OrgEventWaitingLst extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +28,7 @@ public class org_map extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_map() {
+    public OrgEventWaitingLst() {
         // Required empty public constructor
     }
 
@@ -36,11 +38,11 @@ public class org_map extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_map.
+     * @return A new instance of fragment org_event_waiting_lst.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_map newInstance(String param1, String param2) {
-        org_map fragment = new org_map();
+    public static OrgEventWaitingLst newInstance(String param1, String param2) {
+        OrgEventWaitingLst fragment = new OrgEventWaitingLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,7 +62,26 @@ public class org_map extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_org_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
+
+        // Button to navigate to the Selected List
+        Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+        buttonGoToSelectedList.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst)
+        );
+
+        // Button to navigate to Notifications
+        Button buttonGoToNotif = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
+        buttonGoToNotif.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_notif_waiting_lst)
+        );
+
+        // Button to navigate to Map
+        Button buttonGoToMap = view.findViewById(R.id.button_go_to_map_from_org_event_waiting_lst);
+        buttonGoToMap.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_map)
+        );
+
+        return view;
     }
 }

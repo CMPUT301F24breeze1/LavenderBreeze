@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".organization.org_view_event_qrcode">
+    tools:context=".organization.OrgViewEventQrCode">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
