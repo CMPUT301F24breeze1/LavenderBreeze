@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.myapplication.R;
+<<<<<<<< HEAD:code/app/src/main/java/com/example/myapplication/organization/org_event_waiting_lst.java
 import com.example.myapplication.entrant.Event;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,13 +21,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Collections;
 import java.util.List;
+========
+>>>>>>>> b1309b163bf605a73bffbd34b7d5480af71a99b8:code/app/src/main/java/com/example/myapplication/organization/OrgEventWaitingLst.java
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_event_waiting_lst#newInstance} factory method to
+ * Use the {@link OrgEventWaitingLst#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_event_waiting_lst extends Fragment {
+public class OrgEventWaitingLst extends Fragment {
 
     private List<String> entrants;
     private List<String> chosen;
@@ -43,7 +46,7 @@ public class org_event_waiting_lst extends Fragment {
     // TODO: Rename and change types of parameters
     private int EventId;
 
-    public org_event_waiting_lst() {
+    public OrgEventWaitingLst() {
         // Required empty public constructor
     }
 
@@ -56,8 +59,8 @@ public class org_event_waiting_lst extends Fragment {
      * @return A new instance of fragment org_event_waiting_lst.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_event_waiting_lst newInstance(String param1, String param2) {
-        org_event_waiting_lst fragment = new org_event_waiting_lst();
+    public static OrgEventWaitingLst newInstance(String param1, String param2) {
+        OrgEventWaitingLst fragment = new OrgEventWaitingLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);

@@ -12,10 +12,10 @@ import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_map#newInstance} factory method to
+ * Use the {@link OrgViewEventQrCode#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_map extends Fragment {
+public class OrgViewEventQrCode extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class org_map extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_map() {
+    public OrgViewEventQrCode() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class org_map extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_map.
+     * @return A new instance of fragment org_view_event_qrcode.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_map newInstance(String param1, String param2) {
-        org_map fragment = new org_map();
+    public static OrgViewEventQrCode newInstance(String param1, String param2) {
+        OrgViewEventQrCode fragment = new OrgViewEventQrCode();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class org_map extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_org_map, container, false);
+        return inflater.inflate(R.layout.fragment_org_view_event_qrcode, container, false);
     }
 }

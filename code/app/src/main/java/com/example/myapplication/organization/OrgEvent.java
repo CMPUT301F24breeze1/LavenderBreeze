@@ -14,10 +14,10 @@ import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_event#newInstance} factory method to
+ * Use the {@link OrgEvent#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_event extends Fragment {
+public class OrgEvent extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class org_event extends Fragment {
     // TODO: Rename and change types of parameters
     private int EventId;
 
-    public org_event() {
+    public OrgEvent() {
         // Required empty public constructor
     }
 
@@ -38,8 +38,13 @@ public class org_event extends Fragment {
      * @return A new instance of fragment org_event.
      */
     // TODO: Rename and change types and number of parameters
+<<<<<<<< HEAD:code/app/src/main/java/com/example/myapplication/organization/org_event.java
     public static org_event newInstance(int param1) {
         org_event fragment = new org_event();
+========
+    public static OrgEvent newInstance(String param1, String param2) {
+        OrgEvent fragment = new OrgEvent();
+>>>>>>>> b1309b163bf605a73bffbd34b7d5480af71a99b8:code/app/src/main/java/com/example/myapplication/organization/OrgEvent.java
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, param1);
         fragment.setArguments(args);
