@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.entrant;
 
 import android.os.Bundle;
 
@@ -19,6 +19,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.

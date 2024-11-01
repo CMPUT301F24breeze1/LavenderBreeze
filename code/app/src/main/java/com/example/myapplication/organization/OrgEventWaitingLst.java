@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.organization;
 
 import android.os.Bundle;
 
@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.myapplication.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EntrantNotification#newInstance} factory method to
+ * Use the {@link OrgEventWaitingLst#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EntrantNotification extends Fragment {
+public class OrgEventWaitingLst extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +28,7 @@ public class EntrantNotification extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EntrantNotification() {
+    public OrgEventWaitingLst() {
         // Required empty public constructor
     }
 
@@ -36,11 +38,11 @@ public class EntrantNotification extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment EntrantNotification.
+     * @return A new instance of fragment org_event_waiting_lst.
      */
     // TODO: Rename and change types and number of parameters
-    public static EntrantNotification newInstance(String param1, String param2) {
-        EntrantNotification fragment = new EntrantNotification();
+    public static OrgEventWaitingLst newInstance(String param1, String param2) {
+        OrgEventWaitingLst fragment = new OrgEventWaitingLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,14 +62,26 @@ public class EntrantNotification extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_entrant_notification, container, false);
+        View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
 
-        // Find the button and set an onClickListener to navigate to org_event_lst.xml
-        Button profile = view.findViewById(R.id.button_go_to_entrant_profile);
-        profile.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantNotification_to_entrantProfile3)
+        // Button to navigate to the Selected List
+        Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+        buttonGoToSelectedList.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst)
         );
+
+        // Button to navigate to Notifications
+        Button buttonGoToNotif = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
+        buttonGoToNotif.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_notif_waiting_lst)
+        );
+
+        // Button to navigate to Map
+        Button buttonGoToMap = view.findViewById(R.id.button_go_to_map_from_org_event_waiting_lst);
+        buttonGoToMap.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_map)
+        );
+
         return view;
     }
 }
