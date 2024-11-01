@@ -159,7 +159,11 @@
         android:id="@+id/org_add_event"
         android:name="com.example.myapplication.organization.OrgAddEvent"
         android:label="fragment_org_add_event"
-        tools:layout="@layout/fragment_org_add_event" />
+        tools:layout="@layout/fragment_org_add_event" >
+        <action
+            android:id="@+id/action_org_add_event_to_org_event"
+            app:destination="@id/org_event" />
+    </fragment>
     <fragment
         android:id="@+id/org_notif_waiting_lst"
         android:name="com.example.myapplication.organization.OrgNotifWaitingLst"

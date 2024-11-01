@@ -14,7 +14,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
     }
 
     buildTypes {
@@ -40,7 +39,11 @@ android {
 }
 
 dependencies {
-    implementation(libs.qr.generator)
+    debugImplementation("androidx.fragment:fragment-testing:1.3.6")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.test.ext:junit:1.1.3")
+    testImplementation("org.mockito:mockito-core:3.9.0")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.appcompat)
