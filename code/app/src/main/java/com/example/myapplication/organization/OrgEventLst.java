@@ -16,7 +16,7 @@ import android.widget.ListView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.entrant.Event;
-import com.example.myapplication.entrant.EventsListAdapter;
+import com.example.myapplication.model.EventsListAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,9 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
-
-import com.example.myapplication.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,9 +33,12 @@ import com.example.myapplication.R;
  */
 public class OrgEventLst extends Fragment {
 
-    ListView eventList;
-    ArrayList<Event> eventDataList;
-    EventsListAdapter eventArrayAdapter;
+    private ListView eventList;
+    private ArrayList<Event> eventDataList;
+    private EventsListAdapter eventArrayAdapter;
+
+    private FirebaseFirestore db;
+    private CollectionReference eventsRef;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,13 +88,15 @@ public class OrgEventLst extends Fragment {
         View view = inflater.inflate(R.layout.fragment_org_events_lst, container, false);
 
         //initialize database instance
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference eventsRef = db.collection("events");
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
 
+        ArrayList<String> eventIds = new ArrayList<>();
         //initialize event data list and array adapter
-        eventDataList = new ArrayList<>();
-        eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList);
         eventList = view.findViewById(R.id.event_list_view);
+        eventDataList = new ArrayList<>();
+
+        eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList);
         eventList.setAdapter(eventArrayAdapter);
 
         //When anything regarding the database happens, this code will run, updating the list
@@ -107,13 +109,13 @@ public class OrgEventLst extends Fragment {
                 if(value != null){
                     eventDataList.clear();
                     for(QueryDocumentSnapshot doc:value){
+                        String eventId = doc.getId();
                         String eventName = doc.getString("eventName");
-                        String qrHash = doc.getString("qrCodeHash");
                         Log.d("Firestore", String.format("Event %s added",eventName));
+                        Log.d("Firestore", eventsRef.getId());
                         // I set the event description as the doc ID to make it easier to pass when clicked
-                        eventDataList.add(new Event(eventName, doc.getId(), new Date(), new Date(),
-                                new Date(), new Date(), "String location", 50, 0,
-                                "String posterUrl", qrHash, "String organizerId"));
+                        eventDataList.add(new Event(eventId));
+                        eventIds.add(eventId);
                     }
                 }
                 eventArrayAdapter.notifyDataSetChanged();
@@ -124,7 +126,8 @@ public class OrgEventLst extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("eventId",Integer.parseInt(eventDataList.get(i).getEventDescription()));
+                Log.d("Kenny", eventIds.get(i));
+                bundle.putString("eventId",eventIds.get(i));
                 Navigation.findNavController(view).navigate(R.id.action_org_events_lst_to_org_event,bundle);
             }
         });

@@ -1,4 +1,4 @@
-package com.example.myapplication.entrant;
+package com.example.myapplication.model;
 
 import android.util.Log;
 

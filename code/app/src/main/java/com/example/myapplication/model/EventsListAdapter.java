@@ -1,4 +1,4 @@
-package com.example.myapplication.entrant;
+package com.example.myapplication.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,14 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
+import com.example.myapplication.entrant.Event;
 
 import java.util.ArrayList;
 
-public class EventsListAdapter extends ArrayAdapter<Event> {
-    private ArrayList<Event> events;
+public class EventsListAdapter extends ArrayAdapter<com.example.myapplication.entrant.Event> {
+    private ArrayList<com.example.myapplication.entrant.Event> events;
     private Context context;
 
-    public EventsListAdapter(Context context, ArrayList<Event> events){
+    public EventsListAdapter(Context context, ArrayList<com.example.myapplication.entrant.Event> events){
         super(context, 0, events);
         this.events = events;
         this.context=context;
@@ -38,6 +39,7 @@ public class EventsListAdapter extends ArrayAdapter<Event> {
         TextView eventName = view.findViewById(R.id.event_name);
 
         eventName.setText(event.getEventName());
+        //Log.d("Kenny", event.getEventName());
 
         return view;
     }

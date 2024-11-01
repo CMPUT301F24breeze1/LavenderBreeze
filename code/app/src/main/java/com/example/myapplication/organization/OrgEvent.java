@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,10 @@ public class OrgEvent extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "EventId";
+    private static final String ARG_PARAM1 = "eventId";
 
     // TODO: Rename and change types of parameters
-    private int EventId;
+    private String eventId;
 
     public OrgEvent() {
         // Required empty public constructor
@@ -38,15 +39,10 @@ public class OrgEvent extends Fragment {
      * @return A new instance of fragment org_event.
      */
     // TODO: Rename and change types and number of parameters
-<<<<<<<< HEAD:code/app/src/main/java/com/example/myapplication/organization/org_event.java
-    public static org_event newInstance(int param1) {
-        org_event fragment = new org_event();
-========
-    public static OrgEvent newInstance(String param1, String param2) {
+    public static OrgEvent newInstance(String param1) {
         OrgEvent fragment = new OrgEvent();
->>>>>>>> b1309b163bf605a73bffbd34b7d5480af71a99b8:code/app/src/main/java/com/example/myapplication/organization/OrgEvent.java
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +51,7 @@ public class OrgEvent extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            EventId = getArguments().getInt(ARG_PARAM1);
+            eventId = getArguments().getString(ARG_PARAM1);
 
         }
     }
@@ -65,8 +61,9 @@ public class OrgEvent extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_event, container, false);
         //Create bundle containing EventId to be passed to next fragment if necessary
+        Log.d("Kenny", eventId);
         Bundle bundle = new Bundle();
-        bundle.putInt("EventId",EventId);
+        bundle.putString("eventId",eventId);
         // Button to navigate to the QR code fragment
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
         buttonGoToQRCode.setOnClickListener(v ->
