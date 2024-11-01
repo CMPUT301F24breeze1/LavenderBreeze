@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.organization;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,15 +20,20 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import com.example.myapplication.QRCodeGenerator;
+import com.example.myapplication.model.Event;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.qrcode.encoder.QRCode;
 
+import com.example.myapplication.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_add_event#newInstance} factory method to
+ * Use the {@link OrgAddEvent#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_add_event extends Fragment {
+public class OrgAddEvent extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,7 +51,7 @@ public class org_add_event extends Fragment {
     private String eventQRCode;
     private FirebaseFirestore database;
 
-    public org_add_event() {
+    public OrgAddEvent() {
         // Required empty public constructor
     }
 
@@ -59,15 +64,14 @@ public class org_add_event extends Fragment {
      * @return A new instance of fragment org_add_event.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_add_event newInstance(String param1, String param2) {
-        org_add_event fragment = new org_add_event();
+    public static OrgAddEvent newInstance(String param1, String param2) {
+        OrgAddEvent fragment = new OrgAddEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

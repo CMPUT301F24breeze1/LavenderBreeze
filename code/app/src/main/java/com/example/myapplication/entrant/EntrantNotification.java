@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.entrant;
 
 import android.os.Bundle;
 
@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.myapplication.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EntrantQrScan#newInstance} factory method to
+ * Use the {@link EntrantNotification#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EntrantQrScan extends Fragment {
+public class EntrantNotification extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +28,7 @@ public class EntrantQrScan extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EntrantQrScan() {
+    public EntrantNotification() {
         // Required empty public constructor
     }
 
@@ -36,11 +38,11 @@ public class EntrantQrScan extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment EntrantQrScan.
+     * @return A new instance of fragment EntrantNotification.
      */
     // TODO: Rename and change types and number of parameters
-    public static EntrantQrScan newInstance(String param1, String param2) {
-        EntrantQrScan fragment = new EntrantQrScan();
+    public static EntrantNotification newInstance(String param1, String param2) {
+        EntrantNotification fragment = new EntrantNotification();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,16 +63,12 @@ public class EntrantQrScan extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_entrant_qr_scan, container, false);
+        View view = inflater.inflate(R.layout.fragment_entrant_notification, container, false);
 
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
-        Button eventPage = view.findViewById(R.id.button_go_to_entrant_event_page);
-        eventPage.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantQrScan_to_entrantEventPage)
-        );
-        Button eventList = view.findViewById(R.id.button_go_to_entrant_event_list);
-        eventList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantQrScan_to_entrantEventsList)
+        Button profile = view.findViewById(R.id.button_go_to_entrant_profile);
+        profile.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_entrantNotification_to_entrantProfile3)
         );
         return view;
     }

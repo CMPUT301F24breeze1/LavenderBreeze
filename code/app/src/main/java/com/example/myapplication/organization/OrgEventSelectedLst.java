@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.organization;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link org_event_selected_lst#newInstance} factory method to
+ * Use the {@link OrgEventSelectedLst#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class org_event_selected_lst extends Fragment {
+public class OrgEventSelectedLst extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class org_event_selected_lst extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public org_event_selected_lst() {
+    public OrgEventSelectedLst() {
         // Required empty public constructor
     }
 
@@ -37,8 +39,8 @@ public class org_event_selected_lst extends Fragment {
      * @return A new instance of fragment org_event_selected_lst.
      */
     // TODO: Rename and change types and number of parameters
-    public static org_event_selected_lst newInstance(String param1, String param2) {
-        org_event_selected_lst fragment = new org_event_selected_lst();
+    public static OrgEventSelectedLst newInstance(String param1, String param2) {
+        OrgEventSelectedLst fragment = new OrgEventSelectedLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

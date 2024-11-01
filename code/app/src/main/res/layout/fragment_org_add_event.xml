@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".org_add_event">
+    tools:context=".organization.OrgAddEvent"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/editTextEventName"
