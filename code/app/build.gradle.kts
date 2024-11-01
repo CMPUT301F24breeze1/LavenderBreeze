@@ -40,7 +40,6 @@ android {
 
 dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation(libs.qr.generator)
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.appcompat)
