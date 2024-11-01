@@ -41,7 +41,7 @@ android {
 
 dependencies {
     implementation(libs.qr.generator)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.appcompat)
     implementation(libs.material)

@@ -1,7 +1,7 @@
 package com.example.myapplication.entrant;
 
 import android.os.Bundle;
-
+import com.example.myapplication.model.User;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -10,6 +10,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,7 @@ public class EntrantProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
-        user = new User(requireContext());
+         user = User.getInstance(requireContext());
 
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
         ImageButton edit = view.findViewById(R.id.editButton);
@@ -93,9 +94,11 @@ public class EntrantProfile extends Fragment {
         );
         // Reference the views
         personName = view.findViewById(R.id.personName);
+
         emailAddress = view.findViewById(R.id.emailAddress);
         contactPhoneNumber = view.findViewById(R.id.contactPhoneNumber);
         emailNotificationSwitch = view.findViewById(R.id.emailNotificationSwitch);
+//        Log.d("User", "Entrant profile: " + user.getName());
         // Set user data in the UI
         updateUserData();
 
