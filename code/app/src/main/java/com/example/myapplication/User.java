@@ -52,6 +52,13 @@ public class User {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         // Document exists, pull data
+
+
+//                        log username'
+                        Log.d("User_exists", "Document exists");
+                        Log.d("User", "Username: " + document.getString("name"));
+
+
                         loadUserData(document);
                     } else {
                         // Document doesn't exist, create new user
@@ -112,7 +119,7 @@ public class User {
      * @return the device ID
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
