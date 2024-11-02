@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User {
+public class User implements java.io.Serializable {
     private static User instance;
     private String name;
     private String email;
@@ -27,6 +27,7 @@ public class User {
     private Boolean isFacility;
     private String deviceID;
     private String profilePicture;
+    private static final long serialVersionUID = 1L;
 
     private FirebaseFirestore database;
     private CollectionReference users ;
@@ -35,7 +36,7 @@ public class User {
      * @param context
      */
     // Constructor
-    public User(Context context) {
+    public User(Context context, OnUserDataLoadedListener listener) {
         // Extract the device ID
         this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.d("Device ID", "Android ID: " + deviceID);
@@ -51,17 +52,13 @@ public class User {
 
                     if (document.exists()) {
                         // Document exists, pull data
-
-//                        log username'
-//                        Log.d("User_exists", "Document exists");
-//                        Log.d("User", "Username: " + document.getString("name"));
-//                        Log.d("User", "email: " + document.getString("email"));
                         loadUserData(document);
 
                     } else {
                         // Document doesn't exist, create new user
                         createNewUser();
                     }
+                    if (listener != null) listener.onUserDataLoaded();
                 }
             }
         });
@@ -114,9 +111,12 @@ public class User {
         this.profilePicture = "";
     }
 
-    public static synchronized User getInstance(Context context) {
+    public static synchronized User getInstance(Context context,OnUserDataLoadedListener listener) {
         if (instance == null) {
-            instance = new User(context);
+            instance = new User(context,listener);
+        }
+        else if (listener != null) {
+            listener.onUserDataLoaded();
         }
         return instance;
     }
@@ -276,5 +276,8 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+    public interface OnUserDataLoadedListener {
+        void onUserDataLoaded();
     }
 }
