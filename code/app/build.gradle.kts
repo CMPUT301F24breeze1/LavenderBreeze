@@ -16,7 +16,9 @@ android {
         versionName = "1.0"
 
     }
-
+    defaultConfig {
+        testInstrumentationRunner= "androidx.test.runner.AndroidJUnitRunner"
+    }
     buildTypes {
         release {
             isMinifyEnabled = false

@@ -17,7 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User implements java.io.Serializable {
-    private static User instance;
+    public interface OnUserDataLoadedListener {
+        void onUserDataLoaded();
+    }
     private String name;
     private String email;
     private String phoneNumber;
@@ -52,13 +54,12 @@ public class User implements java.io.Serializable {
 
                     if (document.exists()) {
                         // Document exists, pull data
-                        loadUserData(document);
+                        loadUserData(document,listener);
 
                     } else {
                         // Document doesn't exist, create new user
                         createNewUser();
                     }
-                    if (listener != null) listener.onUserDataLoaded();
                 }
             }
         });
@@ -69,7 +70,7 @@ public class User implements java.io.Serializable {
      * @param document
      */
     // Load user data from Firestore
-    private void loadUserData(DocumentSnapshot document) {
+    private void loadUserData(DocumentSnapshot document,OnUserDataLoadedListener listener) {
         name = document.getString("name");
         email = document.getString("email");
         phoneNumber = document.getString("phoneNumber");
@@ -77,6 +78,9 @@ public class User implements java.io.Serializable {
         isOrganizer = document.getBoolean("isOrganizer");
         isAdmin = document.getBoolean("isAdmin");
         isFacility = document.getBoolean("isFacility");
+        //profilePicture = document.getString("profilePicture");
+        if (listener != null) listener.onUserDataLoaded();
+
 //                        profilePicture = document.getString("profilePicture");
     }
 
@@ -109,16 +113,6 @@ public class User implements java.io.Serializable {
         this.isAdmin = false;
         this.isFacility = false;
         this.profilePicture = "";
-    }
-
-    public static synchronized User getInstance(Context context,OnUserDataLoadedListener listener) {
-        if (instance == null) {
-            instance = new User(context,listener);
-        }
-        else if (listener != null) {
-            listener.onUserDataLoaded();
-        }
-        return instance;
     }
 
     // Getters that return local values
@@ -277,7 +271,5 @@ public class User implements java.io.Serializable {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
-    public interface OnUserDataLoadedListener {
-        void onUserDataLoaded();
-    }
+
 }

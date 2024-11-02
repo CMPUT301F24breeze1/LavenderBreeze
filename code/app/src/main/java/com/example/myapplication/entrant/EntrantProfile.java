@@ -79,13 +79,10 @@ public class EntrantProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
-        user = User.getInstance(requireContext(), new User.OnUserDataLoadedListener() {
-            @Override
-            public void onUserDataLoaded() {
-                // This is called once data is fully loaded
-                updateUserData();
-            }
-        });
+
+        // Initialize User with a lambda as the listener
+        user = new User(requireContext(), () -> updateUserData());
+
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
         ImageButton edit = view.findViewById(R.id.editButton);
 
