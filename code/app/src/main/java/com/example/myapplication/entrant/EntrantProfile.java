@@ -10,6 +10,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,24 +56,19 @@ public class EntrantProfile extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static EntrantProfile newInstance(String param1, String param2) {
         EntrantProfile fragment = new EntrantProfile();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-        //userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
-            getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
-                user = (User) bundle.getSerializable("updated_user");
-                updateUserData(); // Refresh UI with updated User data
-            });
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+            Log.d("EntrantProfile", "Received updated user: " + bundle.getSerializable("updated_user"));
+            user = (User) bundle.getSerializable("updated_user");
+            updateUserData(); // Refresh UI with updated User data
+        });
             // Update UI with new user data
-
          BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
          NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
          NavigationUI.setupWithNavController(bottomNavigationView, navController);

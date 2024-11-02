@@ -25,7 +25,12 @@ public class UserTest {
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
-        user = new User(context, null);
+        user = new User(context, new User.OnUserDataLoadedListener() {
+            @Override
+            public void onUserDataLoaded() {
+                // Notify completion of async operation if needed
+            }
+        });
     }
 
     /**
@@ -77,8 +82,8 @@ public class UserTest {
      */
     @Test
     public void testSetPhoneNumberValidInput() {
-        user.setPhoneNumber(1234567890);
-        assertEquals(Integer.valueOf(1234567890), user.getPhoneNumber());
+        user.setPhoneNumber("1234567890");
+        assertEquals("1234567890", user.getPhoneNumber());
     }
 
     /**
@@ -87,7 +92,7 @@ public class UserTest {
     @Test
     public void testSetPhoneNumberInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setPhoneNumber(12345); // Too short
+            user.setPhoneNumber("12345"); // Too short
         });
         assertThrows(IllegalArgumentException.class, () -> {
             user.setPhoneNumber(null);
