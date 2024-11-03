@@ -32,6 +32,8 @@ public class Event {
     private String qrCodeHash;
     private List<String> waitlist;
     private List<String> selectedEntrants;
+    private List<String> acceptedEntrants;
+    private List<String> declinedEntrants;
     private String organizerId;
 
     private FirebaseFirestore database;
@@ -63,6 +65,8 @@ public class Event {
         this.qrCodeHash = qrCodeHash;
         this.waitlist = new ArrayList<>();
         this.selectedEntrants = new ArrayList<>();
+        this.acceptedEntrants = new ArrayList<>();
+        this.declinedEntrants = new ArrayList<>();
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
@@ -103,6 +107,8 @@ public class Event {
         this.organizerId = document.getString("organizerId");
         this.waitlist = (List<String>) document.get("waitlist");
         this.selectedEntrants = (List<String>) document.get("selectedEntrants");
+        this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
+        this.declinedEntrants = (List<String>) document.get("declinedEntrants");
     }
 
     // Save or update the current state of an Event object to Firestore
@@ -122,6 +128,8 @@ public class Event {
         eventData.put("organizerId", organizerId);
         eventData.put("waitlist", waitlist);
         eventData.put("selectedEntrants", selectedEntrants);
+        eventData.put("acceptedEntrants", acceptedEntrants);
+        eventData.put("declinedEntrants", declinedEntrants);
 
         if (eventId == null || eventId.isEmpty()) {
             // Create a new event
@@ -199,6 +207,10 @@ public class Event {
         return selectedEntrants;
     }
 
+    public List<String> getAcceptedEntrants() { return acceptedEntrants; }
+
+    public List<String> getDeclinedEntrants() { return declinedEntrants; }
+
     // Setters (updates corresponding field in Firestore)
     public void setEventName(String eventName) {
         this.eventName = eventName;
@@ -270,9 +282,19 @@ public class Event {
         events.document(eventId).update("selectedEntrants", selectedEntrants);
     }
 
+    public void setAcceptedEntrants(List<String> acceptedEntrants) {
+        this.acceptedEntrants = acceptedEntrants;
+        events.document(eventId).update("acceptedEntrants", acceptedEntrants);
+    }
+
+    public void setDeclinedEntrants(List<String> declinedEntrants) {
+        this.declinedEntrants = declinedEntrants;
+        events.document(eventId).update("selectedEntrants", declinedEntrants);
+    }
+
 
     /**
-     * Add/remove methods for waitlist/selected entrants
+     * Add/remove methods for waitlist/selected/accepted/declined entrants
      */
 
     public void addToWaitlist(String userId) {
@@ -300,6 +322,34 @@ public class Event {
         if (selectedEntrants.contains(userId)) {
             selectedEntrants.remove(userId);
             events.document(eventId).update("selectedEntrants", selectedEntrants);
+        }
+    }
+
+    public void addToAcceptedlist(String userId) {
+        if (!acceptedEntrants.contains(userId)) {
+            acceptedEntrants.add(userId);
+            events.document(eventId).update("acceptedEntrants", acceptedEntrants);
+        }
+    }
+
+    public void removeFromAcceptedlist(String userId) {
+        if (acceptedEntrants.contains(userId)) {
+            acceptedEntrants.remove(userId);
+            events.document(eventId).update("acceptedEntrants", acceptedEntrants);
+        }
+    }
+
+    public void addToDeclinedlist(String userId) {
+        if (!declinedEntrants.contains(userId)) {
+            declinedEntrants.add(userId);
+            events.document(eventId).update("declinedEntrants", declinedEntrants);
+        }
+    }
+
+    public void removeFromDeclinedlist(String userId) {
+        if (declinedEntrants.contains(userId)) {
+            declinedEntrants.remove(userId);
+            events.document(eventId).update("declinedEntrants", declinedEntrants);
         }
     }
 

@@ -1,85 +1,146 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link org_event_waiting_lst#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class org_event_waiting_lst extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ListView listView;
+    private EntrantAdapter entrantAdapter;
+    private List<User> entrantList; // List of entrants
+    private FirebaseFirestore db; // Firestore instance
+    private String eventId; // Event ID to fetch the correct entrants
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public org_event_waiting_lst() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment org_event_waiting_lst.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static org_event_waiting_lst newInstance(String param1, String param2) {
-        org_event_waiting_lst fragment = new org_event_waiting_lst();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
+
+        // Initialize Firestore and views
+        db = FirebaseFirestore.getInstance();
+        listView = view.findViewById(R.id.waitlistListView);
+        entrantList = new ArrayList<>();
+
+        // Assume eventId is passed as an argument to this fragment
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            eventId = getArguments().getString("eventId");
+        }
+
+        // Fetch and display entrants
+        fetchEntrants();
+
+        // Set item click listener for list items
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User selectedEntrant = entrantList.get(position);
+                // Show entrant's map
+                showEntrantMap(selectedEntrant);
+            }
+        });
+
+        Button backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        Button sendNotificationButton = view.findViewById(R.id.notifyButton);
+        sendNotificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotificationToEntrants();
+            }
+        });
+
+        return view;
+    }
+
+    private void fetchEntrants() {
+        // Fetch the waitlist from Firestore based on the event ID
+        CollectionReference eventsRef = db.collection("events");
+        eventsRef.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Event event = document.toObject(Event.class);
+                        if (event != null) {
+                            List<String> waitlist = event.getWaitlist();
+                            if (waitlist != null) {
+                                // Fetch each entrant's data by their ID
+                                for (String entrantId : waitlist) {
+                                    fetchEntrantData(entrantId);
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Error fetching entrants", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void fetchEntrantData(String entrantId) {
+        // Fetch user data for each entrant from Firestore
+        CollectionReference usersRef = db.collection("users");
+        usersRef.document(entrantId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        User entrant = document.toObject(User.class);
+                        entrantList.add(entrant);
+                        updateListView(); // Update the list view when a new entrant is fetched
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateListView() {
+        // Create and set the adapter for the ListView
+        if (entrantAdapter == null) {
+            entrantAdapter = new EntrantAdapter(getContext(), entrantList);
+            listView.setAdapter(entrantAdapter);
+        } else {
+            entrantAdapter.notifyDataSetChanged(); // Notify adapter of data change
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
+    private void sendNotificationToEntrants() {
+        Toast.makeText(getContext(), "Notification sent to entrants in the waiting list", Toast.LENGTH_SHORT).show();
+    }
 
-        // Button to navigate to the Selected List
-        Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
-        buttonGoToSelectedList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst)
-        );
+    private void showEntrantMap(User selectedEntrant) {
+        // Implement the logic to show the map for the selected entrant
 
-        // Button to navigate to Notifications
-        Button buttonGoToNotif = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
-        buttonGoToNotif.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_notif_waiting_lst)
-        );
-
-        // Button to navigate to Map
-        Button buttonGoToMap = view.findViewById(R.id.button_go_to_map_from_org_event_waiting_lst);
-        buttonGoToMap.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_map)
-        );
-
-        return view;
     }
 }

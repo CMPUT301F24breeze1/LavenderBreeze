@@ -1,29 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <!-- Button to go to the Selected List -->
-    <Button
-        android:id="@+id/button_go_to_selected_list_from_org_event_waiting_lst"
-        android:layout_width="wrap_content"
+    <!-- Header with Back Button, Title, and Notification Button -->
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to Selected List" />
+        android:padding="16dp">
 
-    <!-- Button to go to Notifications -->
-    <Button
-        android:id="@+id/button_go_to_notif_from_org_event_waiting_lst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Notifications" />
 
-    <!-- Button to go to Map -->
-    <Button
-        android:id="@+id/button_go_to_map_from_org_event_waiting_lst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Map" />
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp" />
 
+        <!-- Title: Waiting List -->
+        <TextView
+            android:id="@+id/waitlistTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waiting List"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true" />
+
+        <!-- Notification Button -->
+        <Button
+            android:id="@+id/notifyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notify"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp" />
+    </RelativeLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#BDBDBD" />
+
+    <!-- ListView to show entrants in the waitlist -->
+    <ListView
+        android:id="@+id/waitlistListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
 </LinearLayout>
