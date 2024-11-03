@@ -26,6 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go to Home" />
+    <Button
+        android:id="@+id/button_go_to_Leave_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Leave_page" />
 
 
 </LinearLayout>
