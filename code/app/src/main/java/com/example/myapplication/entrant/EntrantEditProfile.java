@@ -1,27 +1,22 @@
 package com.example.myapplication.entrant;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
-import com.example.myapplication.model.UserViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +30,6 @@ public class EntrantEditProfile extends Fragment {
     private TextView personName, emailAddress, contactPhoneNumber;
     private SwitchCompat emailNotificationSwitch;
     private User user;
-    private UserViewModel userViewModel;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

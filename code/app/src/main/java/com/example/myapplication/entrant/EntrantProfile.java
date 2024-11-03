@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.myapplication.model.UserViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.myapplication.R;
@@ -31,7 +30,6 @@ public class EntrantProfile extends Fragment {
     private User user;
     private TextView personName, emailAddress, contactPhoneNumber;
     private SwitchCompat emailNotificationSwitch;
-    private UserViewModel userViewModel;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
