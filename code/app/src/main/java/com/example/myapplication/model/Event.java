@@ -1,5 +1,8 @@
 package com.example.myapplication.model;
 
+import static org.junit.jupiter.params.shadow.com.univocity.parsers.common.NoopProcessorErrorHandler.instance;
+
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,7 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Event {
+public class Event{
+    //private static Event instance;
     private String eventId;
     private String eventName;
     private String eventDescription;
@@ -33,10 +37,34 @@ public class Event {
     private List<String> waitlist;
     private List<String> selectedEntrants;
     private String organizerId;
+    //private static final long serialVersionUID = 1L;
 
     private FirebaseFirestore database;
     private CollectionReference events;
 
+    public Event(){}
+/**
+    public Event(Context context, OnEventDataLoadedListener listener, String eventId){
+        database = FirebaseFirestore.getInstance();
+        events = database.collection("events");
+
+        events.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        loadEventData();
+                    } else {
+                        saveEvent();
+                    }
+                    if (listener != null) listener.onEventDataLoaded();
+                }
+            }
+        });
+    };
+ **/
     // Constructor retrieves data for an existing event using eventId
     public Event(String eventId) {
         this.eventId = eventId;
@@ -141,7 +169,16 @@ public class Event {
                     });
         }
     }
-
+/**
+    public static synchronized Event getInstance(Context context, OnEventDataLoadedListener listener,String eventId) {
+        if (instance == null) {
+            instance = new Event(context,listener,eventId);
+        } else if (listener != null) {
+            listener.onEventDataLoaded();
+        }
+        return instance;
+    }
+ **/
     // Getters
     public String getEventName() {
         return eventName;
@@ -303,9 +340,9 @@ public class Event {
         }
     }
 
-
-
-
+    public interface OnEventDataLoadedListener {
+        void onEventDataLoaded();
+    }
 
 
 }

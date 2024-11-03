@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
-import com.example.myapplication.entrant.Event;
+import com.example.myapplication.model.Event;
 
 import java.util.ArrayList;
 
-public class EventsListAdapter extends ArrayAdapter<com.example.myapplication.entrant.Event> {
-    private ArrayList<com.example.myapplication.entrant.Event> events;
+public class EventsListAdapter extends ArrayAdapter<com.example.myapplication.model.Event> {
+    private ArrayList<com.example.myapplication.model.Event> events;
     private Context context;
 
-    public EventsListAdapter(Context context, ArrayList<com.example.myapplication.entrant.Event> events){
+    public EventsListAdapter(Context context, ArrayList<com.example.myapplication.model.Event> events){
         super(context, 0, events);
         this.events = events;
         this.context=context;

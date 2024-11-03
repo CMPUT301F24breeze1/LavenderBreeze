@@ -14,10 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.myapplication.R;
-import com.example.myapplication.entrant.Event;
+import com.example.myapplication.model.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.lang.reflect.Array;
+import java.text.CollationElementIterator;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +48,9 @@ public class OrgEventWaitingLst extends Fragment {
     private List<String> entrants;
     private List<String> chosen;
     private int capacity = 3;
+
+    private FirebaseFirestore db;
+    private CollectionReference eventsRef;
 
 
 
@@ -93,9 +98,35 @@ public class OrgEventWaitingLst extends Fragment {
         Event event = new Event(eventId);
 
         entrants = event.getWaitlist();
-        chosen = event.getSelectedEntrants();
+        chosen = Collections.emptyList();
+        /**
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
+        eventsRef.document(eventId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    Event event = documentSnapshot.toObject(Event.class);
+                    if(event != null) {
+                        if (event.getWaitlist() != null) {
+                            entrants = event.getWaitlist();
+                        } else {
+                            Log.d("Kenny", "waitlist is null");
+                        }
+                        if(event.getSelectedEntrants() != null){
+                            chosen = event.getSelectedEntrants();
+                        }
+                        chosen = event.getSelectedEntrants();
+                    } else {
+                        Log.d("Kenny", "EVENT IS NULL");
+                    }
 
-        Button select_entrants = view.findViewById(R.id.button_select_entrants);
+                }
+            }
+        } );
+        **/
+
+        FloatingActionButton select_entrants = view.findViewById(R.id.button_select_entrants);
         select_entrants.setOnClickListener(view1 -> {
             Log.d("Kenny", "Entrants being Selected...");
             if(capacity >= entrants.size()){
@@ -106,14 +137,29 @@ public class OrgEventWaitingLst extends Fragment {
                 Collections.shuffle(entrants);
                 for(int i = 0; i < capacity; i++){
                     chosen.add(entrants.get(0));
+
                     Log.d("Kenny", "added: " + entrants.get(0) + " to chosen");
                     entrants.remove(0);
                 }
             }
 
-            event.setSelectedEntrants(chosen);
+            /**
+            eventsRef.document("eventId").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        Event event = documentSnapshot.toObject(Event.class);
+                        if(event != null) {
+                            event.setWaitlist(entrants);
+                            event.setSelectedEntrants(chosen);
+                        }
+                    }
+                }
+            } );
+             **/
+
             event.setWaitlist(entrants);
-            event.saveEvent();
+            event.setSelectedEntrants(chosen);
         });
 
 

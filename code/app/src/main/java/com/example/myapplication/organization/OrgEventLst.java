@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.entrant.Event;
+import com.example.myapplication.model.Event;
 import com.example.myapplication.model.EventsListAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,7 +95,7 @@ public class OrgEventLst extends Fragment {
         ArrayList<String> eventIds = new ArrayList<>();
         //initialize event data list and array adapter
         eventList = view.findViewById(R.id.event_list_view);
-        eventDataList = new ArrayList<>();
+        eventDataList = new ArrayList<Event>();
 
         eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList);
         eventList.setAdapter(eventArrayAdapter);
@@ -114,8 +115,9 @@ public class OrgEventLst extends Fragment {
                         Log.d("Firestore", String.format("Event %s added",eventName));
                         Log.d("Firestore", eventsRef.getId());
                         // I set the event description as the doc ID to make it easier to pass when clicked
-                        eventDataList.add(new Event(eventId));
-                        eventIds.add(eventId);
+                        eventDataList.add(new Event(eventName, doc.getId(), new Date(), new Date(),
+                                new Date(), new Date(), "String location", 50, 0,
+                                "String posterUrl", "qrHash", "String organizerId"));
                     }
                 }
                 eventArrayAdapter.notifyDataSetChanged();
@@ -126,8 +128,7 @@ public class OrgEventLst extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Bundle bundle = new Bundle();
-                Log.d("Kenny", eventIds.get(i));
-                bundle.putString("eventId",eventIds.get(i));
+                bundle.putString("eventId",eventDataList.get(i).getEventDescription());
                 Navigation.findNavController(view).navigate(R.id.action_org_events_lst_to_org_event,bundle);
             }
         });
