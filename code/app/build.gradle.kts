@@ -14,8 +14,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-    }
 
+    }
+    defaultConfig {
+        testInstrumentationRunner= "androidx.test.runner.AndroidJUnitRunner"
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -45,6 +48,9 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.9.0")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation(libs.qr.generator)
+    androidTestImplementation ("androidx.test:runner:1.4.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.appcompat)
     implementation(libs.material)

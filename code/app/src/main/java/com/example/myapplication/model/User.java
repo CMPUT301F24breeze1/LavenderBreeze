@@ -16,7 +16,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User {
+public class User implements java.io.Serializable {
+    public interface OnUserDataLoadedListener {
+        void onUserDataLoaded();
+    }
     private String name;
     private String email;
     private String phoneNumber;
@@ -25,6 +28,8 @@ public class User {
     private Boolean isAdmin;
     private Boolean isFacility;
     private String deviceID;
+    private String profilePicture;
+    private static final long serialVersionUID = 1L;
     private String userID;
 
     private FirebaseFirestore database;
@@ -35,12 +40,12 @@ public class User {
      * @param context
      */
     // Constructor
-    public User(Context context) {
+    public User(Context context, OnUserDataLoadedListener listener) {
         // Extract the device ID
         this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.d("Device ID", "Android ID: " + deviceID);
-        this.database = FirebaseFirestore.getInstance();
-        this.users = database.collection("users");
+        database = FirebaseFirestore.getInstance();
+        users = database.collection("users");
 
         // Check if user exists
         users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -48,10 +53,10 @@ public class User {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+
                     if (document.exists()) {
                         // Document exists, pull data
-                        loadUserData(document);
-                        userID = document.getId();
+                        loadUserData(document,listener);
                     } else {
                         // Document doesn't exist, create new user
                         createNewUser();
@@ -78,7 +83,7 @@ public class User {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
                         // Document exists, pull data
-                        loadUserData(document);
+                        loadUser(document);
                         userID = document.getId(); // Set the user ID from the document
                         Log.d("User ID", "User ID: " + userID);
                         callback.onUserIDLoaded(userID); // Notify that user ID is loaded
@@ -99,14 +104,27 @@ public class User {
      * @param document
      */
     // Load user data from Firestore
-    private void loadUserData(DocumentSnapshot document) {
-        this.name = document.getString("name");
-        this.email = document.getString("email");
-        this.phoneNumber = document.getString("phoneNumber");
-        this.isEntrant = document.getBoolean("isEntrant");
-        this.isOrganizer = document.getBoolean("isOrganizer");
-        this.isAdmin = document.getBoolean("isAdmin");
-        this.isFacility = document.getBoolean("isFacility");
+    private void loadUserData(DocumentSnapshot document,OnUserDataLoadedListener listener) {
+        name = document.getString("name");
+        email = document.getString("email");
+        phoneNumber = document.getString("phoneNumber");
+        isEntrant = document.getBoolean("isEntrant");
+        isOrganizer = document.getBoolean("isOrganizer");
+        isAdmin = document.getBoolean("isAdmin");
+        isFacility = document.getBoolean("isFacility");
+        //profilePicture = document.getString("profilePicture");
+        if (listener != null) listener.onUserDataLoaded();
+
+//                        profilePicture = document.getString("profilePicture");
+    }
+    private void loadUser(DocumentSnapshot document){
+        name = document.getString("name");
+        email = document.getString("email");
+        phoneNumber = document.getString("phoneNumber");
+        isEntrant = document.getBoolean("isEntrant");
+        isOrganizer = document.getBoolean("isOrganizer");
+        isAdmin = document.getBoolean("isAdmin");
+        isFacility = document.getBoolean("isFacility");
     }
 
     /**
@@ -114,7 +132,7 @@ public class User {
      */
     // Create new user with default values
     private void createNewUser() {
-        Map<String, Object> userData = new HashMap<>();
+        HashMap<String, Object> userData = new HashMap<>();
         userData.put("name", "Default Name");
         userData.put("email", "default@example.com");
         userData.put("phoneNumber", "0000000000");
@@ -122,8 +140,13 @@ public class User {
         userData.put("isOrganizer", false);
         userData.put("isAdmin", false);
         userData.put("isFacility", false);
+        userData.put("profilePicture", "");
 
-        users.document(deviceID).set(userData);
+        users.document(deviceID).set(userData).addOnSuccessListener(aVoid -> {
+            Log.d("User", "DocumentSnapshot successfully written!");
+        }).addOnFailureListener(e -> {
+            Log.w("User", "Error writing document", e);
+        });
         // Set local attributes to default values
         this.name = "Default Name";
         this.email = "default@example.com";
@@ -132,19 +155,17 @@ public class User {
         this.isOrganizer = false;
         this.isAdmin = false;
         this.isFacility = false;
+        this.profilePicture = "";
     }
 
     // Getters that return local values
 
-    public String getUserID() {
-        return userID; // Return the stored user ID
-    }
     /**
      * Get the device ID
      * @return the device ID
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -287,4 +308,12 @@ public class User {
         this.isFacility = isFacility;
         users.document(deviceID).update("isFacility", isFacility);
     }
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
 }

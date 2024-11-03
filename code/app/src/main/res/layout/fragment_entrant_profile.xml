@@ -1,25 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#382E2E"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:scrollbars="vertical">
 
+    <ImageButton
+        android:id="@+id/notificationButton"
+        android:layout_width="49dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="4dp"
+        android:background="#382E2E"
+        android:src="@drawable/notification"
+        app:layout_constraintEnd_toStartOf="@+id/editButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_go_to_entrant_edit_profile"
+    <ImageButton
+        android:id="@+id/editButton"
+        android:layout_width="43dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Profile Picture -->
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:contentDescription="Profile Picture"
+        android:paddingTop="10dp"
+        android:src="@drawable/account_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Name and Email under Profile Picture -->
+    <TextView
+        android:id="@+id/personName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Entrant Edit Profile" />
-    <Button
-        android:id="@+id/button_go_to_entrant_notifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Entrant Notifications" />
-    <Button
-        android:id="@+id/button_go_to_entrant_event_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Entrant Event List" />
+        android:layout_marginTop="8dp"
+        android:text="Person Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/profilePicture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contactInfoBox"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/usercontactborder"
+        android:orientation="vertical"
+
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@id/personName"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <!-- Email Address -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:paddingTop="16dp"
+            android:text="Contact Information"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Email: "
+                android:textSize="24sp"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/emailAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="contact@example.com"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Phone Number: "
+            android:textColor="@color/white"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/contactPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(123) 456-7890"
+            android:layout_margin="8dp"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </LinearLayout>
+        <!-- Phone Number -->
+        <!-- Email Notification Slider -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Email Notifications"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/emailNotificationSwitch"
+                android:layout_width="176dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/user_bottom_menu" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
