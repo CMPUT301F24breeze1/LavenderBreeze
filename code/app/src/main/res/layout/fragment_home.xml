@@ -3,18 +3,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
-
+    <!-- Organizer Event List Button on Top -->
     <Button
         android:id="@+id/button_go_to_org_event_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Organizer Event List" />
+        android:text="Organizer Event List"
+        android:textSize="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Entrant Profile Button Below -->
     <Button
         android:id="@+id/button_go_to_entrant_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Entrant Profile" />
+        android:text="Entrant Profile"
+        android:textSize="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"/>
 
 </LinearLayout>

@@ -5,27 +5,54 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Event Name at the Top -->
+    <TextView
+        android:id="@+id/text_event_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event Name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="8dp" />
+
+    <!-- Event Details in the Middle -->
+    <TextView
+        android:id="@+id/text_event_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event details go here. This includes description, location, date, and time."
+        android:textSize="16sp"
+        android:padding="8dp" />
+
+    <!-- Spacer to push buttons to the bottom -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Buttons at the Bottom -->
     <Button
         android:id="@+id/button_go_to_qrcode_from_org_event"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View QR Code" />
 
     <Button
         android:id="@+id/button_go_to_edit_event_from_org_event"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit Event" />
 
     <Button
         android:id="@+id/button_go_to_waiting_list_from_org_event"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Waiting List" />
 
     <Button
         android:id="@+id/button_go_to_selected_list_from_org_event"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Selected List" />
 </LinearLayout>
