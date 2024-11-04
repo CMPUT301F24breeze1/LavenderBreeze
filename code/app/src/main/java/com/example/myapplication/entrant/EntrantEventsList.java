@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,7 @@ public class EntrantEventsList extends Fragment {
     private List<String> selectedlist;
     private List<String> cancelledlist;
     private List<String> acceptedlist;
-    private List<Event> displayedEvents;
+    private List<Event> displayedEvents = new ArrayList<>();
     private ListView eventList;
     private ArrayAdapter<Event> eventAdapter;
     private User user;
@@ -46,9 +48,7 @@ public class EntrantEventsList extends Fragment {
 
         // Initialize the ListView and displayedEvents list
         eventList = view.findViewById(R.id.eventListView);
-        displayedEvents = new ArrayList<>();
-        eventAdapter = new EventAdapter(getContext(), displayedEvents);
-        eventList.setAdapter(eventAdapter);
+
 
         // Initialize navigation buttons
         initializeButtons(view);
@@ -80,23 +80,42 @@ public class EntrantEventsList extends Fragment {
 
     // Method to set up filter buttons for different event lists
     private void setupFilterButtons(View view) {
-        view.findViewById(R.id.button_show_waitlist).setOnClickListener(v -> showEventList(waitlist));
-        view.findViewById(R.id.button_show_selected).setOnClickListener(v -> showEventList(selectedlist));
-        view.findViewById(R.id.button_show_cancelled).setOnClickListener(v -> showEventList(cancelledlist));
-        view.findViewById(R.id.button_show_accepted).setOnClickListener(v -> showEventList(acceptedlist));
+        view.findViewById(R.id.button_show_waitlist).setOnClickListener(v -> showEventList(waitlist,"Waitlist"));
+        view.findViewById(R.id.button_show_selected).setOnClickListener(v -> showEventList(selectedlist,"Selected"));
+        view.findViewById(R.id.button_show_cancelled).setOnClickListener(v -> showEventList(cancelledlist,"Cancelled"));
+        view.findViewById(R.id.button_show_accepted).setOnClickListener(v -> showEventList(acceptedlist,"Accepted"));
     }
 
     // Load the appropriate event list based on the filter
-    private void showEventList(List<String> eventIds) {
+    private void showEventList(List<String> eventIds, String status) {
+        if (eventList == null) {
+            Log.d("EntrantEventsList", "eventList is null");
+            return;
+        }
+        else{
+            Log.d("EntrantEventsList", eventIds.get(0));
+        }
         displayedEvents.clear();
+        eventAdapter = new EventAdapter(requireContext(), displayedEvents, status);
+        eventList.setAdapter(eventAdapter);
+
         if (eventIds != null) {
             for (String eventId : eventIds) {
                 Event event = new Event(eventId);
-                displayedEvents.add(event); // Here, you may need to fetch event details asynchronously
+                event.loadEventDataAsync(new Event.OnEventDataLoadedListener() {
+                    @Override
+                    public void onEventDataLoaded(Event loadedEvent) {
+                        if (loadedEvent != null) {
+                            Log.d("EntrantEventsList", "Loaded event: " + loadedEvent.getEventName());
+                            displayedEvents.add(loadedEvent);
+                            eventAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
             }
         }
-        eventAdapter.notifyDataSetChanged();
     }
+
 
     // Method to extract event lists from the user
     private void extractData() {
@@ -105,7 +124,7 @@ public class EntrantEventsList extends Fragment {
             selectedlist = user.getSelectedEvents();
             cancelledlist = user.getCancelledEvents();
             acceptedlist = user.getAcceptedEvents();
-            showEventList(waitlist); // Show waitlist events by default
+            showEventList(waitlist,"Waitlist"); // Show waitlist events by default
         }
     }
 }
