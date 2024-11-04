@@ -3,6 +3,7 @@ package com.example.myapplication.entrant;
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,14 @@ import com.example.myapplication.model.User;
 public class EntrantLeavePage extends Fragment {
 
     private Event event; // Store the event object
-
+    private User user;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             event = (Event) getArguments().getSerializable("event"); // Retrieve the event
         }
+        user = new User(requireContext(), null); // Initialize user and load data
     }
 
     @Override
@@ -71,7 +73,8 @@ public class EntrantLeavePage extends Fragment {
     private void leaveEvent() {
         if (event != null) {
             // Assuming you have a user instance
-            User user = new User(requireContext(), null); // or retrieve your existing user instance
+            //User user = new User(requireContext(), null); // or retrieve your existing user instance
+            Log.d("EntrantLeavePage", "User: " + user.getRequestedEvents());
             user.removeRequestedEvent(event.getEventId()); // Adjust this method as necessary
 
             // Navigate back to the event list

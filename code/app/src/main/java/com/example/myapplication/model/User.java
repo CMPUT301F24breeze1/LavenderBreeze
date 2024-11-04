@@ -311,6 +311,8 @@ public class User implements java.io.Serializable {
     }
 
     public void removeRequestedEvent(String eventId) {
+        Log.d("User", "Removing event with ID: " + eventId);
+        Log.d("User", "Current requestedEvents: " + requestedEvents);
         removeEventFromFirestoreList(eventId, "requestedEvents", requestedEvents);
     }
 
@@ -357,8 +359,10 @@ public class User implements java.io.Serializable {
 
     // Helper method to remove an event from a list and update Firestore
     private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String> eventList) {
+        Log.d("User", "Event removed from the list 1" + eventList);
         if (eventList != null && eventList.contains(eventId)) {
             eventList.remove(eventId);
+            Log.d("User", "Event removed from the list 2" + eventList);
             database.collection("users").document(deviceID)
                     .update(firestoreField, eventList)
                     .addOnSuccessListener(aVoid -> Log.d("User", "Event removed from " + firestoreField))

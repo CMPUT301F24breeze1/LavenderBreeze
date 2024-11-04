@@ -47,7 +47,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
                 case "Selected":
                     //actionId = R.id.action_selectedList_to_declineInvitationFragment;
                     break;
-                case "Waitlist":
+                case "Requested":
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("event", event);
                     Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantLeavePage2,bundle);
