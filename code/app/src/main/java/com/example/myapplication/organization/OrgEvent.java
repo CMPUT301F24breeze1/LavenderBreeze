@@ -13,6 +13,8 @@ import android.widget.Button;
 
 import com.example.myapplication.R;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link OrgEvent#newInstance} factory method to
@@ -23,9 +25,18 @@ public class OrgEvent extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "eventId";
+    private static final String ARG_PARAM2 = "waitlist";
+    private static final String ARG_PARAM3 = "selected";
+    private static final String ARG_PARAM4 = "capacity";
+
+
 
     // TODO: Rename and change types of parameters
     private String eventId;
+    private ArrayList<String> waitlist;
+    private ArrayList<String> selected;
+    private int capacity;
+
 
     public OrgEvent() {
         // Required empty public constructor
@@ -39,10 +50,13 @@ public class OrgEvent extends Fragment {
      * @return A new instance of fragment org_event.
      */
     // TODO: Rename and change types and number of parameters
-    public static OrgEvent newInstance(String param1) {
+    public static OrgEvent newInstance(String param1,ArrayList<String> param2,ArrayList<String> param3, int param4) {
         OrgEvent fragment = new OrgEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putStringArrayList(ARG_PARAM2,param2);
+        args.putStringArrayList(ARG_PARAM3,param3);
+        args.putInt(ARG_PARAM4,param4);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +66,9 @@ public class OrgEvent extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_PARAM1);
-
+            waitlist = getArguments().getStringArrayList(ARG_PARAM2);
+            selected = getArguments().getStringArrayList(ARG_PARAM3);
+            capacity = getArguments().getInt(ARG_PARAM4);
         }
     }
 
@@ -61,9 +77,12 @@ public class OrgEvent extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_event, container, false);
         //Create bundle containing EventId to be passed to next fragment if necessary
-        Log.d("Kenny", eventId);
+        Log.d("Kenny", "Event page eventId: "+eventId);
         Bundle bundle = new Bundle();
         bundle.putString("eventId",eventId);
+        bundle.putStringArrayList("waitlist",waitlist);
+        bundle.putStringArrayList("selected",selected);
+        bundle.putInt("capacity",capacity);
         // Button to navigate to the QR code fragment
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
         buttonGoToQRCode.setOnClickListener(v ->

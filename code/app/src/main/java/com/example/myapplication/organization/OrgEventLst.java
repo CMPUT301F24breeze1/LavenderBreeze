@@ -17,7 +17,10 @@ import android.widget.ListView;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.EventsListAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -26,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -92,7 +96,19 @@ public class OrgEventLst extends Fragment {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
 
-        ArrayList<String> eventIds = new ArrayList<>();
+        Task<QuerySnapshot> task = eventsRef.get();
+
+        task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                task.getResult().getDocuments();
+            }
+        });
+
+        // initialize array of waitlists and selected entrant lists
+        ArrayList < ArrayList < String >> waitlists = new ArrayList<>();
+        ArrayList<ArrayList<String>> selecteds = new ArrayList<>();
+
         //initialize event data list and array adapter
         eventList = view.findViewById(R.id.event_list_view);
         eventDataList = new ArrayList<Event>();
@@ -110,25 +126,49 @@ public class OrgEventLst extends Fragment {
                 if(value != null){
                     eventDataList.clear();
                     for(QueryDocumentSnapshot doc:value){
-                        String eventId = doc.getId();
+                        // Get event name, capacity, waitlist, and selected entrants list
                         String eventName = doc.getString("eventName");
+                        int capacity = doc.getDouble("capacity").intValue();
+                        ArrayList<String> waitlist = (ArrayList<String>) doc.get("waitlist");
+                        ArrayList<String> selected = (ArrayList<String>) doc.get("selectedEntrants");
+
+                        // Checking that data was read in properly
+                        Log.d("Kenny", String.valueOf(waitlist.size()));
+                        Log.d("Kenny", String.valueOf(selected.size()));
                         Log.d("Firestore", String.format("Event %s added",eventName));
-                        Log.d("Firestore", eventsRef.getId());
+
+                        // add waitlist and selected list to respective lists
+                        waitlists.add(waitlist);
+                        selecteds.add(selected);
+
+
                         // I set the event description as the doc ID to make it easier to pass when clicked
                         eventDataList.add(new Event(eventName, doc.getId(), new Date(), new Date(),
-                                new Date(), new Date(), "String location", 50, 0,
+                                new Date(), new Date(), "String location",capacity, 0,
                                 "String posterUrl", "qrHash", "String organizerId"));
+
                     }
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
         });
-
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                // put necessary arguments into a bundle
+
                 Bundle bundle = new Bundle();
                 bundle.putString("eventId",eventDataList.get(i).getEventDescription());
+                bundle.putStringArrayList("waitlist",waitlists.get(i));
+                bundle.putStringArrayList("selected",selecteds.get(i));
+                bundle.putInt("capacity",eventDataList.get(i).getCapacity());
+
+                //check that the lists have the correct length
+
+                Log.d("Kenny", "events_lst waitlist size: "+String.valueOf(waitlists.get(i).size()));
+                Log.d("Kenny", "events_lst selected size: "+String.valueOf(selecteds.get(i).size()));
+
                 Navigation.findNavController(view).navigate(R.id.action_org_events_lst_to_org_event,bundle);
             }
         });

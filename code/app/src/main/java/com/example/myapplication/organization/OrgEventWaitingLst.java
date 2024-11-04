@@ -2,8 +2,6 @@ package com.example.myapplication.organization;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -14,29 +12,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.myapplication.R;
-import com.example.myapplication.model.Event;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.lang.reflect.Array;
-import java.text.CollationElementIterator;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +36,7 @@ public class OrgEventWaitingLst extends Fragment {
 
     private List<String> entrants;
     private List<String> chosen;
-    private int capacity = 3;
+    private int capacity;
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
@@ -57,9 +46,15 @@ public class OrgEventWaitingLst extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "eventId";
+    private static final String ARG_PARAM2 = "waitlist";
+    private static final String ARG_PARAM3 = "selected";
+    private static final String ARG_PARAM4 = "capacity";
+
 
     // TODO: Rename and change types of parameters
     private String eventId;
+    private ArrayList<String> waitlist;
+    private ArrayList<String> selected;
 
     public OrgEventWaitingLst() {
         // Required empty public constructor
@@ -73,10 +68,13 @@ public class OrgEventWaitingLst extends Fragment {
      * @return A new instance of fragment org_event_waiting_lst.
      */
     // TODO: Rename and change types and number of parameters
-    public static OrgEventWaitingLst newInstance(String param1) {
+    public static OrgEventWaitingLst newInstance(String param1,ArrayList<String> param2,ArrayList<String> param3,int param4) {
         OrgEventWaitingLst fragment = new OrgEventWaitingLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putStringArrayList(ARG_PARAM2,param2);
+        args.putStringArrayList(ARG_PARAM3,param3);
+        args.putInt(ARG_PARAM4,param4);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,6 +85,9 @@ public class OrgEventWaitingLst extends Fragment {
 
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_PARAM1);
+            waitlist = getArguments().getStringArrayList(ARG_PARAM2);
+            selected = getArguments().getStringArrayList(ARG_PARAM3);
+            capacity = getArguments().getInt(ARG_PARAM4);
         }
     }
 
@@ -95,10 +96,23 @@ public class OrgEventWaitingLst extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
 
-        Event event = new Event(eventId);
 
-        entrants = event.getWaitlist();
-        chosen = Collections.emptyList();
+
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
+        Task<DocumentSnapshot> task = eventsRef.document(eventId).get();
+        task.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                DocumentSnapshot doc = task.getResult();
+                waitlist = (ArrayList<String>) doc.get("waitlist");
+                selected = (ArrayList<String>) doc.get("selectedEntrants");
+                Log.d("Kenny", "data loaded");
+            }
+        });
+
+        entrants = waitlist;
+        chosen = selected;
         /**
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
@@ -129,19 +143,38 @@ public class OrgEventWaitingLst extends Fragment {
         FloatingActionButton select_entrants = view.findViewById(R.id.button_select_entrants);
         select_entrants.setOnClickListener(view1 -> {
             Log.d("Kenny", "Entrants being Selected...");
-            if(capacity >= entrants.size()){
-                chosen.addAll(entrants);
+            if(capacity >= waitlist.size()){
+                selected.addAll(waitlist);
                 Log.d("Kenny", "added all waitlisted entrants to chosen");
-                entrants.clear();
+                waitlist.clear();
             } else {
-                Collections.shuffle(entrants);
+                Collections.shuffle(waitlist);
                 for(int i = 0; i < capacity; i++){
-                    chosen.add(entrants.get(0));
+                    selected.add(waitlist.get(0));
 
-                    Log.d("Kenny", "added: " + entrants.get(0) + " to chosen");
-                    entrants.remove(0);
+                    Log.d("Kenny", "added: " + waitlist.get(0) + " to chosen");
+                    waitlist.remove(0);
                 }
             }
+
+            Map<String, Object> eventData = new HashMap<>();
+            eventData.put("waitlist", waitlist);
+            eventData.put("selectedEntrants", selected);
+            eventsRef.document(eventId).update(eventData)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("Event", "Event updated successfully");
+                    }).addOnFailureListener(e -> {
+                        Log.e("Event", "Error updating event", e);
+                    });
+
+
+            Task<DocumentReference> task1 = eventsRef.add(eventData);
+            task1.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d("Kenny", "Data logged");
+                }
+            });
 
             /**
             eventsRef.document("eventId").get().addOnCompleteListener(task -> {
@@ -158,8 +191,8 @@ public class OrgEventWaitingLst extends Fragment {
             } );
              **/
 
-            event.setWaitlist(entrants);
-            event.setSelectedEntrants(chosen);
+            Log.d("Kenny", "Entrants size: "+String.valueOf(waitlist.size()));
+            Log.d("Kenny", "Selected size: "+String.valueOf(waitlist.size()));
         });
 
 
