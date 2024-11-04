@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,11 +20,11 @@ public class EntrantQrScan extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "DeviceID";
+    //private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String deviceID;
     private String mParam2;
 
     public EntrantQrScan() {
@@ -43,7 +44,7 @@ public class EntrantQrScan extends Fragment {
         EntrantQrScan fragment = new EntrantQrScan();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +53,8 @@ public class EntrantQrScan extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            deviceID = getArguments().getString(ARG_PARAM1);
+            //mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -72,6 +73,9 @@ public class EntrantQrScan extends Fragment {
         eventList.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantQrScan_to_entrantEventsList)
         );
+
+        Button scanQR = view.findViewById(R.id.scanQR);
+        scanQR.setOnClickListener();
         return view;
     }
 }

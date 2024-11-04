@@ -27,6 +27,7 @@ firebase-common = { group = "com.google.firebase", name = "firebase-common", ver
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 qr-generator = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "qrGenerator" }
 
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 
