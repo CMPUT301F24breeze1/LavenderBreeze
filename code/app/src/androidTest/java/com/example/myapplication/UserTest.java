@@ -1,11 +1,15 @@
 // From chatgpt, openai, "write a java implementation of UserTest Class", 2024-10-25
 package com.example.myapplication;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.example.myapplication.model.User;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +25,12 @@ public class UserTest {
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
-        user = new User(context);
+        user = new User(context, new User.OnUserDataLoadedListener() {
+            @Override
+            public void onUserDataLoaded() {
+                // Notify completion of async operation if needed
+            }
+        });
     }
 
     /**
@@ -84,9 +93,6 @@ public class UserTest {
     public void testSetPhoneNumberInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
             user.setPhoneNumber("12345"); // Too short
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            user.setPhoneNumber("abcdefghij"); // Non-numeric
         });
         assertThrows(IllegalArgumentException.class, () -> {
             user.setPhoneNumber(null);

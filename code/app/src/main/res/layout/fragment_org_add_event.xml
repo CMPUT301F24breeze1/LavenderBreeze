@@ -1,14 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".org_add_event">
+    tools:context=".organization.OrgAddEvent"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+    <EditText
+        android:id="@+id/editTextEventName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Name" />
+    <EditText
+        android:id="@+id/editTextEventDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Description" />
+
+    <EditText
+        android:id="@+id/editTextLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location" />
+
+    <EditText
+        android:id="@+id/editTextCapacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Capacity"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/editTextPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/editTextPosterUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Poster URL" />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="Event Start Time" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/editTextEventStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="yyyy-MM-dd HH:mm"
+        android:inputType="datetime" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event End Time" />
+
+    <EditText
+        android:id="@+id/editTextEventEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="yyyy-MM-dd HH:mm"
+        android:inputType="datetime" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registration Start Time" />
+
+    <EditText
+        android:id="@+id/editTextRegistrationStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="yyyy-MM-dd HH:mm"
+        android:inputType="datetime" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registration End Time" />
+
+    <EditText
+        android:id="@+id/editTextRegistrationEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="yyyy-MM-dd HH:mm"
+        android:inputType="datetime" />
+
+    <Button
+        android:id="@+id/buttonAddEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Event" />
+
+    <ImageView
+        android:id="@+id/qrCodeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Generated QR Code" />
+
+</LinearLayout>
