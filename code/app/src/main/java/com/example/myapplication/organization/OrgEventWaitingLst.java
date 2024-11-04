@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,8 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class OrgEventWaitingLst extends Fragment {
 
-    private List<String> entrants;
-    private List<String> chosen;
     private int capacity;
 
     private FirebaseFirestore db;
@@ -96,7 +95,7 @@ public class OrgEventWaitingLst extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
 
-
+        Log.d("Kenny", "eventId at start of waitintLst: "+eventId);
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
@@ -111,55 +110,38 @@ public class OrgEventWaitingLst extends Fragment {
             }
         });
 
-        entrants = waitlist;
-        chosen = selected;
-        /**
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-        eventsRef.document(eventId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = task.getResult();
-                if (documentSnapshot.exists()) {
-                    Event event = documentSnapshot.toObject(Event.class);
-                    if(event != null) {
-                        if (event.getWaitlist() != null) {
-                            entrants = event.getWaitlist();
-                        } else {
-                            Log.d("Kenny", "waitlist is null");
-                        }
-                        if(event.getSelectedEntrants() != null){
-                            chosen = event.getSelectedEntrants();
-                        }
-                        chosen = event.getSelectedEntrants();
-                    } else {
-                        Log.d("Kenny", "EVENT IS NULL");
-                    }
-
-                }
-            }
-        } );
-        **/
-
         FloatingActionButton select_entrants = view.findViewById(R.id.button_select_entrants);
         select_entrants.setOnClickListener(view1 -> {
             Log.d("Kenny", "Entrants being Selected...");
-            if(capacity >= waitlist.size()){
-                selected.addAll(waitlist);
-                Log.d("Kenny", "added all waitlisted entrants to chosen");
-                waitlist.clear();
+            if(waitlist.isEmpty()){
+                Toast.makeText(getActivity(), "Nobody has signed up for this event yet",
+                        Toast.LENGTH_LONG).show();
+            } else if (capacity == 0) {
+                Toast.makeText(getActivity(), "Invalid event capacity!",
+                        Toast.LENGTH_LONG).show();
+            } else if (!selected.isEmpty()) {
+                Toast.makeText(getActivity(), "Selection has already occured for this event!",
+                        Toast.LENGTH_LONG).show();
             } else {
-                Collections.shuffle(waitlist);
-                for(int i = 0; i < capacity; i++){
-                    selected.add(waitlist.get(0));
+                if (capacity >= waitlist.size()) {
+                    selected.addAll(waitlist);
+                    Log.d("Kenny", "added all waitlisted entrants to chosen");
+                    waitlist.clear();
+                } else {
+                    Collections.shuffle(waitlist);
+                    for (int i = 0; i < capacity; i++) {
+                        selected.add(waitlist.get(0));
 
-                    Log.d("Kenny", "added: " + waitlist.get(0) + " to chosen");
-                    waitlist.remove(0);
+                        Log.d("Kenny", "added " + waitlist.get(0) + " to chosen");
+                        waitlist.remove(0);
+                    }
                 }
             }
 
             Map<String, Object> eventData = new HashMap<>();
             eventData.put("waitlist", waitlist);
             eventData.put("selectedEntrants", selected);
+            Log.d("Kenny", "Updating eventId: "+eventId);
             eventsRef.document(eventId).update(eventData)
                     .addOnSuccessListener(aVoid -> {
                         Log.d("Event", "Event updated successfully");
@@ -168,31 +150,8 @@ public class OrgEventWaitingLst extends Fragment {
                     });
 
 
-            Task<DocumentReference> task1 = eventsRef.add(eventData);
-            task1.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Log.d("Kenny", "Data logged");
-                }
-            });
-
-            /**
-            eventsRef.document("eventId").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        Event event = documentSnapshot.toObject(Event.class);
-                        if(event != null) {
-                            event.setWaitlist(entrants);
-                            event.setSelectedEntrants(chosen);
-                        }
-                    }
-                }
-            } );
-             **/
-
-            Log.d("Kenny", "Entrants size: "+String.valueOf(waitlist.size()));
-            Log.d("Kenny", "Selected size: "+String.valueOf(waitlist.size()));
+            Log.d("Kenny", "Waitlist size: "+String.valueOf(waitlist.size()));
+            Log.d("Kenny", "Selected size: "+String.valueOf(selected.size()));
         });
 
 

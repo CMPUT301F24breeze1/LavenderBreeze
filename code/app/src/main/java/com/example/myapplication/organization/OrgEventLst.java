@@ -27,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,8 @@ public class OrgEventLst extends Fragment {
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
+    List<DocumentSnapshot> events;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -96,18 +100,44 @@ public class OrgEventLst extends Fragment {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
 
+        ArrayList < ArrayList < String >> waitlists = new ArrayList<>();
+        ArrayList<ArrayList<String>> selecteds = new ArrayList<>();
+
         Task<QuerySnapshot> task = eventsRef.get();
 
         task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                task.getResult().getDocuments();
+                events = task.getResult().getDocuments();
+                Log.d("Kenny", "Documents Retrieved");
+                for(int i = 0; i < events.size(); i++){
+                    String eventName = events.get(i).getString("eventName");
+                    int capacity = events.get(i).getDouble("capacity").intValue();
+                    ArrayList<String> waitlist = (ArrayList<String>) events.get(i).get("waitlist");
+                    ArrayList<String> selected = (ArrayList<String>) events.get(i).get("selectedEntrants");
+
+                    // Checking that data was read in properly
+                    Log.d("Kenny", String.valueOf(waitlist.size()));
+                    Log.d("Kenny", String.valueOf(selected.size()));
+                    Log.d("Firestore", String.format("Event %s added",eventName));
+
+                    // add waitlist and selected list to respective lists
+                    waitlists.add(waitlist);
+                    selecteds.add(selected);
+
+
+                    // I set the event description as the doc ID to make it easier to pass when clicked
+                    eventDataList.add(new Event(eventName, events.get(i).getId(), new Date(), new Date(),
+                            new Date(), new Date(), "String location",capacity, 0,
+                            "String posterUrl", "qrHash", "String organizerId"));
+                }
+                eventArrayAdapter.notifyDataSetChanged();
             }
         });
 
+
         // initialize array of waitlists and selected entrant lists
-        ArrayList < ArrayList < String >> waitlists = new ArrayList<>();
-        ArrayList<ArrayList<String>> selecteds = new ArrayList<>();
+
 
         //initialize event data list and array adapter
         eventList = view.findViewById(R.id.event_list_view);
@@ -117,6 +147,7 @@ public class OrgEventLst extends Fragment {
         eventList.setAdapter(eventArrayAdapter);
 
         //When anything regarding the database happens, this code will run, updating the list
+        /**
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -152,6 +183,7 @@ public class OrgEventLst extends Fragment {
                 eventArrayAdapter.notifyDataSetChanged();
             }
         });
+         **/
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
