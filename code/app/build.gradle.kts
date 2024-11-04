@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.database)
+    debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.3")
@@ -51,8 +53,6 @@ dependencies {
     implementation(libs.qr.generator)
     androidTestImplementation ("androidx.test:runner:1.4.0")
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation(libs.qr.generator)
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore")
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.junit.jupiter)
-    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

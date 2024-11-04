@@ -170,7 +170,7 @@
         tools:layout="@layout/fragment_org_add_event" >
         <action
             android:id="@+id/action_org_add_event_to_org_event"
-            app:destination="@id/org_event" />
+            app:destination="@id/OrgEvent" />
     </fragment>
     <fragment
         android:id="@+id/OrgNotifWaitingLst"
