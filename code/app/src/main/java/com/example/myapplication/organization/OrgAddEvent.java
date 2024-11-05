@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import com.example.myapplication.DeviceUtils;
 import com.example.myapplication.QRCodeGenerator;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
@@ -156,26 +158,32 @@ public class OrgAddEvent extends Fragment {
         QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
         String eventQRCode = qrCode.getQRCodeAsBase64();
 
-        final String[] organizerID = new String[1];
-        User user = new User(requireContext(), new UserIDCallback() {
-            @Override
-            public void onUserIDLoaded(String userID) {
-                // This will be called when the user ID is loaded
-                organizerID[0] = userID; // Now you have the user ID
-                Log.d("Organizer ID", "Organizer ID: " + organizerID[0]);
-                Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
+        String organizerID = DeviceUtils.getDeviceId(requireContext());
+        Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
                         eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
-                        eventQRCode, organizerID[0]);
-                event.saveEvent();
-                Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-            }
+                       eventQRCode, organizerID);
+        event.saveEvent();
 
-            @Override
-            public void onNewUserCreated() {
-                // Handle the creation of a new user
-                Log.d("User", "New user created");
-            }
-        });
+//        final String[] organizerID = new String[1];
+//        User user = new User(requireContext(), new UserIDCallback() {
+//            @Override
+//            public void onUserIDLoaded(String userID) {
+//                // This will be called when the user ID is loaded
+//                organizerID[0] = userID; // Now you have the user ID
+//                Log.d("Organizer ID", "Organizer ID: " + organizerID[0]);
+//                Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
+//                        eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
+//                        eventQRCode, organizerID[0]);
+//                event.saveEvent();
+//                Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onNewUserCreated() {
+//                // Handle the creation of a new user
+//                Log.d("User", "New user created");
+//            }
+//        });
 
     }
 

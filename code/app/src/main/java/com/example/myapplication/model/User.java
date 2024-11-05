@@ -74,36 +74,36 @@ public class User implements java.io.Serializable {
 
     // adding this so to successfully retrieve userID
     // Constructor with callback
-    public User(Context context, UserIDCallback callback) {
-        // Extract the device ID
-        this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        Log.d("Device ID", "Android ID: " + deviceID);
-        this.database = FirebaseFirestore.getInstance();
-        this.users = database.collection("users");
-
-        // Check if user exists
-        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        // Document exists, pull data
-                        loadUser(document);
-                        userID = document.getId(); // Set the user ID from the document
-                        Log.d("User ID", "User ID: " + userID);
-                        callback.onUserIDLoaded(userID); // Notify that user ID is loaded
-                    } else {
-                        // Document doesn't exist, create new user
-                        createNewUser();
-                        callback.onNewUserCreated(); // Notify that a new user was created
-                    }
-                } else {
-                    Log.e("FirestoreError", "Error getting user document: ", task.getException());
-                }
-            }
-        });
-    }
+//    public User(Context context, UserIDCallback callback) {
+//        // Extract the device ID
+//        this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//        Log.d("Device ID", "Android ID: " + deviceID);
+//        this.database = FirebaseFirestore.getInstance();
+//        this.users = database.collection("users");
+//
+//        // Check if user exists
+//        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document != null && document.exists()) {
+//                        // Document exists, pull data
+//                        loadUser(document);
+//                        userID = document.getId(); // Set the user ID from the document
+//                        Log.d("User ID", "User ID: " + userID);
+//                        callback.onUserIDLoaded(userID); // Notify that user ID is loaded
+//                    } else {
+//                        // Document doesn't exist, create new user
+//                        createNewUser();
+//                        callback.onNewUserCreated(); // Notify that a new user was created
+//                    }
+//                } else {
+//                    Log.e("FirestoreError", "Error getting user document: ", task.getException());
+//                }
+//            }
+//        });
+//    }
 
     /**
      * Load user data from Firestore
