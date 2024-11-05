@@ -44,9 +44,11 @@ public class User implements java.io.Serializable {
     private List<String> cancelledEvents;
     private List<String> acceptedEvents;
     private static final long serialVersionUID = 1L;
+    private String userID;
 
     private FirebaseFirestore database;
     private CollectionReference users ;
+
     /**
      * Constructor of the user class
      * @param context
@@ -69,7 +71,6 @@ public class User implements java.io.Serializable {
                     if (document.exists()) {
                         // Document exists, pull data
                         loadUserData(document,listener);
-
                     } else {
                         // Document doesn't exist, create new user
                         createNewUser();
@@ -78,6 +79,7 @@ public class User implements java.io.Serializable {
             }
         });
     }
+
 
     /**
      * Load user data from Firestore
@@ -100,6 +102,15 @@ public class User implements java.io.Serializable {
         if (listener != null) listener.onUserDataLoaded();
 
 //                        profilePicture = document.getString("profilePicture");
+    }
+    private void loadUser(DocumentSnapshot document){
+        name = document.getString("name");
+        email = document.getString("email");
+        phoneNumber = document.getString("phoneNumber");
+        isEntrant = document.getBoolean("isEntrant");
+        isOrganizer = document.getBoolean("isOrganizer");
+        isAdmin = document.getBoolean("isAdmin");
+        isFacility = document.getBoolean("isFacility");
     }
 
     /**
@@ -142,6 +153,7 @@ public class User implements java.io.Serializable {
     }
 
     // Getters that return local values
+
     /**
      * Get the device ID
      * @return the device ID
