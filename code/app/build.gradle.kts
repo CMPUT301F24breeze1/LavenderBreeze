@@ -39,11 +39,14 @@ android {
         resources.excludes.add("META-INF/NOTICE.txt")
         resources.excludes.add("META-INF/LICENSE.txt")
     }
+    lint {
+        // https://github.com/bumptech/glide/issues/4940
+        lintConfig = file("$rootDir/android_glide_lint.xml")
+    }
 }
 
 dependencies {
     implementation(libs.firebase.database)
-    debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.3")
@@ -54,6 +57,9 @@ dependencies {
     androidTestImplementation ("androidx.test:runner:1.4.0")
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
