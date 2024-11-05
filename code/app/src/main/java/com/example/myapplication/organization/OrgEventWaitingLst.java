@@ -54,9 +54,28 @@ public class OrgEventWaitingLst extends Fragment {
         listView = view.findViewById(R.id.event_waitlist_listview);
         entrantList = new ArrayList<>();
 
-        // Assume eventId is passed as an argument to this fragment
+
+        // Check if arguments were passed and retrieve them
         if (getArguments() != null) {
             eventId = getArguments().getString("eventId");
+            waitlist = getArguments().getStringArrayList("waitlist");
+            selected = getArguments().getStringArrayList("selected");
+            capacity = getArguments().getInt("capacity");
+
+            // Ensure lists are initialized
+            if (waitlist == null) {
+                waitlist = new ArrayList<>();
+            }
+            if (selected == null) {
+                selected = new ArrayList<>();
+            }
+
+            // Log or display the data to verify it is received correctly
+            Log.d("OrgWaitlist", "Event ID: " + eventId);
+            Log.d("OrgWaitlist", "Waitlist: " + waitlist);
+            Log.d("OrgWaitlist", "Selected List: " + selected);
+        } else {
+            Log.e("OrgWaitlist", "No arguments passed to OrgWaitlist");
         }
 
         // Fetch and display entrants
@@ -65,7 +84,12 @@ public class OrgEventWaitingLst extends Fragment {
         loadEventData();
 
         FloatingActionButton selectEntrantsButton = view.findViewById(R.id.button_select_entrants);
-        selectEntrantsButton.setOnClickListener(view1 -> selectEntrants());
+        selectEntrantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectEntrants();
+            }
+        });
 
         Button showMapButton = view.findViewById(R.id.button_go_to_map_from_org_event_waiting_lst);
         showMapButton.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +115,6 @@ public class OrgEventWaitingLst extends Fragment {
             }
         });
 
-
         return view;
     }
 
@@ -114,18 +137,13 @@ public class OrgEventWaitingLst extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Event event = document.toObject(Event.class);
-                        if (event != null) {
-                            List<String> waitlist = event.getWaitlist();
-                            if (waitlist != null) {
-                                // Fetch each entrant's data by their ID
-                                for (String entrantId : waitlist) {
-                                    fetchEntrantData(entrantId);
-                                }
+                        waitlist = (ArrayList<String>) document.get("waitlist");
+                        if (waitlist != null) {
+                            // Fetch each entrant's data by their ID
+                            for (String entrantId : waitlist) {
+                                fetchEntrantData(entrantId);
                             }
                         }
-                    } else {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getContext(), "Error fetching entrants", Toast.LENGTH_SHORT).show();
@@ -163,40 +181,74 @@ public class OrgEventWaitingLst extends Fragment {
     }
 
     private void selectEntrants() {
-        Log.d("Kenny", "Selecting entrants...");
+        Log.d("Kenny", "Starting entrant selection...");
+
+        // Ensure waitlist and selected lists are initialized
+        if (waitlist == null) {
+            Log.e("Kenny", "Waitlist is null!");
+            Toast.makeText(getActivity(), "Waitlist is not initialized!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (selected == null) {
+            Log.e("Kenny", "Selected list is null!");
+            Toast.makeText(getActivity(), "Selected list is not initialized!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Check for empty waitlist
         if (waitlist.isEmpty()) {
             Toast.makeText(getActivity(), "Nobody has signed up for this event yet", Toast.LENGTH_LONG).show();
             return;
         }
-        if (capacity == 0) {
+
+        // Check for valid capacity
+        if (capacity <= 0) {
             Toast.makeText(getActivity(), "Invalid event capacity!", Toast.LENGTH_LONG).show();
             return;
         }
+
+        // Ensure no prior selection has occurred
         if (!selected.isEmpty()) {
             Toast.makeText(getActivity(), "Selection has already occurred for this event!", Toast.LENGTH_LONG).show();
             return;
         }
 
+        Log.d("Kenny", "Selecting entrants based on capacity: " + capacity);
+
+        // Shuffle and select entrants based on capacity
         if (capacity >= waitlist.size()) {
             selected.addAll(waitlist);
             waitlist.clear();
-            Log.d("Kenny", "Added all waitlisted entrants to selected");
+            Log.d("Kenny", "Added all waitlisted entrants to selected.");
         } else {
             Collections.shuffle(waitlist);
             for (int i = 0; i < capacity; i++) {
                 selected.add(waitlist.remove(0));
-                Log.d("Kenny", "Added " + selected.get(selected.size() - 1) + " to selected");
+                Log.d("Kenny", "Added entrant " + selected.get(selected.size() - 1) + " to selected list.");
             }
         }
 
+        // Ensure `eventsRef` and `eventId` are valid before updating Firestore
+        if (eventsRef == null || eventId == null || eventId.isEmpty()) {
+            Log.e("Kenny", "Firestore reference or event ID is null/empty. Cannot update database.");
+            Toast.makeText(getActivity(), "Failed to update the database. Event ID is missing.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Prepare data for Firestore update
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("waitlist", waitlist);
         eventData.put("selectedEntrants", selected);
 
+        // Update Firestore document
         eventsRef.document(eventId).update(eventData)
-                .addOnSuccessListener(aVoid -> Log.d("Event", "Event updated successfully"))
-                .addOnFailureListener(e -> Log.e("Event", "Error updating event", e));
+                .addOnSuccessListener(aVoid -> Log.d("Kenny", "Event updated successfully in Firestore."))
+                .addOnFailureListener(e -> {
+                    Log.e("Kenny", "Error updating event in Firestore", e);
+                    Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
+                });
     }
+
 
     private void sendNotificationToEntrants() {
         Toast.makeText(getContext(), "Notification sent to entrants in the waiting list", Toast.LENGTH_SHORT).show();
