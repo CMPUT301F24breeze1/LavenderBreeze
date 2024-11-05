@@ -39,6 +39,10 @@ android {
         resources.excludes.add("META-INF/NOTICE.txt")
         resources.excludes.add("META-INF/LICENSE.txt")
     }
+    lint {
+        // https://github.com/bumptech/glide/issues/4940
+        lintConfig = file("$rootDir/android_glide_lint.xml")
+    }
 }
 
 dependencies {
