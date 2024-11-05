@@ -54,7 +54,6 @@ public class OrgEventWaitingLst extends Fragment {
         listView = view.findViewById(R.id.event_waitlist_listview);
         entrantList = new ArrayList<>();
 
-
         // Check if arguments were passed and retrieve them
         if (getArguments() != null) {
             eventId = getArguments().getString("eventId");
