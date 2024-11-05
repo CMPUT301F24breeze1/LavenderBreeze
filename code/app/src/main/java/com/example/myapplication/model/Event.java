@@ -73,6 +73,29 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
     }
 
+    public interface OnEventDataLoadedListener {
+        void onEventDataLoaded(Event loadedEvent);
+    }
+
+    public void loadEventDataAsync(OnEventDataLoadedListener listener) {
+        // Example of fetching data asynchronously, such as with Firestore
+        database.collection("events").document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Parse the document into an Event object or fields
+                        // Populate this event instance
+                        listener.onEventDataLoaded(this);  // Pass back the loaded event
+                    } else {
+                        listener.onEventDataLoaded(null);  // Indicate loading failure
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Event", "Failed to load event data: ", e);
+                    listener.onEventDataLoaded(null);
+                });
+    }
+
+
     // Load event data from Firestore
     private void loadEventData() {
         DocumentReference docRef = events.document(eventId);
@@ -152,6 +175,10 @@ public class Event implements java.io.Serializable {
     }
 
     // Getters
+    public String getEventId() {
+        return eventId;
+    }
+
     public String getEventName() {
         return eventName;
     }
