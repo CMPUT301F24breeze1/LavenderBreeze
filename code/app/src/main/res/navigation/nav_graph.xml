@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_entrantEventsList_to_entrantQrScan"
             app:destination="@id/entrantQrScan" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantLeavePage2"
+            app:destination="@id/entrantLeavePage" />
     </fragment>
     <fragment
         android:id="@+id/entrantQrScan"
@@ -190,6 +193,15 @@
         android:name="com.example.myapplication.organization.OrgEditOrganizer"
         android:label="fragment_org_edit_organizer"
         tools:layout="@layout/fragment_org_edit_organizer" />
+    <fragment
+        android:id="@+id/entrantLeavePage"
+        android:name="com.example.myapplication.entrant.EntrantLeavePage"
+        android:label="fragment_entrant_leave_page"
+        tools:layout="@layout/fragment_entrant_leave_page" >
+        <action
+            android:id="@+id/action_entrantLeavePage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
 
 
 </navigation>

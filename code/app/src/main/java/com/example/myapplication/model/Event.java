@@ -1,8 +1,5 @@
 package com.example.myapplication.model;
 
-import static org.junit.jupiter.params.shadow.com.univocity.parsers.common.NoopProcessorErrorHandler.instance;
-
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Event{
-    //private static Event instance;
+public class Event implements java.io.Serializable{
     private String eventId;
     private String eventName;
     private String eventDescription;
@@ -37,12 +33,10 @@ public class Event{
     private List<String> waitlist;
     private List<String> selectedEntrants;
     private String organizerId;
-    //private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private FirebaseFirestore database;
     private CollectionReference events;
-
-    public Event(){}
 
     // Constructor retrieves data for an existing event using eventId
     public Event(String eventId) {
@@ -51,6 +45,9 @@ public class Event{
         this.events = database.collection("events");
 
         loadEventData();
+    }
+    public interface OnEventDataLoadedListener {
+        void onEventDataLoaded(Event event);
     }
 
     // Constructors for creating a new Event
@@ -148,8 +145,29 @@ public class Event{
                     });
         }
     }
-
+    public void loadEventDataAsync(OnEventDataLoadedListener listener) {
+        DocumentReference docRef = events.document(eventId);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    populateEventData(task.getResult());
+                    if (listener != null) {
+                        listener.onEventDataLoaded(Event.this);
+                    }
+                } else {
+                    Log.d("Event", "Event data loading failed or document does not exist");
+                    if (listener != null) {
+                        listener.onEventDataLoaded(null);
+                    }
+                }
+            }
+        });
+    }
     // Getters
+    public String getEventId() {
+        return eventId;
+    }
     public String getEventName() {
         return eventName;
     }
@@ -310,9 +328,9 @@ public class Event{
         }
     }
 
-    public interface OnEventDataLoadedListener {
-        void onEventDataLoaded();
-    }
+
+
+
 
 
 }
