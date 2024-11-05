@@ -4,39 +4,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <!-- Button to go back to event -->
-
-    <Button
-        android:id="@+id/button_go_to_event_from_org_event_waiting_lst"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/left_arrow"
-        android:backgroundTint="@color/white"
-        android:textSize="40sp"/>
+        android:orientation="horizontal">
 
-    <!-- Spacer -->
+        <!-- Button to go back to event -->
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        <Button
+            android:id="@+id/button_go_to_event_from_org_event_waiting_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/left_arrow"
+            android:backgroundTint="@color/white"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:textSize="40sp"/>
 
-    <!-- Button to go to Notifications -->
+        <!-- Title: Waiting List -->
+        <TextView
+            android:id="@+id/waitlist_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waiting List"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true" />
 
-    <Button
-        android:id="@+id/button_go_to_notif_from_org_event_waiting_lst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableRight="@drawable/send_notification"
-        android:backgroundTint="@color/white"
-        android:layout_gravity="right"
-        android:textSize="40sp"/>
-</LinearLayout>
+        <!-- Button to go to Notifications -->
+
+        <Button
+            android:id="@+id/button_go_to_notif_from_org_event_waiting_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/send_notification"
+            android:backgroundTint="@color/white"
+            android:layout_gravity="right"
+            android:textSize="40sp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"/>
+    </RelativeLayout>
 
     <!-- Button to go to the Selected List -->
 

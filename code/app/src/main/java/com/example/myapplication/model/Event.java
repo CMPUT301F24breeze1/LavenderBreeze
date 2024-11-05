@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Event implements java.io.Serializable{
+public class Event implements java.io.Serializable {
     private String eventId;
     private String eventName;
     private String eventDescription;
@@ -32,6 +32,8 @@ public class Event implements java.io.Serializable{
     private String qrCodeHash;
     private List<String> waitlist;
     private List<String> selectedEntrants;
+    private List<String> acceptedEntrants;
+    private List<String> declinedEntrants;
     private String organizerId;
     private static final long serialVersionUID = 1L;
 
@@ -45,9 +47,6 @@ public class Event implements java.io.Serializable{
         this.events = database.collection("events");
 
         loadEventData();
-    }
-    public interface OnEventDataLoadedListener {
-        void onEventDataLoaded(Event event);
     }
 
     // Constructors for creating a new Event
@@ -67,6 +66,8 @@ public class Event implements java.io.Serializable{
         this.qrCodeHash = qrCodeHash;
         this.waitlist = new ArrayList<>();
         this.selectedEntrants = new ArrayList<>();
+        this.acceptedEntrants = new ArrayList<>();
+        this.declinedEntrants = new ArrayList<>();
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
@@ -107,6 +108,8 @@ public class Event implements java.io.Serializable{
         this.organizerId = document.getString("organizerId");
         this.waitlist = (List<String>) document.get("waitlist");
         this.selectedEntrants = (List<String>) document.get("selectedEntrants");
+        this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
+        this.declinedEntrants = (List<String>) document.get("declinedEntrants");
     }
 
     // Save or update the current state of an Event object to Firestore
@@ -126,6 +129,8 @@ public class Event implements java.io.Serializable{
         eventData.put("organizerId", organizerId);
         eventData.put("waitlist", waitlist);
         eventData.put("selectedEntrants", selectedEntrants);
+        eventData.put("acceptedEntrants", acceptedEntrants);
+        eventData.put("declinedEntrants", declinedEntrants);
 
         if (eventId == null || eventId.isEmpty()) {
             // Create a new event
@@ -145,29 +150,8 @@ public class Event implements java.io.Serializable{
                     });
         }
     }
-    public void loadEventDataAsync(OnEventDataLoadedListener listener) {
-        DocumentReference docRef = events.document(eventId);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful() && task.getResult().exists()) {
-                    populateEventData(task.getResult());
-                    if (listener != null) {
-                        listener.onEventDataLoaded(Event.this);
-                    }
-                } else {
-                    Log.d("Event", "Event data loading failed or document does not exist");
-                    if (listener != null) {
-                        listener.onEventDataLoaded(null);
-                    }
-                }
-            }
-        });
-    }
+
     // Getters
-    public String getEventId() {
-        return eventId;
-    }
     public String getEventName() {
         return eventName;
     }
@@ -223,6 +207,10 @@ public class Event implements java.io.Serializable{
     public List<String> getSelectedEntrants() {
         return selectedEntrants;
     }
+
+    public List<String> getAcceptedEntrants() { return acceptedEntrants; }
+
+    public List<String> getDeclinedEntrants() { return declinedEntrants; }
 
     // Setters (updates corresponding field in Firestore)
     public void setEventName(String eventName) {
@@ -295,9 +283,19 @@ public class Event implements java.io.Serializable{
         events.document(eventId).update("selectedEntrants", selectedEntrants);
     }
 
+    public void setAcceptedEntrants(List<String> acceptedEntrants) {
+        this.acceptedEntrants = acceptedEntrants;
+        events.document(eventId).update("acceptedEntrants", acceptedEntrants);
+    }
+
+    public void setDeclinedEntrants(List<String> declinedEntrants) {
+        this.declinedEntrants = declinedEntrants;
+        events.document(eventId).update("selectedEntrants", declinedEntrants);
+    }
+
 
     /**
-     * Add/remove methods for waitlist/selected entrants
+     * Add/remove methods for waitlist/selected/accepted/declined entrants
      */
 
     public void addToWaitlist(String userId) {
@@ -328,10 +326,37 @@ public class Event implements java.io.Serializable{
         }
     }
 
+    public void addToAcceptedlist(String userId) {
+        if (!acceptedEntrants.contains(userId)) {
+            acceptedEntrants.add(userId);
+            events.document(eventId).update("acceptedEntrants", acceptedEntrants);
+        }
+    }
+
+    public void removeFromAcceptedlist(String userId) {
+        if (acceptedEntrants.contains(userId)) {
+            acceptedEntrants.remove(userId);
+            events.document(eventId).update("acceptedEntrants", acceptedEntrants);
+        }
+    }
+
+    public void addToDeclinedlist(String userId) {
+        if (!declinedEntrants.contains(userId)) {
+            declinedEntrants.add(userId);
+            events.document(eventId).update("declinedEntrants", declinedEntrants);
+        }
+    }
+
+    public void removeFromDeclinedlist(String userId) {
+        if (declinedEntrants.contains(userId)) {
+            declinedEntrants.remove(userId);
+            events.document(eventId).update("declinedEntrants", declinedEntrants);
+        }
+    }
+
 
 
 
 
 
 }
-
