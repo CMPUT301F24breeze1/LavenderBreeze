@@ -164,27 +164,6 @@ public class OrgAddEvent extends Fragment {
                        eventQRCode, organizerID);
         event.saveEvent();
 
-//        final String[] organizerID = new String[1];
-//        User user = new User(requireContext(), new UserIDCallback() {
-//            @Override
-//            public void onUserIDLoaded(String userID) {
-//                // This will be called when the user ID is loaded
-//                organizerID[0] = userID; // Now you have the user ID
-//                Log.d("Organizer ID", "Organizer ID: " + organizerID[0]);
-//                Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
-//                        eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
-//                        eventQRCode, organizerID[0]);
-//                event.saveEvent();
-//                Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onNewUserCreated() {
-//                // Handle the creation of a new user
-//                Log.d("User", "New user created");
-//            }
-//        });
-
     }
 
     public Date parseDate(String dateString) {

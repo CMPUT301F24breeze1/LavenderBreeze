@@ -41,15 +41,6 @@ public class OrgEvent extends Fragment {
     private static final String ARG_PARAM12 = "qrCodeHash";
 
 
-
-
-
-
-
-
-
-
-
     // TODO: Rename and change types of parameters
     private String eventId;
     private ArrayList<String> waitlist;
@@ -144,15 +135,25 @@ public class OrgEvent extends Fragment {
 
         //Create bundle containing EventId to be passed to next fragment if necessary
         Bundle bundle = new Bundle();
-        bundle.putString("eventId",eventId);
-        bundle.putStringArrayList("waitlist",waitlist);
-        bundle.putStringArrayList("selected",selected);
-        bundle.putInt("capacity",capacity);
+        bundle.putString("eventId", eventId);
+        bundle.putStringArrayList("waitlist", waitlist);
+        bundle.putStringArrayList("selected", selected);
+        bundle.putInt("capacity", capacity);
+        bundle.putString("eventName", eventName);
+        bundle.putString("eventDescription", eventDescription);
+        bundle.putString("eventStart", eventStart);
+        bundle.putString("eventEnd", eventEnd);
+        bundle.putInt("price", price);
+        bundle.putString("registrationStart", registrationStart);
+        bundle.putString("registrationEnd", registrationEnd);
+        bundle.putString("qrCodeHash", qrCodeHash);
+
         // Button to navigate to the QR code fragment
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
-        buttonGoToQRCode.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_view_event_qrcode)
-        );
+        buttonGoToQRCode.setOnClickListener(v ->{
+            Log.d("OrgEvent", "Navigating with eventId: " + eventId);
+            Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_view_event_qrcode, bundle);
+        });
 
         // Button to navigate back to Events List
         Button buttonGoToEventsLst = view.findViewById(R.id.button_go_to_event_lst_from_org_event);

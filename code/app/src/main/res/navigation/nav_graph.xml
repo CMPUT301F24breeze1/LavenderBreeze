@@ -142,7 +142,11 @@
         android:id="@+id/OrgViewEventQrCode"
         android:name="com.example.myapplication.organization.OrgViewEventQrCode"
         android:label="fragment_org_view_event_qrcode"
-        tools:layout="@layout/fragment_org_view_event_qrcode" />
+        tools:layout="@layout/fragment_org_view_event_qrcode" >
+        <action
+            android:id="@+id/action_OrgViewEventQrCode_to_OrgEvent"
+            app:destination="@id/OrgEvent" />
+    </fragment>
     <fragment
         android:id="@+id/OrgEventWaitingLst"
         android:name="com.example.myapplication.organization.OrgEventWaitingLst"
