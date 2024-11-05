@@ -4,14 +4,17 @@ package com.example.myapplication.model;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +91,7 @@ public class User implements java.io.Serializable {
         selectedEvents = (List<String>) document.get("selectedEvents");
         cancelledEvents = (List<String>) document.get("cancelledEvents");
         acceptedEvents = (List<String>) document.get("acceptedEvents");
-        //profilePicture = document.getString("profilePicture");
+        profilePicture = document.getString("profilePicture");
         if (listener != null) listener.onUserDataLoaded();
 
 //                        profilePicture = document.getString("profilePicture");
@@ -219,6 +222,10 @@ public class User implements java.io.Serializable {
         }
         this.name = name;
         users.document(deviceID).update("name", name);
+    }
+
+    public String getDeviceID() {
+        return deviceID;
     }
 
     /**
@@ -367,6 +374,22 @@ public class User implements java.io.Serializable {
                     .update(firestoreField, eventList)
                     .addOnSuccessListener(aVoid -> Log.d("User", "Event removed from " + firestoreField))
                     .addOnFailureListener(e -> Log.e("User", "Error removing event from " + firestoreField, e));
+        }
+    }
+    public void updateProfilePictureInDatabase() {
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(deviceID)
+                .update("profilePicture", profilePicture)
+                .addOnSuccessListener(aVoid -> Log.d("User", "Profile picture updated in Firestore"))
+                .addOnFailureListener(e -> Log.e("User", "Error updating profile picture", e));
+    }
+    public void loadProfilePictureInto(ImageView imageView) {
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            Picasso.get().load(profilePicture).into(imageView);
+        } else {
+            // Optionally, set a default placeholder image if no profile picture is available
+            imageView.setImageResource(R.drawable.account_circle);
         }
     }
 }

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,6 +30,8 @@ import com.example.myapplication.R;
 public class EntrantProfile extends Fragment {
     private User user;
     private TextView personName, emailAddress, contactPhoneNumber;
+    private ImageButton edit, notifications;
+    private ImageView profilePicture;
     private SwitchCompat emailNotificationSwitch;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,13 +63,8 @@ public class EntrantProfile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
-            Log.d("EntrantProfile", "Received updated user: " + bundle.getSerializable("updated_user"));
-            user = (User) bundle.getSerializable("updated_user");
-            updateUserData(); // Refresh UI with updated User data
-        });
-            // Update UI with new user data
+        user = new User(requireContext(), () -> updateUserData());
+        // Update UI with new user data
          BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
          NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
          NavigationUI.setupWithNavController(bottomNavigationView, navController);
@@ -78,20 +76,15 @@ public class EntrantProfile extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
 
-        // Initialize User with a lambda as the listener
-        user = new User(requireContext(), () -> updateUserData());
-
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
-        ImageButton edit = view.findViewById(R.id.editButton);
+        edit = view.findViewById(R.id.editButton);
 
         edit.setOnClickListener(v ->
         {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("user", user);
-            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile, bundle);
+            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile);
         });
 
-        ImageButton notifications = view.findViewById(R.id.notificationButton);
+        notifications = view.findViewById(R.id.notificationButton);
         notifications.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantNotification)
         );
@@ -101,6 +94,7 @@ public class EntrantProfile extends Fragment {
         emailAddress = view.findViewById(R.id.emailAddress);
         contactPhoneNumber = view.findViewById(R.id.contactPhoneNumber);
         emailNotificationSwitch = view.findViewById(R.id.emailNotificationSwitch);
+        profilePicture = view.findViewById(R.id.profilePicture);
         return view;
     }
     private void updateUserData() {
@@ -109,6 +103,7 @@ public class EntrantProfile extends Fragment {
             personName.setText(user.getName());
             emailAddress.setText(user.getEmail());
             contactPhoneNumber.setText(user.getPhoneNumber());
+            user.loadProfilePictureInto(profilePicture);
         }
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());

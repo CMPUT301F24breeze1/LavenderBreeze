@@ -52,6 +52,8 @@ dependencies {
     androidTestImplementation ("androidx.test:runner:1.4.0")
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.squareup.picasso:picasso:2.71828")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
