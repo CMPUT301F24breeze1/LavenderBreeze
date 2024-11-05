@@ -13,7 +13,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class User implements java.io.Serializable {
@@ -29,6 +31,10 @@ public class User implements java.io.Serializable {
     private Boolean isFacility;
     private String deviceID;
     private String profilePicture;
+    private List<String> requestedEvents;
+    private List<String> selectedEvents;
+    private List<String> cancelledEvents;
+    private List<String> acceptedEvents;
     private static final long serialVersionUID = 1L;
 
     private FirebaseFirestore database;
@@ -78,6 +84,10 @@ public class User implements java.io.Serializable {
         isOrganizer = document.getBoolean("isOrganizer");
         isAdmin = document.getBoolean("isAdmin");
         isFacility = document.getBoolean("isFacility");
+        requestedEvents = (List<String>) document.get("requestedEvents");
+        selectedEvents = (List<String>) document.get("selectedEvents");
+        cancelledEvents = (List<String>) document.get("cancelledEvents");
+        acceptedEvents = (List<String>) document.get("acceptedEvents");
         //profilePicture = document.getString("profilePicture");
         if (listener != null) listener.onUserDataLoaded();
 
@@ -98,6 +108,10 @@ public class User implements java.io.Serializable {
         userData.put("isAdmin", false);
         userData.put("isFacility", false);
         userData.put("profilePicture", "");
+        userData.put("requestedEvents", new ArrayList<>());
+        userData.put("selectedEvents", new ArrayList<>());
+        userData.put("cancelledEvents", new ArrayList<>());
+        userData.put("acceptedEvents", new ArrayList<>());
 
         users.document(deviceID).set(userData).addOnSuccessListener(aVoid -> {
             Log.d("User", "DocumentSnapshot successfully written!");
@@ -113,6 +127,10 @@ public class User implements java.io.Serializable {
         this.isAdmin = false;
         this.isFacility = false;
         this.profilePicture = "";
+        this.requestedEvents = new ArrayList<>();
+        this.selectedEvents = new ArrayList<>();
+        this.cancelledEvents = new ArrayList<>();
+        this.acceptedEvents = new ArrayList<>();
     }
 
     // Getters that return local values
@@ -170,6 +188,22 @@ public class User implements java.io.Serializable {
      */
     public Boolean getIsFacility() {
         return isFacility;
+    }
+
+    public List<String> getRequestedEvents() {
+        return requestedEvents;
+    }
+
+    public List<String> getSelectedEvents() {
+        return selectedEvents;
+    }
+
+    public List<String> getCancelledEvents() {
+        return cancelledEvents;
+    }
+
+    public List<String> getAcceptedEvents() {
+        return acceptedEvents;
     }
 
     // Setters with validation
@@ -271,5 +305,68 @@ public class User implements java.io.Serializable {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
+    // Add and remove methods for requestedEvents
+    public void addRequestedEvent(String eventId) {
+        addEventToFirestoreList(eventId, "requestedEvents", requestedEvents);
+    }
 
+    public void removeRequestedEvent(String eventId) {
+        Log.d("User", "Removing event with ID: " + eventId);
+        Log.d("User", "Current requestedEvents: " + requestedEvents);
+        removeEventFromFirestoreList(eventId, "requestedEvents", requestedEvents);
+    }
+
+    // Add and remove methods for selectedEvents
+    public void addSelectedEvent(String eventId) {
+        addEventToFirestoreList(eventId, "selectedEvents", selectedEvents);
+    }
+
+    public void removeSelectedEvent(String eventId) {
+        removeEventFromFirestoreList(eventId, "selectedEvents", selectedEvents);
+    }
+
+    // Add and remove methods for cancelledEvents
+    public void addCancelledEvent(String eventId) {
+        addEventToFirestoreList(eventId, "cancelledEvents", cancelledEvents);
+    }
+
+    public void removeCancelledEvent(String eventId) {
+        removeEventFromFirestoreList(eventId, "cancelledEvents", cancelledEvents);
+    }
+
+    // Add and remove methods for acceptedEvents
+    public void addAcceptedEvent(String eventId) {
+        addEventToFirestoreList(eventId, "acceptedEvents", acceptedEvents);
+    }
+
+    public void removeAcceptedEvent(String eventId) {
+        removeEventFromFirestoreList(eventId, "acceptedEvents", acceptedEvents);
+    }
+
+    // Helper method to add an event to a list and update Firestore
+    private void addEventToFirestoreList(String eventId, String firestoreField, List<String> eventList) {
+        if (eventList == null) {
+            eventList = new ArrayList<>();
+        }
+        if (!eventList.contains(eventId)) {
+            eventList.add(eventId);
+            database.collection("users").document(deviceID)
+                    .update(firestoreField, eventList)
+                    .addOnSuccessListener(aVoid -> Log.d("User", "Event added to " + firestoreField))
+                    .addOnFailureListener(e -> Log.e("User", "Error adding event to " + firestoreField, e));
+        }
+    }
+
+    // Helper method to remove an event from a list and update Firestore
+    private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String> eventList) {
+        Log.d("User", "Event removed from the list 1" + eventList);
+        if (eventList != null && eventList.contains(eventId)) {
+            eventList.remove(eventId);
+            Log.d("User", "Event removed from the list 2" + eventList);
+            database.collection("users").document(deviceID)
+                    .update(firestoreField, eventList)
+                    .addOnSuccessListener(aVoid -> Log.d("User", "Event removed from " + firestoreField))
+                    .addOnFailureListener(e -> Log.e("User", "Error removing event from " + firestoreField, e));
+        }
+    }
 }

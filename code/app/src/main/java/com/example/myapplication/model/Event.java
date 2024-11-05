@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Event {
+public class Event implements java.io.Serializable{
     private String eventId;
     private String eventName;
     private String eventDescription;
@@ -33,6 +33,7 @@ public class Event {
     private List<String> waitlist;
     private List<String> selectedEntrants;
     private String organizerId;
+    private static final long serialVersionUID = 1L;
 
     private FirebaseFirestore database;
     private CollectionReference events;
@@ -44,6 +45,9 @@ public class Event {
         this.events = database.collection("events");
 
         loadEventData();
+    }
+    public interface OnEventDataLoadedListener {
+        void onEventDataLoaded(Event event);
     }
 
     // Constructors for creating a new Event
@@ -141,8 +145,29 @@ public class Event {
                     });
         }
     }
-
+    public void loadEventDataAsync(OnEventDataLoadedListener listener) {
+        DocumentReference docRef = events.document(eventId);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    populateEventData(task.getResult());
+                    if (listener != null) {
+                        listener.onEventDataLoaded(Event.this);
+                    }
+                } else {
+                    Log.d("Event", "Event data loading failed or document does not exist");
+                    if (listener != null) {
+                        listener.onEventDataLoaded(null);
+                    }
+                }
+            }
+        });
+    }
     // Getters
+    public String getEventId() {
+        return eventId;
+    }
     public String getEventName() {
         return eventName;
     }

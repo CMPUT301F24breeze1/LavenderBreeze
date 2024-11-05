@@ -1,7 +1,11 @@
 package com.example.myapplication.entrant;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -30,6 +34,7 @@ public class EntrantEditProfile extends Fragment {
     private TextView personName, emailAddress, contactPhoneNumber;
     private SwitchCompat emailNotificationSwitch;
     private User user;
+    private static final int PICK_IMAGE_REQUEST = 1;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -89,6 +94,7 @@ public class EntrantEditProfile extends Fragment {
         emailNotificationSwitch = view.findViewById(R.id.emailNotificationSwitch);
 
         updateUserData();
+        editPhotoButton.setOnClickListener(v -> showEditPhotoDialog());
         doneEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,4 +153,57 @@ public class EntrantEditProfile extends Fragment {
         dialog.setOnEditCompleteListener(listener);
         dialog.show(getParentFragmentManager(), "EditDialogFragment");
     }
+    private void showEditPhotoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_photo_options, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        Button uploadButton = dialogView.findViewById(R.id.button_upload_photo);
+        Button aiButton = dialogView.findViewById(R.id.button_ai_generated_photo);
+        Button deleteButton = dialogView.findViewById(R.id.button_delete_photo);
+
+        uploadButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            //uploadPicture();
+        });
+
+        aiButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            //generateAIPicture();
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            //deletePicture();
+        });
+
+        dialog.show();
+    }
 }
+
+//private void uploadPicture() {
+//        Intent intent = new Intent(Intent.ACTION_PICK);
+//        intent.setType("image/*");
+//        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+//    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            Uri imageUri = data.getData();
+//            uploadImageToFirebase(imageUri);
+//        }
+//    }
+//    private void uploadImageToFirebase(Uri imageUri) {
+//        String storagePath = "profile_pictures/" + user.getDeviceID() + ".jpg";
+//        FirebaseStorage.getInstance().getReference(storagePath)
+//                .putFile(imageUri)
+//                .addOnSuccessListener(taskSnapshot -> taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+//                    String downloadUrl = uri.toString();
+//                    user.setProfilePicture(downloadUrl);
+//                    profilePicture.setImageURI(imageUri); // Set the new picture on the screen
+//                    Toast.makeText(requireContext(), "Profile picture updated", Toast.LENGTH_SHORT).show();
+//                }))
+//                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//    }
