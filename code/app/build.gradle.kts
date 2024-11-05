@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.database)
+    debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.3")
