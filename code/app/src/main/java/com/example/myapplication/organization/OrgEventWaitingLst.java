@@ -95,8 +95,6 @@ public class OrgEventWaitingLst extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_event_waiting_lst, container, false);
 
-        Log.d("Kenny", "eventId at start of waitintLst: "+eventId);
-
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
         Task<DocumentSnapshot> task = eventsRef.document(eventId).get();
@@ -148,10 +146,6 @@ public class OrgEventWaitingLst extends Fragment {
                     }).addOnFailureListener(e -> {
                         Log.e("Event", "Error updating event", e);
                     });
-
-
-            Log.d("Kenny", "Waitlist size: "+String.valueOf(waitlist.size()));
-            Log.d("Kenny", "Selected size: "+String.valueOf(selected.size()));
         });
 
 

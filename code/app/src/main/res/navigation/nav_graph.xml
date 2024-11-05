@@ -126,6 +126,9 @@
         <action
             android:id="@+id/action_org_event_to_org_event_selected_lst"
             app:destination="@id/OrgEventSelectedLst" />
+        <action
+            android:id="@+id/action_OrgEvent_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
     </fragment>
     <fragment
         android:id="@+id/OrgEditEvent"

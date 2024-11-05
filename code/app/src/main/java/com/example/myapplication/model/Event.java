@@ -43,28 +43,7 @@ public class Event{
     private CollectionReference events;
 
     public Event(){}
-/**
-    public Event(Context context, OnEventDataLoadedListener listener, String eventId){
-        database = FirebaseFirestore.getInstance();
-        events = database.collection("events");
 
-        events.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-
-                    if (document.exists()) {
-                        loadEventData();
-                    } else {
-                        saveEvent();
-                    }
-                    if (listener != null) listener.onEventDataLoaded();
-                }
-            }
-        });
-    };
- **/
     // Constructor retrieves data for an existing event using eventId
     public Event(String eventId) {
         this.eventId = eventId;
@@ -169,16 +148,7 @@ public class Event{
                     });
         }
     }
-/**
-    public static synchronized Event getInstance(Context context, OnEventDataLoadedListener listener,String eventId) {
-        if (instance == null) {
-            instance = new Event(context,listener,eventId);
-        } else if (listener != null) {
-            listener.onEventDataLoaded();
-        }
-        return instance;
-    }
- **/
+
     // Getters
     public String getEventName() {
         return eventName;
