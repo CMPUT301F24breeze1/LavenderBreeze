@@ -391,10 +391,9 @@ public class User implements java.io.Serializable {
     }
     public void loadProfilePictureInto(ImageView imageView,Context context) {
         if (profilePicture != null && !profilePicture.isEmpty()) {
-            Glide.with(context)
+            Glide.with(imageView.getContext())
                     .load(profilePicture)
                     .placeholder(R.drawable.account_circle) // Placeholder if image is loading
-                    .error(R.drawable.account_circle)       // Fallback if loading fails
                     .transform(new CircleCrop())            // Make image circular
                     .into(imageView);
         } else {
