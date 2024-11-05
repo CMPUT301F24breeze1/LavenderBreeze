@@ -14,6 +14,7 @@ junitJupiter = "5.8.1"
 qrGenerator = "4.3.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseStorage = "21.0.1"
+firebaseDatabase = "21.0.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,6 +31,7 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 qr-generator = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "qrGenerator" }
 
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 

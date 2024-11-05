@@ -5,54 +5,166 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Event Name at the Top -->
-    <TextView
-        android:id="@+id/text_event_name"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Button to go back to event -->
+
+        <Button
+            android:id="@+id/button_go_to_event_lst_from_org_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/left_arrow"
+            android:backgroundTint="@color/white"
+            android:textSize="40sp"/>
+
+        <!-- Spacer -->
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <!-- Button to go to Notifications -->
+
+        <Button
+            android:id="@+id/button_go_to_edit_event_from_org_event"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:text="Edit"
+            android:textSize="20sp"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/image_view_org_event_poster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/select_entrants"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:maxHeight="225dp"/>
+
+    <TextView
+        android:id="@+id/text_view_org_event_event_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Event Name"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="8dp" />
+        android:layout_gravity="center"
+        android:textSize="30sp"/>
 
-    <!-- Event Details in the Middle -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
+
     <TextView
-        android:id="@+id/text_event_details"
-        android:layout_width="match_parent"
+        android:id="@+id/text_view_org_event_event_description"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event details go here. This includes description, location, date, and time."
-        android:textSize="16sp"
-        android:padding="8dp" />
+        android:text="Event Information"
+        android:textSize="15sp"/>
 
-    <!-- Spacer to push buttons to the bottom -->
-    <Space
+    <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="25dp"/>
 
-    <!-- Buttons at the Bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule: " />
+        <TextView
+            android:id="@+id/text_view_org_event_start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" to "/>
+        <TextView
+            android:id="@+id/text_view_org_event_end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End date"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Capacity: " />
+        <TextView
+            android:id="@+id/text_view_org_event_capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="capacity"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price: " />
+        <TextView
+            android:id="@+id/text_view_org_event_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration Period: " />
+        <TextView
+            android:id="@+id/text_view_org_event_registration_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" to "/>
+        <TextView
+            android:id="@+id/text_view_org_event_registration_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End date"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
+
     <Button
         android:id="@+id/button_go_to_qrcode_from_org_event"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View QR Code" />
 
     <Button
-        android:id="@+id/button_go_to_edit_event_from_org_event"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit Event" />
-
-    <Button
         android:id="@+id/button_go_to_waiting_list_from_org_event"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Waiting List" />
 
     <Button
         android:id="@+id/button_go_to_selected_list_from_org_event"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Selected List" />
 </LinearLayout>
