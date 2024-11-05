@@ -1,10 +1,15 @@
 package com.example.myapplication.entrant;
 
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+
 import com.example.myapplication.model.User;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -103,9 +108,10 @@ public class EntrantProfile extends Fragment {
             personName.setText(user.getName());
             emailAddress.setText(user.getEmail());
             contactPhoneNumber.setText(user.getPhoneNumber());
-            user.loadProfilePictureInto(profilePicture);
+            user.loadProfilePictureInto(profilePicture,requireContext());
         }
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
+
 }

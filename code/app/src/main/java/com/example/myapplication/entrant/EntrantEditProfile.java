@@ -28,7 +28,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -118,7 +118,7 @@ public class EntrantEditProfile extends Fragment {
         personName.setText(user.getName());
         emailAddress.setText(user.getEmail());
         contactPhoneNumber.setText(user.getPhoneNumber());
-        user.loadProfilePictureInto(profilePicture);
+        user.loadProfilePictureInto(profilePicture,requireContext());
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
@@ -179,7 +179,7 @@ public class EntrantEditProfile extends Fragment {
                         String downloadUrl = uri.toString();
                         user.setProfilePicture(downloadUrl);
                         user.updateProfilePictureInDatabase();
-                        user.loadProfilePictureInto(profilePicture);
+                        user.loadProfilePictureInto(profilePicture,requireContext());
                         Toast.makeText(getContext(), "Profile picture updated!", Toast.LENGTH_SHORT).show();
                     });
                 })
