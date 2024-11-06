@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ListView
+        android:id="@+id/facility_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|bottom">
+        <Button
+            android:id="@+id/button_go_to_add_facility_from_facility_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Facility"
+            android:layout_marginRight="10dp"/>
+
+        <Button
+            android:id="@+id/button_go_to_edit_facility_from_facility_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Facility"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/button_go_to_org_event_list_from_facility_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"/>
+    </LinearLayout>
+
+</LinearLayout>

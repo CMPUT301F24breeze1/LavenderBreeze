@@ -47,6 +47,11 @@
             android:text="Create Facility"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"/>
+        <Button
+            android:id="@+id/button_go_to_facility_list_from_add_facility"
+            android:text="Back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </FrameLayout>

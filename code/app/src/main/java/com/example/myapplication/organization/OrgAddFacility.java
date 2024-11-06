@@ -100,8 +100,12 @@ public class OrgAddFacility extends Fragment {
             }
             Facility facility = new Facility(facilityName, facilityAddress, facilityEmail, facilityPhoneNumber, organizerId);
             facility.saveToFirestore();
-            Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_OrgEventLst);
+            Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_orgFacilityList);
         });
+
+        Button buttonGoToFacilityList = view.findViewById(R.id.button_go_to_facility_list_from_add_facility);
+        buttonGoToFacilityList.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_orgFacilityList));
 
         return view;
     }
