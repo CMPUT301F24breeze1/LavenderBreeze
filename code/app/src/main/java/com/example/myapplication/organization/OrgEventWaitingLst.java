@@ -156,9 +156,16 @@ public class OrgEventWaitingLst extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        User entrant = document.toObject(User.class);
-                        entrantList.add(entrant);
-                        updateListView(); // Update the list view when a new entrant is fetched
+                        // Create a User object and load the data using loadUserData
+                        new User(getContext(), new User.OnUserDataLoadedListener() {
+                            @Override
+                            public void onUserDataLoaded() {
+                                // At this point, user data has been loaded
+                                entrantList.add(new User(getContext(), this)); // Add the loaded user to the list after the data has been fully loaded
+                                updateListView(); // Update the list view when a new entrant is fetched
+                            }
+                        });
+
                     }
                 }
             }
