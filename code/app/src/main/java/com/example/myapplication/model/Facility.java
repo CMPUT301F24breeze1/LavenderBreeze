@@ -30,7 +30,6 @@ public class Facility {
         this.organizerId = DeviceUtils.getDeviceId(context);
 
         initializeFirestore();
-        saveToFirestore();
     }
 
     public Facility(String facilityName, String facilityAddress, String facilityEmail,
@@ -42,12 +41,29 @@ public class Facility {
         this.organizerId = organizerId;
 
         initializeFirestore();
-        saveToFirestore();
     }
 
     private void initializeFirestore() {
         db = FirebaseFirestore.getInstance();
         facilities = db.collection("facilities");
+    }
+
+    // Save facility to Firestore only if it doesn't already exist
+    public void saveToFirestoreIfNotExists() {
+        if (facilities != null) {
+            // Check if a facility with the same name already exists
+            facilities.whereEqualTo("facilityName", facilityName).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null && task.getResult().isEmpty()) {
+                            // Facility does not exist, so add it to Firestore
+                            saveToFirestore();
+                        } else {
+                            Log.d("Firestore", "Facility already exists, skipping save.");
+                        }
+                    });
+        } else {
+            Log.e("Firestore Error", "Firestore database is not initialized.");
+        }
     }
 
     public void saveToFirestore() {
@@ -123,5 +139,8 @@ public class Facility {
 
     public String getFacilityId() {
         return facilityId;
+    }
+    public void setFacilityId(String facilityId){
+        this.facilityId = facilityId;
     }
 }

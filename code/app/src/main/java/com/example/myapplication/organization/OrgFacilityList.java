@@ -9,8 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.Facility;
+import com.example.myapplication.model.FacilityAdapter;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,33 +28,21 @@ import com.example.myapplication.R;
  */
 public class OrgFacilityList extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ListView facilityList;
+    private ArrayList<Facility> facilityDataList;
+    private FacilityAdapter facilityArrayAdapter;
+    private FirebaseFirestore db;
+    private CollectionReference facilities;
 
     public OrgFacilityList() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrgFacilityList.
-     */
-    // TODO: Rename and change types and number of parameters
     public static OrgFacilityList newInstance(String param1, String param2) {
         OrgFacilityList fragment = new OrgFacilityList();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("ARG_PARAM1", param1);
+        args.putString("ARG_PARAM2", param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,10 +50,8 @@ public class OrgFacilityList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db = FirebaseFirestore.getInstance();
+        facilities = db.collection("facilities");
     }
 
     @Override
@@ -64,20 +59,49 @@ public class OrgFacilityList extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_facility_list, container, false);
 
+        // Initialize button for adding facilities
         Button buttonGoToAddFacility = view.findViewById(R.id.button_go_to_add_facility_from_facility_list);
         buttonGoToAddFacility.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_orgFacilityList_to_orgAddFacility));
 
-//        Button buttonGoToEditFacility = view.findViewById(R.id.button_go_to_edit_facility_from_facility_list);
-//        buttonGoToAddFacility.setOnClickListener(v ->
-//                Navigation.findNavController(v).navigate(R.id.action_orgFacilityList_to_orgEditFacility));
-
+        // Button to navigate to event list
         Button buttonGoToEventFacility = view.findViewById(R.id.button_go_to_org_event_list_from_facility_list);
         buttonGoToEventFacility.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_orgFacilityList_to_OrgEventLst));
 
 
+        // Initialize ListView and the data list
+        facilityList = view.findViewById(R.id.facility_list_view);
+        facilityDataList = new ArrayList<>();
+        facilityArrayAdapter = new FacilityAdapter(getContext(), facilityDataList);
+        facilityList.setAdapter(facilityArrayAdapter);
+
+        // Load facilities from Firestore
+        loadFacilitiesFromFirestore();
 
         return view;
+    }
+
+    private void loadFacilitiesFromFirestore() {
+        facilities.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String facilityName = document.getString("facilityName");
+                            String facilityId = document.getId();  // Get the Firestore document ID
+                            Facility facility = new Facility(requireContext());
+                            facility.setFacilityName(facilityName);
+                            facility.setFacilityId(facilityId);
+
+                            // Add the facility to the list
+                            facilityDataList.add(facility);
+                        }
+
+                        // Notify adapter that data has changed
+                        facilityArrayAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getContext(), "Failed to load facilities", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

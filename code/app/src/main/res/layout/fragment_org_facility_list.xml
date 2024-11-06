@@ -24,12 +24,6 @@
             android:layout_marginRight="10dp"/>
 
         <Button
-            android:id="@+id/button_go_to_edit_facility_from_facility_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit Facility"
-            android:layout_marginRight="10dp"/>
-        <Button
             android:id="@+id/button_go_to_org_event_list_from_facility_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
