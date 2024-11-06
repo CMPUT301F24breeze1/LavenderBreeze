@@ -18,10 +18,13 @@ import java.util.Locale;
 import com.example.myapplication.DeviceUtils;
 import com.example.myapplication.QRCodeGenerator;
 import com.example.myapplication.model.Event;
+import com.example.myapplication.model.Facility;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserIDCallback;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.myapplication.R;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -163,7 +166,60 @@ public class OrgAddEvent extends Fragment {
                         eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
                        eventQRCode, organizerID);
         event.saveEvent();
+        saveToFacility(eventLocation, event);
+    }
 
+    void saveToFacility(String eventLocation, Event event) {
+        // Check if facility with given location exists
+        database.collection("facilities")
+                .whereEqualTo("facilityName", eventLocation)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Facility exists, add the event to its event list
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String facilityId = document.getId();
+                            database.collection("facilities")
+                                    .document(facilityId)
+                                    .update("events", FieldValue.arrayUnion(event))
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(requireContext(), "Event added to facility successfully", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("OrgAddEvent", "Error adding event to facility", e);
+                                    });
+                        }
+                    } else {
+                        // Facility does not exist, create a default facility
+                        createDefaultFacility(eventLocation, event);
+                    }
+                });
+    }
+
+    private void createDefaultFacility(String eventLocation, Event event) {
+        String organizerID = DeviceUtils.getDeviceId(requireContext());
+
+        // Default facility data
+        Facility defaultFacility = new Facility(requireContext());
+        defaultFacility.setFacilityName(eventLocation);
+        defaultFacility.setOrganizerId(DeviceUtils.getDeviceId(requireContext()));
+
+        // Save the new facility to Firestore
+        database.collection("facilities")
+                .add(defaultFacility)
+                .addOnSuccessListener(documentReference -> {
+                    // Facility created, add the event to this new facility
+                    documentReference.update("events", FieldValue.arrayUnion(event))
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(requireContext(), "Default facility created and event added", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("OrgAddEvent", "Error adding event to new facility", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgAddEvent", "Error creating default facility", e);
+                });
     }
 
     public Date parseDate(String dateString) {

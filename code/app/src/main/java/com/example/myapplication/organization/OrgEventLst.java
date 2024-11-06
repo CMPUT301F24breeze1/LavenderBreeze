@@ -181,7 +181,7 @@ public class OrgEventLst extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_home)
         );
 
-// Button to navigate to Event Details
+        // Button to navigate to Event Details
         Button button_go_to_event_from_org_event_list = view.findViewById(R.id.button_go_to_event_from_org_event_list);
         button_go_to_event_from_org_event_list.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_event)
@@ -194,6 +194,9 @@ public class OrgEventLst extends Fragment {
         buttonGoToEditOrganizer.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_edit_organizer)
         );
+        Button buttonGoToFacility = view.findViewById(R.id.button_go_to_facility_from_org_event_lst);
+        buttonGoToFacility.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_OrgEventLst_to_orgAddFacility));
 
         return view;
     }

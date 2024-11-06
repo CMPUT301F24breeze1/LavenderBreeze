@@ -108,6 +108,9 @@
         <action
             android:id="@+id/action_org_events_lst_to_org_edit_organizer"
             app:destination="@id/OrgEditOrganizer" />
+        <action
+            android:id="@+id/action_OrgEventLst_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
     </fragment>
     <fragment
         android:id="@+id/OrgEvent"
@@ -205,6 +208,15 @@
         <action
             android:id="@+id/action_entrantLeavePage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/orgAddFacility"
+        android:name="com.example.myapplication.organization.OrgAddFacility"
+        android:label="fragment_org_add_facility"
+        tools:layout="@layout/fragment_org_add_facility" >
+        <action
+            android:id="@+id/action_orgAddFacility_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
     </fragment>
 
 
