@@ -36,7 +36,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -186,6 +189,65 @@ public class OrgEventSelectedLst extends Fragment {
 
         entrantAdapter = new UserListAdapter(this.getContext(), sentEntrants);
         SelectedEntrantsList.setAdapter(entrantAdapter);
+
+        SelectedEntrantsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (waitlist == null) {
+                    Log.e("Kenny", "Waitlist is null!");
+                    Toast.makeText(getActivity(), "Waitlist is not initialized!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (selected == null) {
+                    Log.e("Kenny", "Selected list is null!");
+                    Toast.makeText(getActivity(), "Selected list is not initialized!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Check for empty waitlist
+                if (waitlist.isEmpty()) {
+                    Toast.makeText(getActivity(), "There is Nobody to fill this spot", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Check for valid capacity
+                if (capacity <= 0) {
+                    Toast.makeText(getActivity(), "Invalid event capacity!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Log.d("Kenny", "Selecting replecement entrant");
+                selected.add(waitlist.remove(0));
+                sentEntrants.get(i).putString("Status","Not Registered");
+                entrantAdapter.notifyDataSetChanged();
+                // Shuffle and select entrants based on capacity
+
+
+                // Ensure `eventsRef` and `eventId` are valid before updating Firestore
+                if (usersRef == null || eventId == null || eventId.isEmpty()) {
+                    Log.e("Kenny", "Firestore reference or event ID is null/empty. Cannot update database.");
+                    Toast.makeText(getActivity(), "Failed to update the database. Event ID is missing.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                // Prepare data for Firestore update
+                Map<String, Object> eventData = new HashMap<>();
+                eventData.put("waitlist", waitlist);
+                eventData.put("selectedEntrants", selected);
+
+
+                CollectionReference eventsRef = db.collection("events");
+
+                // Update Firestore document
+                eventsRef.document(eventId).update(eventData)
+                        .addOnSuccessListener(aVoid -> Log.d("Kenny", "Event updated successfully in Firestore."))
+                        .addOnFailureListener(e -> {
+                            Log.e("Kenny", "Error updating event in Firestore", e);
+                            Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
+                        });
+            }
+
+        });
 
         Button buttonGoToEvent = view.findViewById(R.id.button_go_to_event_from_org_event_selected_lst);
         buttonGoToEvent.setOnClickListener(v ->
