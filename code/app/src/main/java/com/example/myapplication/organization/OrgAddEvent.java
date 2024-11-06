@@ -1,6 +1,15 @@
 package com.example.myapplication.organization;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import android.util.Log;
@@ -9,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +32,8 @@ import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserIDCallback;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.myapplication.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +90,10 @@ public class OrgAddEvent extends Fragment {
         }
     }
 
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imageUri;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -90,12 +106,11 @@ public class OrgAddEvent extends Fragment {
         // Bind views
         editTextEventName = view.findViewById(R.id.editTextEventName);
         editTextEventDescription = view.findViewById(R.id.editTextEventDescription);
+        editTextEventStart = view.findViewById(R.id.editTextEventStart);
+        editTextEventEnd = view.findViewById(R.id.editTextEventEnd);
         editTextLocation = view.findViewById(R.id.editTextLocation);
         editTextCapacity = view.findViewById(R.id.editTextCapacity);
         editTextPrice = view.findViewById(R.id.editTextPrice);
-        editTextPosterUrl = view.findViewById(R.id.editTextPosterUrl);
-        editTextEventStart = view.findViewById(R.id.editTextEventStart);
-        editTextEventEnd = view.findViewById(R.id.editTextEventEnd);
         editTextRegistrationStart = view.findViewById(R.id.editTextRegistrationStart);
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
 
@@ -108,8 +123,56 @@ public class OrgAddEvent extends Fragment {
             }
         });
 
+        ImageView posterImageView = view.findViewById(R.id.imageViewPoster);
+        // Initialize the image picker launcher
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        imageUri = result.getData().getData();
+                        posterImageView.setVisibility(View.VISIBLE);
+                        posterImageView.setImageURI(imageUri); // Display selected image in ImageView
+                    }
+                }
+        );
+
+        Button buttonAddPoster = view.findViewById(R.id.buttonAddPoster);
+        buttonAddPoster.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            pickImageLauncher.launch(Intent.createChooser(intent, "Select Event Poster"));
+        });
+
         return view;
     }
+
+    private void uploadPosterImage() {
+        if (imageUri != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference("event_posters/" + System.currentTimeMillis() + ".jpg");
+
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                String posterUrl = uri.toString();
+                                // Save poster URL in Firestore along with event data
+                                saveEventWithPosterUrl(posterUrl);
+                            }))
+                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to upload poster", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(requireContext(), "No poster selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveEventWithPosterUrl(String posterUrl) {
+        Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
+                eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, posterUrl, eventQRCode, organizerID);
+        event.saveEvent();
+        Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event);
+    }
+
 
     public boolean validateEventData(String eventName, String eventDescription, String eventLocation, String eventPosterURL,
                                      int eventCapacity, int eventPrice,
@@ -141,7 +204,6 @@ public class OrgAddEvent extends Fragment {
         String eventName = editTextEventName.getText().toString();
         String eventDescription = editTextEventDescription.getText().toString();
         String eventLocation = editTextLocation.getText().toString();
-        String eventPosterURL = editTextPosterUrl.getText().toString();
         int eventCapacity = Integer.parseInt(editTextCapacity.getText().toString());
         int eventPrice = Integer.parseInt(editTextPrice.getText().toString());
         Date eventStart = parseDate(editTextEventStart.getText().toString());
