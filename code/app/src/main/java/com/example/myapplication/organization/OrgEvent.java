@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
@@ -89,6 +90,7 @@ public class OrgEvent extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +150,6 @@ public class OrgEvent extends Fragment {
         bundle.putString("registrationEnd", registrationEnd);
         bundle.putString("qrCodeHash", qrCodeHash);
 
-        // Button to navigate to the QR code fragment
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
         buttonGoToQRCode.setOnClickListener(v ->{
             Log.d("OrgEvent", "Navigating with eventId: " + eventId);

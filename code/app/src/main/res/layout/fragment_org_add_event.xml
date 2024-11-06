@@ -1,107 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".organization.OrgAddEvent"
-    android:orientation="vertical">
+    android:padding="16dp">
 
+    <!-- Cancel Button at the Top Left Corner -->
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <!-- Poster Placeholder (ImageView) -->
+    <ImageView
+        android:id="@+id/imageViewPoster"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/buttonCancel"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="Event Poster"
+        android:scaleType="centerCrop" />
+
+    <!-- Add Poster Button (Beside Poster Placeholder) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonAddPoster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/imageViewPoster"
+        android:layout_alignEnd="@id/imageViewPoster"
+        android:layout_margin="8dp"
+        android:contentDescription="Add Poster"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white" />
+
+
+    <!-- Event Name -->
     <EditText
         android:id="@+id/editTextEventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Name" />
+        android:hint="Event Name"
+        android:layout_below="@id/imageViewPoster"
+        android:layout_marginTop="16dp" />
+
+    <!-- Event Description -->
     <EditText
         android:id="@+id/editTextEventDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Description" />
+        android:hint="Event Description"
+        android:layout_below="@id/editTextEventName" />
 
+    <!-- Event Start Date -->
+    <EditText
+        android:id="@+id/editTextEventStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Start Date (yyyy-MM-dd HH:mm)"
+        android:inputType="datetime"
+        android:layout_below="@id/editTextEventDescription" />
+
+    <!-- Event End Date -->
+    <EditText
+        android:id="@+id/editTextEventEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event End Date (yyyy-MM-dd HH:mm)"
+        android:inputType="datetime"
+        android:layout_below="@id/editTextEventStart" />
+
+    <!-- Registration Start Date -->
+    <EditText
+        android:id="@+id/editTextRegistrationStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Registration Start Date (yyyy-MM-dd HH:mm)"
+        android:inputType="datetime"
+        android:layout_below="@id/editTextEventEnd" />
+
+    <!-- Registration End Date -->
+    <EditText
+        android:id="@+id/editTextRegistrationEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Registration End Date (yyyy-MM-dd HH:mm)"
+        android:inputType="datetime"
+        android:layout_below="@id/editTextRegistrationStart" />
+
+    <!-- Location -->
     <EditText
         android:id="@+id/editTextLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Location" />
+        android:hint="Location"
+        android:layout_below="@id/editTextRegistrationEnd" />
 
+    <!-- Capacity -->
     <EditText
         android:id="@+id/editTextCapacity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Capacity"
-        android:inputType="number" />
+        android:inputType="number"
+        android:layout_below="@id/editTextLocation" />
 
+    <!-- Price -->
     <EditText
         android:id="@+id/editTextPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Price"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:layout_below="@id/editTextCapacity" />
 
-    <EditText
-        android:id="@+id/editTextPosterUrl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Poster URL" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Event Start Time" />
-
-    <EditText
-        android:id="@+id/editTextEventStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="yyyy-MM-dd HH:mm"
-        android:inputType="datetime" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Event End Time" />
-
-    <EditText
-        android:id="@+id/editTextEventEnd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="yyyy-MM-dd HH:mm"
-        android:inputType="datetime" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registration Start Time" />
-
-    <EditText
-        android:id="@+id/editTextRegistrationStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="yyyy-MM-dd HH:mm"
-        android:inputType="datetime" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registration End Time" />
-
-    <EditText
-        android:id="@+id/editTextRegistrationEnd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="yyyy-MM-dd HH:mm"
-        android:inputType="datetime" />
-
+    <!-- Create Event Button at the Bottom Center -->
     <Button
         android:id="@+id/buttonAddEvent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create Event" />
-
-    <ImageView
-        android:id="@+id/qrCodeImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Generated QR Code" />
+        android:text="Create Event"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp" />
 
-</LinearLayout>
+</RelativeLayout>

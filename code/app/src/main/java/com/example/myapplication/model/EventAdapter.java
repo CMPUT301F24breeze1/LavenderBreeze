@@ -43,24 +43,23 @@ public class EventAdapter extends ArrayAdapter<Event> {
         // Set arrow click listener based on status
         arrowImage.setOnClickListener(v -> {
             Integer actionId = null;
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("event", event);
             switch (status) {
                 case "Selected":
-                    //actionId = R.id.action_selectedList_to_declineInvitationFragment;
+                    Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantSelectedPage,bundle);
                     break;
                 case "Requested":
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("event", event);
                     Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantLeavePage2,bundle);
-                    //actionId = R.id.action_entrantEventsList_to_entrantLeavePage2;
                     break;
                 case "Cancelled":
-                    //actionId = R.id.action_cancelledList_to_rejoinFragment;
+                    Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entranteventdescription,bundle);
                     break;
                 case "Accepted":
-                    //actionId = R.id.action_acceptedList_to_leaveEventFragment;
+                    Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entranteventdescription,bundle);
                     break;
                 default:
-                    actionId = R.id.action_entrantEventsList_to_home;
+                    Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantEventPage);
                     break;
             }
             //Navigation.findNavController(v).navigate(actionId);

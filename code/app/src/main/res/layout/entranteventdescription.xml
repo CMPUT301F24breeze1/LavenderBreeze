@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/leaveeventborder">
 
         <!-- Header with Back Arrow -->
         <LinearLayout
@@ -27,12 +28,8 @@
                 android:src="@drawable/arrow_back"
                 android:contentDescription="Back to Event List" />
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/leaveeventborder">
-        <!-- Event Image and Organizer Name -->
+
+            <!-- Event Image and Organizer Name -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -113,16 +110,4 @@
                 android:src="@drawable/arrow_down" />
         </LinearLayout>
     </LinearLayout>
-        <Button
-            android:id="@+id/leaveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/buttonborder"
-            android:text="Leave Event"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-    </LinearLayout>
-
 </ScrollView>
