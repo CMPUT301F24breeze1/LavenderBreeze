@@ -88,6 +88,9 @@
         <action
             android:id="@+id/action_entrantQrScan_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+        <action
+            android:id="@+id/action_entrantQrScan_to_entrantAddPage"
+            app:destination="@id/entrantAddPage" />
     </fragment>
     <fragment
         android:id="@+id/entrantEditProfile"
@@ -228,6 +231,13 @@
         tools:layout="@layout/entranteventdescription" >
         <action
             android:id="@+id/action_entranteventdescription_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantAddPage"
+        android:label="fragment_entrant_add_page" >
+        <action
+            android:id="@+id/action_entrantAddPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
     </fragment>
 

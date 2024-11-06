@@ -155,8 +155,9 @@ public class OrgAddEvent extends Fragment {
             return;
         }
 
-        QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
-        String eventQRCode = qrCode.getQRCodeAsBase64();
+        //QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
+        //String eventQRCode = qrCode.getQRCodeAsBase64();
+        String eventQRCode = "temp";
 
         String organizerID = DeviceUtils.getDeviceId(requireContext());
         Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,

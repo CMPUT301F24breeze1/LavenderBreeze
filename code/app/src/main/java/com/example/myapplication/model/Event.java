@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.myapplication.QRCodeGenerator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -160,6 +161,9 @@ public class Event implements java.io.Serializable {
             events.add(eventData).addOnSuccessListener(documentReference -> {
                 eventId = documentReference.getId();  // Get the new event ID
                 Log.d("Event", "Event created with ID: " + eventId);
+                QRCodeGenerator qrCode = new QRCodeGenerator(eventId);
+                String eventQrCode = qrCode.getQRCodeAsBase64();
+                documentReference.update("qrCodeHash", eventQrCode);
             }).addOnFailureListener(e -> {
                 Log.e("Event", "Error creating event", e);
             });
