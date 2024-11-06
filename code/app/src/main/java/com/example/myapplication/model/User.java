@@ -49,6 +49,8 @@ public class User implements java.io.Serializable {
     private FirebaseFirestore database;
     private CollectionReference users ;
 
+    public User(){}
+
     /**
      * Constructor of the user class
      * @param context

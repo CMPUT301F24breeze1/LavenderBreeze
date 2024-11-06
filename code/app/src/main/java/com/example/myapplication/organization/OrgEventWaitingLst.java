@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.EntrantAdapter;
@@ -108,6 +109,14 @@ public class OrgEventWaitingLst extends Fragment {
                 sendNotificationToEntrants();
             }
         });
+
+        Bundle bundle = new Bundle();
+        bundle.putString("eventId",eventId);
+
+        Button goToSelectedEntrants = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+        goToSelectedEntrants.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst,getArguments())
+        );
 
 
         return view;

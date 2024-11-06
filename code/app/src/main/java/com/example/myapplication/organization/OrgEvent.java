@@ -134,25 +134,12 @@ public class OrgEvent extends Fragment {
 
 
         //Create bundle containing EventId to be passed to next fragment if necessary
-        Bundle bundle = new Bundle();
-        bundle.putString("eventId", eventId);
-        bundle.putStringArrayList("waitlist", waitlist);
-        bundle.putStringArrayList("selected", selected);
-        bundle.putInt("capacity", capacity);
-        bundle.putString("eventName", eventName);
-        bundle.putString("eventDescription", eventDescription);
-        bundle.putString("eventStart", eventStart);
-        bundle.putString("eventEnd", eventEnd);
-        bundle.putInt("price", price);
-        bundle.putString("registrationStart", registrationStart);
-        bundle.putString("registrationEnd", registrationEnd);
-        bundle.putString("qrCodeHash", qrCodeHash);
 
         // Button to navigate to the QR code fragment
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
         buttonGoToQRCode.setOnClickListener(v ->{
             Log.d("OrgEvent", "Navigating with eventId: " + eventId);
-            Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_view_event_qrcode, bundle);
+            Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_view_event_qrcode, getArguments());
         });
 
         // Button to navigate back to Events List
@@ -170,13 +157,13 @@ public class OrgEvent extends Fragment {
         // Button to navigate to the Waiting List fragment
         Button buttonGoToWaitingList = view.findViewById(R.id.button_go_to_waiting_list_from_org_event);
         buttonGoToWaitingList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_waiting_lst,bundle)
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_waiting_lst,getArguments())
         );
 
         // Button to navigate to the Selected List fragment
         Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event);
         buttonGoToSelectedList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst,bundle)
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst,getArguments())
         );
 
         return view;
