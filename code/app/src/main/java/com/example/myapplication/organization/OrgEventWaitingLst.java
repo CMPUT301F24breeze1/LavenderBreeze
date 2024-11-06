@@ -31,6 +31,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 public class OrgEventWaitingLst extends Fragment {
 
@@ -84,7 +88,12 @@ public class OrgEventWaitingLst extends Fragment {
         loadEventData();
 
         FloatingActionButton selectEntrantsButton = view.findViewById(R.id.button_select_entrants);
-        selectEntrantsButton.setOnClickListener(view1 -> selectEntrants());
+        selectEntrantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectEntrants();
+            }
+        });
 
         Button showMapButton = view.findViewById(R.id.button_go_to_map_from_org_event_waiting_lst);
         showMapButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +118,16 @@ public class OrgEventWaitingLst extends Fragment {
                 sendNotificationToEntrants();
             }
         });
+        Button goToSelectedListButton = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+        goToSelectedListButton.setOnClickListener(v -> {
+            OrgEventSelectedLst fragment = OrgEventSelectedLst.newInstance(eventId);
 
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container_layout, fragment) // Update with your container ID
+                    .addToBackStack(null)
+                    .commit();
+        });
         Bundle bundle = new Bundle();
         bundle.putString("eventId",eventId);
 
@@ -148,6 +166,8 @@ public class OrgEventWaitingLst extends Fragment {
                                 fetchEntrantData(entrantId);
                             }
                         }
+                    } else {
+                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getContext(), "Error fetching entrants", Toast.LENGTH_SHORT).show();
@@ -165,9 +185,16 @@ public class OrgEventWaitingLst extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        User entrant = document.toObject(User.class);
-                        entrantList.add(entrant);
-                        updateListView(); // Update the list view when a new entrant is fetched
+                        // Create a User object and load the data using loadUserData
+                        new User(getContext(), new User.OnUserDataLoadedListener() {
+                            @Override
+                            public void onUserDataLoaded() {
+                                // At this point, user data has been loaded
+                                entrantList.add(new User(getContext(), this)); // Add the loaded user to the list after the data has been fully loaded
+                                updateListView(); // Update the list view when a new entrant is fetched
+                            }
+                        });
+
                     }
                 }
             }
@@ -252,6 +279,7 @@ public class OrgEventWaitingLst extends Fragment {
                     Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
                 });
     }
+
 
     private void sendNotificationToEntrants() {
         Toast.makeText(getContext(), "Notification sent to entrants in the waiting list", Toast.LENGTH_SHORT).show();
