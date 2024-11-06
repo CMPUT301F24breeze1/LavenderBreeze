@@ -262,6 +262,22 @@
         <action
             android:id="@+id/action_orgFacilityList_to_OrgEventLst"
             app:destination="@id/OrgEventLst" />
+        android:id="@+id/entrantSelectedPage"
+        android:name="com.example.myapplication.entrantSelectedPage"
+        android:label="entrantselectedpage"
+        tools:layout="@layout/entrantselectedpage" >
+        <action
+            android:id="@+id/action_entrantSelectedPage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entranteventdescription"
+        android:name="com.example.myapplication.entranteventdescription"
+        android:label="entranteventdescription"
+        tools:layout="@layout/entranteventdescription" >
+        <action
+            android:id="@+id/action_entranteventdescription_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
     </fragment>
 
 

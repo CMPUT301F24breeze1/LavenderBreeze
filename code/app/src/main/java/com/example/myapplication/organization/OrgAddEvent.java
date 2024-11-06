@@ -33,11 +33,14 @@ import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserIDCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.myapplication.R;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -258,30 +261,6 @@ public class OrgAddEvent extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
     }
 
-    public boolean validateEventData(String eventName, String eventDescription, String eventLocation, String eventPosterURL,
-                                     int eventCapacity, int eventPrice,
-                                     Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
-
-        // Check required fields
-        if (eventName == null || eventName.isEmpty()) return false;
-        if (eventDescription == null || eventDescription.isEmpty()) return false;
-        if (eventLocation == null || eventLocation.isEmpty()) return false;
-        if (eventPosterURL == null || eventPosterURL.isEmpty()) return false;
-
-        // Validate capacity and price
-        if (eventCapacity <= 0) return false;
-        if (eventPrice < 0) return false;
-
-        // Validate date fields
-        if (eventStart == null || eventEnd == null || registrationStart == null || registrationEnd == null) return false;
-        if (eventStart.after(eventEnd)) return false;
-        if (registrationStart.after(registrationEnd)) return false;
-        if (registrationEnd.after(eventStart)) return false;
-
-        // All validations passed
-        return true;
-    }
-
     void saveToFacility(String eventLocation, Event event) {
         // Check if facility with given location exists
         database.collection("facilities")
@@ -332,6 +311,32 @@ public class OrgAddEvent extends Fragment {
                 .addOnFailureListener(e -> {
                     Log.e("OrgAddEvent", "Error creating default facility", e);
                 });
+        Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
+    }
+
+    public boolean validateEventData(String eventName, String eventDescription, String eventLocation, String eventPosterURL,
+                                     int eventCapacity, int eventPrice,
+                                     Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
+
+        // Check required fields
+        if (eventName == null || eventName.isEmpty()) return false;
+        if (eventDescription == null || eventDescription.isEmpty()) return false;
+        if (eventLocation == null || eventLocation.isEmpty()) return false;
+        if (eventPosterURL == null || eventPosterURL.isEmpty()) return false;
+
+        // Validate capacity and price
+        if (eventCapacity <= 0) return false;
+        if (eventPrice < 0) return false;
+
+        // Validate date fields
+        if (eventStart == null || eventEnd == null || registrationStart == null || registrationEnd == null) return false;
+        if (eventStart.after(eventEnd)) return false;
+        if (registrationStart.after(registrationEnd)) return false;
+        if (registrationEnd.after(eventStart)) return false;
+
+        // All validations passed
+        return true;
     }
 
     public Date parseDate(String dateString) {
