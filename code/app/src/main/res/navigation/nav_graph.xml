@@ -70,6 +70,12 @@
         <action
             android:id="@+id/action_entrantEventsList_to_entrantLeavePage2"
             app:destination="@id/entrantLeavePage" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantSelectedPage"
+            app:destination="@id/entrantSelectedPage" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entranteventdescription"
+            app:destination="@id/entranteventdescription" />
     </fragment>
     <fragment
         android:id="@+id/entrantQrScan"
@@ -204,6 +210,24 @@
         tools:layout="@layout/fragment_entrant_leave_page" >
         <action
             android:id="@+id/action_entrantLeavePage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantSelectedPage"
+        android:name="com.example.myapplication.entrantSelectedPage"
+        android:label="entrantselectedpage"
+        tools:layout="@layout/entrantselectedpage" >
+        <action
+            android:id="@+id/action_entrantSelectedPage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entranteventdescription"
+        android:name="com.example.myapplication.entranteventdescription"
+        android:label="entranteventdescription"
+        tools:layout="@layout/entranteventdescription" >
+        <action
+            android:id="@+id/action_entranteventdescription_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
     </fragment>
 
