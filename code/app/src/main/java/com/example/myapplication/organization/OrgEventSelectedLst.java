@@ -1,13 +1,10 @@
 package com.example.myapplication.organization;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,83 +12,88 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.myapplication.controller.NotificationSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrgEventSelectedLst extends Fragment {
 
-    private FirebaseFirestore db;
-    private static final String ARG_EVENT_ID = "eventId";
-    private LinearLayout containerLayout;
+    private List<String> selectedList;  // List of device IDs for selected users
+    private List<String> declinedList;  // List of device IDs for declined users
 
-    public OrgEventSelectedLst() {
-        // Required empty public constructor
-    }
-    public static OrgEventSelectedLst newInstance(String eventId) {
-        OrgEventSelectedLst fragment = new OrgEventSelectedLst();
-        Bundle args = new Bundle();
-        args.putString(ARG_EVENT_ID, eventId);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_org_event_selected_lst, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_org_event_selected_lst, container, false);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        containerLayout = view.findViewById(R.id.container_layout);
+        // Initialize lists
+        selectedList = new ArrayList<>();
+        declinedList = new ArrayList<>();
 
-        db = FirebaseFirestore.getInstance();
-        loadSelectedEntrants();
-    }
+        // Retrieve lists of selected and declined user device IDs from arguments
+        if (getArguments() != null) {
+            selectedList = getArguments().getStringArrayList("selectedList");
+            declinedList = getArguments().getStringArrayList("declined");
 
-    private void loadSelectedEntrants() {
-        db.collection("event").document(ARG_EVENT_ID).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    List<String> selectedEntrants = (List<String>) document.get("selectedEntrants");
-                    List<String> acceptedEntrants = (List<String>) document.get("acceptedEntrants");
-                    List<String> declinedEntrants = (List<String>) document.get("declinedEntrants");
+            // Ensure both lists are initialized if null
+            if (selectedList == null) {
+                selectedList = new ArrayList<>();
+            }
+            if (declinedList == null) {
+                declinedList = new ArrayList<>();
+            }
+        }
 
-                    if (selectedEntrants != null) {
-                        displayEntrants(selectedEntrants, acceptedEntrants, declinedEntrants);
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Event data not found", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Log.e("OrgEventSelectedLst", "Error fetching event data", task.getException());
+        // Set up the notification button for selected participants
+        Button notifySelectedButton = view.findViewById(R.id.button_notify_top_right_selected_lst);
+        notifySelectedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotificationToSelected();
+                Toast.makeText(getActivity(), "Notification sent to selected users", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Set up the notification button for declined participants
+        Button notifyDeclinedButton = view.findViewById(R.id.button_notify_top_right_cancelled_lst);
+        notifyDeclinedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotificationToDeclined();
+                Toast.makeText(getActivity(), "Notification sent to declined users", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
     }
 
-    private void displayEntrants(List<String> selectedEntrants, List<String> acceptedEntrants, List<String> declinedEntrants) {
-        for (String entrant : selectedEntrants) {
-            TextView entrantView = new TextView(getContext());
-            entrantView.setText(entrant);
+    /**
+     * Method to send a notification to all users in the selected list
+     */
+    private void sendNotificationToSelected() {
+        if (selectedList != null && !selectedList.isEmpty()) {
+            NotificationSender notificationSender = new NotificationSender();
+            notificationSender.sendNotification(
+                    selectedList,                // List of device IDs
+                    "Event Update",              // Notification title
+                    "You've been selected for the event!" // Notification message
+            );
+        }
+    }
 
-            if (acceptedEntrants != null && acceptedEntrants.contains(entrant)) {
-                entrantView.setBackgroundColor(Color.GREEN);
-                entrantView.setText(entrant + " - Accepted");
-            } else if (declinedEntrants != null && declinedEntrants.contains(entrant)) {
-                entrantView.setBackgroundColor(Color.RED);
-                entrantView.setText(entrant + " - Declined");
-            } else {
-                entrantView.setBackgroundColor(Color.YELLOW);
-                entrantView.setText(entrant + " - Sent");
-            }
-
-            entrantView.setTextSize(18);
-            entrantView.setPadding(16, 16, 16, 16);
-            containerLayout.addView(entrantView);
+    /**
+     * Method to send a notification to all users in the declined list
+     */
+    private void sendNotificationToDeclined() {
+        if (declinedList != null && !declinedList.isEmpty()) {
+            NotificationSender notificationSender = new NotificationSender();
+            notificationSender.sendNotification(
+                    declinedList,                // List of device IDs
+                    "Event Update",              // Notification title
+                    "We're sorry, but your registration has been declined." // Notification message
+            );
         }
     }
 }

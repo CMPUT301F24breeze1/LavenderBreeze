@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // NotificationSender.java
@@ -15,32 +16,18 @@ public class NotificationSender {
     }
 
     /**
-     * Send notification to a device
+     * Send notification to multiple devices
      */
-    public void sendNotification(String deviceId, String title, String message,
-                                 OnNotificationSentListener listener) {
+    public void sendNotification(List<String> deviceIds, String title, String message) {
         Map<String, Object> notificationData = new HashMap<>();
         notificationData.put("title", title);
         notificationData.put("msg", message);
         notificationData.put("timestamp", System.currentTimeMillis());
 
-        db.collection("users")
-                .document(deviceId)
-                .set(notificationData, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    if (listener != null) {
-                        listener.onSuccess();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (listener != null) {
-                        listener.onFailure(e);
-                    }
-                });
-    }
-
-    public interface OnNotificationSentListener {
-        void onSuccess();
-        void onFailure(Exception e);
+        for (String deviceId : deviceIds) {
+            db.collection("users")
+                    .document(deviceId)
+                    .set(notificationData, SetOptions.merge());
+        }
     }
 }

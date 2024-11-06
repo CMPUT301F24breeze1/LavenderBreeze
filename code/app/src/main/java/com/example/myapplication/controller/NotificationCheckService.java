@@ -69,13 +69,12 @@ public class NotificationCheckService {
     }
 
     private void checkForNewNotifications() {
-        Log.d("NotificationService", "Checking for new notifications...");
 
         db.collection("users")
                 .document(deviceId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    Log.d("NotificationService", "Document fetched successfully.");
+
 
                     if (documentSnapshot.exists()) {
                         Long timestamp = documentSnapshot.getLong("timestamp");
@@ -85,11 +84,7 @@ public class NotificationCheckService {
                             String message = documentSnapshot.getString("msg");
                             lastTimestamp = timestamp;
                             showLocalNotification(title, message);
-                        } else {
-                            Log.d("NotificationService", "No new notification or timestamp not updated.");
                         }
-                    } else {
-                        Log.d("NotificationService", "Document does not exist.");
                     }
                 })
                 .addOnFailureListener(e -> Log.e("NotificationService", "Error checking notifications", e));
