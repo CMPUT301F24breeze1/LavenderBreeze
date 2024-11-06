@@ -30,6 +30,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 public class OrgEventWaitingLst extends Fragment {
 
@@ -107,6 +111,16 @@ public class OrgEventWaitingLst extends Fragment {
             public void onClick(View v) {
                 sendNotificationToEntrants();
             }
+        });
+        Button goToSelectedListButton = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+        goToSelectedListButton.setOnClickListener(v -> {
+            OrgEventSelectedLst fragment = OrgEventSelectedLst.newInstance(eventId);
+
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container_layout, fragment) // Update with your container ID
+                    .addToBackStack(null)
+                    .commit();
         });
 
 
