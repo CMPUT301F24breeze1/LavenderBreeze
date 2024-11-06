@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,12 @@ public class User implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     private String userID;
 
+    private Long timestamp;
+    private String msg;
+    private String title;
+
     private FirebaseFirestore database;
-    private CollectionReference users ;
+    private CollectionReference users;
 
     /**
      * Constructor of the user class
