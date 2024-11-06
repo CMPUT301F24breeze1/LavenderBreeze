@@ -105,8 +105,6 @@ public class User implements java.io.Serializable {
         acceptedEvents = (List<String>) document.get("acceptedEvents");
         profilePicture = document.getString("profilePicture");
         if (listener != null) listener.onUserDataLoaded();
-
-//                        profilePicture = document.getString("profilePicture");
     }
     private void loadUser(DocumentSnapshot document){
         name = document.getString("name");
@@ -417,10 +415,5 @@ public class User implements java.io.Serializable {
             // Set a default placeholder image if no profile picture is available
             imageView.setImageResource(R.drawable.account_circle);
         }
-//            Picasso.get().load(profilePicture).into(imageView);
-//        } else {
-//            // Optionally, set a default placeholder image if no profile picture is available
-//            imageView.setImageResource(R.drawable.account_circle);
-//        }
     }
 }
