@@ -1,6 +1,15 @@
 package com.example.myapplication.organization;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import android.util.Log;
@@ -9,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,8 +30,11 @@ import com.example.myapplication.QRCodeGenerator;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.UserIDCallback;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.myapplication.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,8 +57,10 @@ public class OrgAddEvent extends Fragment {
             editTextEventStart, editTextEventEnd,
             editTextRegistrationStart, editTextRegistrationEnd;
 
-    private String eventQRCode;
     private FirebaseFirestore database;
+    private String eventQRCode;
+    private Uri imageUri;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
 
     public OrgAddEvent() {
         // Required empty public constructor
@@ -90,25 +105,153 @@ public class OrgAddEvent extends Fragment {
         // Bind views
         editTextEventName = view.findViewById(R.id.editTextEventName);
         editTextEventDescription = view.findViewById(R.id.editTextEventDescription);
+        editTextEventStart = view.findViewById(R.id.editTextEventStart);
+        editTextEventEnd = view.findViewById(R.id.editTextEventEnd);
         editTextLocation = view.findViewById(R.id.editTextLocation);
         editTextCapacity = view.findViewById(R.id.editTextCapacity);
         editTextPrice = view.findViewById(R.id.editTextPrice);
-        editTextPosterUrl = view.findViewById(R.id.editTextPosterUrl);
-        editTextEventStart = view.findViewById(R.id.editTextEventStart);
-        editTextEventEnd = view.findViewById(R.id.editTextEventEnd);
         editTextRegistrationStart = view.findViewById(R.id.editTextRegistrationStart);
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
 
-        Button buttonAddEvent = view.findViewById(R.id.buttonAddEvent);
-        buttonAddEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createEvent();
-                Navigation.findNavController(v).navigate(R.id.action_org_add_event_to_org_event);
+        Button buttonCreateEvent = view.findViewById(R.id.buttonAddEvent);  // Create Event button
+        Button buttonCancel = view.findViewById(R.id.buttonCancel);  // Cancel button
+
+        buttonCreateEvent.setOnClickListener(v -> {
+            // Validate input fields first
+            if (validateFields()) {
+                // If the form is valid, upload poster (if selected) and create the event
+                uploadPosterImage();
+            } else {
+                // Show a toast if validation fails
+                Toast.makeText(requireContext(), "Please complete all fields before submitting.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        buttonCancel.setOnClickListener(v -> {
+            // Handle cancel action, e.g., navigate back to the event list
+            Navigation.findNavController(v).navigate(R.id.action_org_add_event_to_org_event_lst);
+        });
+
+
+        FloatingActionButton buttonAddPoster = view.findViewById(R.id.buttonAddPoster);
+        buttonAddPoster.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            pickImageLauncher.launch(Intent.createChooser(intent, "Select Event Poster"));
+        });
+
+        ImageView posterImageView = view.findViewById(R.id.imageViewPoster);
+        // Initialize the image picker launcher
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        imageUri = result.getData().getData();
+                        posterImageView.setVisibility(View.VISIBLE);
+                        posterImageView.setImageURI(imageUri); // Display selected image in ImageView
+
+                        // Call the method to upload the image to Firebase Storage
+                        uploadPosterImage();
+                    }
+                }
+        );
+
         return view;
+    }
+
+    public boolean validateFields() {
+        String eventName = editTextEventName.getText().toString();
+        String eventDescription = editTextEventDescription.getText().toString();
+        String eventLocation = editTextLocation.getText().toString();
+        String eventCapacityString = editTextCapacity.getText().toString();
+        String eventPriceString = editTextPrice.getText().toString();
+        String eventStart = editTextEventStart.getText().toString();
+        String eventEnd = editTextEventEnd.getText().toString();
+        String registrationStart = editTextRegistrationStart.getText().toString();
+        String registrationEnd = editTextRegistrationEnd.getText().toString();
+
+        // Check required fields for emptiness
+        if (eventName.isEmpty() || eventDescription.isEmpty() || eventLocation.isEmpty() || eventStart.isEmpty() ||
+                eventEnd.isEmpty() || registrationStart.isEmpty() || registrationEnd.isEmpty()) {
+            return false;  // Return false if any required field is empty
+        }
+
+        // Check if eventCapacity and eventPrice are valid integers
+        if (eventCapacityString.isEmpty() || eventPriceString.isEmpty()) {
+            return false;  // Return false if the capacity or price fields are empty
+        }
+
+        try {
+            int eventCapacity = Integer.parseInt(eventCapacityString);
+            int eventPrice = Integer.parseInt(eventPriceString);
+
+            // Further validation on the parsed values
+            if (eventCapacity <= 0 || eventPrice < 0) {
+                return false;  // Invalid if capacity is less than or equal to 0 or price is negative
+            }
+
+        } catch (NumberFormatException e) {
+            return false;  // Return false if parsing the number fails (invalid input)
+        }
+
+        // If all validations pass
+        return true;
+    }
+
+
+    // Upload Poster Image and Trigger Event Creation after Upload
+    private void uploadPosterImage() {
+        if (imageUri != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference("event_posters/" + System.currentTimeMillis() + ".jpg");
+
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                String posterUrl = uri.toString();  // Get the image URL
+
+                                // Once the image upload is complete, call createEvent
+                                createEvent(posterUrl); // Pass the poster URL after upload completes
+                            }))
+                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to upload poster", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(requireContext(), "No poster selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Create Event Method
+    public void createEvent(String eventPosterURL) {
+        // Retrieve other event information
+        String eventName = editTextEventName.getText().toString();
+        String eventDescription = editTextEventDescription.getText().toString();
+        String eventLocation = editTextLocation.getText().toString();
+        int eventCapacity = Integer.parseInt(editTextCapacity.getText().toString());
+        int eventPrice = Integer.parseInt(editTextPrice.getText().toString());
+        Date eventStart = parseDate(editTextEventStart.getText().toString());
+        Date eventEnd = parseDate(editTextEventEnd.getText().toString());
+        Date eventRegistrationStart = parseDate(editTextRegistrationStart.getText().toString());
+        Date eventRegistrationEnd = parseDate(editTextRegistrationEnd.getText().toString());
+
+        // Validate event data (including poster URL)
+        if (!validateEventData(eventName, eventDescription, eventLocation, eventPosterURL,
+                eventCapacity, eventPrice, eventStart, eventEnd, eventRegistrationStart, eventRegistrationEnd)) {
+            Toast.makeText(requireContext(), "Invalid input. Please check your data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Generate QR Code
+        QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
+        String eventQRCode = qrCode.getQRCodeAsBase64();
+
+        // Create event
+        String organizerID = DeviceUtils.getDeviceId(requireContext());
+        Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
+                eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
+                eventQRCode, organizerID);
+        event.saveEvent();
+        Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
     }
 
     public boolean validateEventData(String eventName, String eventDescription, String eventLocation, String eventPosterURL,
@@ -133,38 +276,6 @@ public class OrgAddEvent extends Fragment {
 
         // All validations passed
         return true;
-    }
-
-
-    public void createEvent(){
-        // Retrieve information
-        String eventName = editTextEventName.getText().toString();
-        String eventDescription = editTextEventDescription.getText().toString();
-        String eventLocation = editTextLocation.getText().toString();
-        String eventPosterURL = editTextPosterUrl.getText().toString();
-        int eventCapacity = Integer.parseInt(editTextCapacity.getText().toString());
-        int eventPrice = Integer.parseInt(editTextPrice.getText().toString());
-        Date eventStart = parseDate(editTextEventStart.getText().toString());
-        Date eventEnd = parseDate(editTextEventEnd.getText().toString());
-        Date eventRegistrationStart = parseDate(editTextRegistrationStart.getText().toString());
-        Date eventRegistrationEnd = parseDate(editTextRegistrationEnd.getText().toString());
-
-        if (!validateEventData(eventName, eventDescription, eventLocation, eventPosterURL,
-                eventCapacity, eventPrice, eventStart, eventEnd, eventRegistrationStart, eventRegistrationEnd)) {
-            Toast.makeText(requireContext(), "Invalid input. Please check your data.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        //QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
-        //String eventQRCode = qrCode.getQRCodeAsBase64();
-        String eventQRCode = "temp";
-
-        String organizerID = DeviceUtils.getDeviceId(requireContext());
-        Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
-                        eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
-                       eventQRCode, organizerID);
-        event.saveEvent();
-
     }
 
     public Date parseDate(String dateString) {

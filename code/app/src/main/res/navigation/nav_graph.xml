@@ -190,6 +190,9 @@
         <action
             android:id="@+id/action_org_add_event_to_org_event"
             app:destination="@id/OrgEvent" />
+        <action
+            android:id="@+id/action_org_add_event_to_org_event_lst"
+            app:destination="@id/OrgEventLst" />
     </fragment>
     <fragment
         android:id="@+id/OrgNotifWaitingLst"
