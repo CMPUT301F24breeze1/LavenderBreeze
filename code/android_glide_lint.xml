@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Custom lint configuration to ignore NotificationPermission for Glide's NotificationTarget -->
+<lint>
+    <issue id="NotificationPermission">
+        <ignore regexp="com.bumptech.glide.request.target.NotificationTarget" />
+    </issue>
+</lint>

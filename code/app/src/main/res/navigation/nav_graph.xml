@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/org_events_lst">
+    app:startDestination="@id/home">
 
     <fragment
         android:id="@+id/home"
@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_home_to_org_events_lst"
-            app:destination="@id/org_events_lst" />
+            app:destination="@id/OrgEventLst" />
         <action
             android:id="@+id/action_home_to_entrantProfile3"
             app:destination="@id/entrantProfile3" />
@@ -67,6 +67,15 @@
         <action
             android:id="@+id/action_entrantEventsList_to_entrantQrScan"
             app:destination="@id/entrantQrScan" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantLeavePage2"
+            app:destination="@id/entrantLeavePage" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entrantSelectedPage"
+            app:destination="@id/entrantSelectedPage" />
+        <action
+            android:id="@+id/action_entrantEventsList_to_entranteventdescription"
+            app:destination="@id/entranteventdescription" />
     </fragment>
     <fragment
         android:id="@+id/entrantQrScan"
@@ -90,95 +99,137 @@
             app:destination="@id/entrantProfile3" />
     </fragment>
     <fragment
-        android:id="@+id/org_events_lst"
+        android:id="@+id/OrgEventLst"
         android:name="com.example.myapplication.organization.OrgEventLst"
-        android:label="fragment_org_events_lst"
-        tools:layout="@layout/fragment_org_events_lst">
+        android:label="fragment_org_events_lst">
         <action
             android:id="@+id/action_org_events_lst_to_home"
             app:destination="@id/home" />
         <action
             android:id="@+id/action_org_events_lst_to_org_event"
-            app:destination="@id/org_event" />
+            app:destination="@id/OrgEvent" />
         <action
             android:id="@+id/action_org_events_lst_to_org_add_event"
-            app:destination="@id/org_add_event" />
+            app:destination="@id/OrgAddEvent" />
         <action
             android:id="@+id/action_org_events_lst_to_org_edit_organizer"
-            app:destination="@id/org_edit_organizer" />
+            app:destination="@id/OrgEditOrganizer" />
     </fragment>
     <fragment
-        android:id="@+id/org_event"
+        android:id="@+id/OrgEvent"
         android:name="com.example.myapplication.organization.OrgEvent"
-        android:label="fragment_org_event"
-        tools:layout="@layout/fragment_org_event" >
+        android:label="fragment_org_event">
+        <argument
+            android:name="eventId"
+            android:defaultValue="0"
+            app:argType="string" />
         <action
             android:id="@+id/action_org_event_to_org_view_event_qrcode"
-            app:destination="@id/org_view_event_qrcode" />
+            app:destination="@id/OrgViewEventQrCode" />
         <action
             android:id="@+id/action_org_event_to_org_edit_event2"
-            app:destination="@id/org_edit_event" />
+            app:destination="@id/OrgEditEvent" />
         <action
             android:id="@+id/action_org_event_to_org_event_waiting_lst"
-            app:destination="@id/org_event_waiting_lst" />
+            app:destination="@id/OrgEventWaitingLst" />
         <action
             android:id="@+id/action_org_event_to_org_event_selected_lst"
-            app:destination="@id/org_event_selected_lst" />
+            app:destination="@id/OrgEventSelectedLst" />
+        <action
+            android:id="@+id/action_OrgEvent_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
     </fragment>
     <fragment
-        android:id="@+id/org_edit_event"
+        android:id="@+id/OrgEditEvent"
         android:name="com.example.myapplication.organization.OrgEditEvent"
         android:label="fragment_org_edit_event"
         tools:layout="@layout/fragment_org_edit_event" />
     <fragment
-        android:id="@+id/org_view_event_qrcode"
+        android:id="@+id/OrgViewEventQrCode"
         android:name="com.example.myapplication.organization.OrgViewEventQrCode"
         android:label="fragment_org_view_event_qrcode"
-        tools:layout="@layout/fragment_org_view_event_qrcode" />
-    <fragment
-        android:id="@+id/org_event_waiting_lst"
-        android:name="com.example.myapplication.organization.OrgEventWaitingLst"
-        android:label="fragment_org_event_waiting_lst"
-        tools:layout="@layout/fragment_org_event_waiting_lst" >
+        tools:layout="@layout/fragment_org_view_event_qrcode" >
         <action
-            android:id="@+id/action_org_event_waiting_lst_to_org_event_selected_lst"
-            app:destination="@id/org_event_selected_lst" />
-        <action
-            android:id="@+id/action_org_event_waiting_lst_to_org_notif_waiting_lst"
-            app:destination="@id/org_notif_waiting_lst" />
-        <action
-            android:id="@+id/action_org_event_waiting_lst_to_org_map"
-            app:destination="@id/org_map" />
+            android:id="@+id/action_OrgViewEventQrCode_to_OrgEvent"
+            app:destination="@id/OrgEvent" />
     </fragment>
     <fragment
-        android:id="@+id/org_event_selected_lst"
+        android:id="@+id/OrgEventWaitingLst"
+        android:name="com.example.myapplication.organization.OrgEventWaitingLst"
+        android:label="fragment_org_event_waiting_lst">
+        <argument
+            android:name="eventId"
+            android:defaultValue="0"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_org_event_waiting_lst_to_org_event_selected_lst"
+            app:destination="@id/OrgEventSelectedLst" />
+        <action
+            android:id="@+id/action_org_event_waiting_lst_to_org_notif_waiting_lst"
+            app:destination="@id/OrgNotifWaitingLst" />
+        <action
+            android:id="@+id/action_org_event_waiting_lst_to_org_map"
+            app:destination="@id/OrgMap" />
+        <action
+            android:id="@+id/action_OrgEventWaitingLst_to_OrgEvent"
+            app:destination="@id/OrgEvent" />
+    </fragment>
+    <fragment
+        android:id="@+id/OrgEventSelectedLst"
         android:name="com.example.myapplication.organization.OrgEventSelectedLst"
         android:label="fragment_org_event_selected_lst"
         tools:layout="@layout/fragment_org_event_selected_lst" />
     <fragment
-        android:id="@+id/org_add_event"
+        android:id="@+id/OrgAddEvent"
         android:name="com.example.myapplication.organization.OrgAddEvent"
         android:label="fragment_org_add_event"
         tools:layout="@layout/fragment_org_add_event" >
         <action
             android:id="@+id/action_org_add_event_to_org_event"
-            app:destination="@id/org_event" />
+            app:destination="@id/OrgEvent" />
     </fragment>
     <fragment
-        android:id="@+id/org_notif_waiting_lst"
+        android:id="@+id/OrgNotifWaitingLst"
         android:name="com.example.myapplication.organization.OrgNotifWaitingLst"
         android:label="fragment_org_notif_waiting_lst"
         tools:layout="@layout/fragment_org_notif_waiting_lst" />
     <fragment
-        android:id="@+id/org_map"
+        android:id="@+id/OrgMap"
         android:name="com.example.myapplication.organization.OrgMap"
         android:label="fragment_org_map"
         tools:layout="@layout/fragment_org_map" />
     <fragment
-        android:id="@+id/org_edit_organizer"
+        android:id="@+id/OrgEditOrganizer"
         android:name="com.example.myapplication.organization.OrgEditOrganizer"
         android:label="fragment_org_edit_organizer"
         tools:layout="@layout/fragment_org_edit_organizer" />
+    <fragment
+        android:id="@+id/entrantLeavePage"
+        android:name="com.example.myapplication.entrant.EntrantLeavePage"
+        android:label="fragment_entrant_leave_page"
+        tools:layout="@layout/fragment_entrant_leave_page" >
+        <action
+            android:id="@+id/action_entrantLeavePage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantSelectedPage"
+        android:name="com.example.myapplication.entrantSelectedPage"
+        android:label="entrantselectedpage"
+        tools:layout="@layout/entrantselectedpage" >
+        <action
+            android:id="@+id/action_entrantSelectedPage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entranteventdescription"
+        android:name="com.example.myapplication.entranteventdescription"
+        android:label="entranteventdescription"
+        tools:layout="@layout/entranteventdescription" >
+        <action
+            android:id="@+id/action_entranteventdescription_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
 
 
 </navigation>

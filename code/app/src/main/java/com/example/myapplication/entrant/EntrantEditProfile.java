@@ -1,11 +1,20 @@
 package com.example.myapplication.entrant;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +26,9 @@ import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,41 +42,20 @@ public class EntrantEditProfile extends Fragment {
     private TextView personName, emailAddress, contactPhoneNumber;
     private SwitchCompat emailNotificationSwitch;
     private User user;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private StorageReference storageRef;
 
 
     public EntrantEditProfile() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EntrantEditProfile.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EntrantEditProfile newInstance(String param1, String param2) {
-        EntrantEditProfile fragment = new EntrantEditProfile();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        storageRef = FirebaseStorage.getInstance().getReference();
+        user = new User(requireContext(), () -> updateUserData());
     }
 
     @Override
@@ -73,9 +64,6 @@ public class EntrantEditProfile extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_edit_profile, container, false);
 
-        if (getArguments() != null) {
-            user = (User) getArguments().getSerializable("user");
-        }
         // Find the views
         doneEditButton = view.findViewById(R.id.doneEdit);
         editPhotoButton = view.findViewById(R.id.editPhotoButton);
@@ -89,13 +77,11 @@ public class EntrantEditProfile extends Fragment {
         emailNotificationSwitch = view.findViewById(R.id.emailNotificationSwitch);
 
         updateUserData();
+        editPhotoButton.setOnClickListener(v -> showEditPhotoDialog());
         doneEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Navigate to ProfileActivity
-                Bundle result = new Bundle();
-                result.putSerializable("updated_user", user);
-                getParentFragmentManager().setFragmentResult("requestKey", result);
                 Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3);
             }
         });
@@ -124,21 +110,15 @@ public class EntrantEditProfile extends Fragment {
                 Toast.makeText(requireContext(), "Email Notifications Disabled", Toast.LENGTH_SHORT).show();
             }
         });
-        // Find the button and set an onClickListener to navigate to org_event_lst.xml
-//        Button profile = view.findViewById(R.id.button_go_to_entrant_profile);
-//        profile.setOnClickListener(v ->
-//                Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3)
-//        );
         return view;
     }
 
     private void updateUserData() {
         // Update the TextViews and Switch with User's data
-        //Log.d("User", "Entrant profile: " + user.getName());
         personName.setText(user.getName());
         emailAddress.setText(user.getEmail());
         contactPhoneNumber.setText(user.getPhoneNumber());
-
+        user.loadProfilePictureInto(profilePicture,requireContext());
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
@@ -147,4 +127,63 @@ public class EntrantEditProfile extends Fragment {
         dialog.setOnEditCompleteListener(listener);
         dialog.show(getParentFragmentManager(), "EditDialogFragment");
     }
+    private void showEditPhotoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_photo_options, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        Button uploadButton = dialogView.findViewById(R.id.button_upload_photo);
+        Button aiButton = dialogView.findViewById(R.id.button_ai_generated_photo);
+        Button deleteButton = dialogView.findViewById(R.id.button_delete_photo);
+
+        uploadButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            openImagePicker();
+        });
+
+        aiButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            //generateAIPicture();
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            //deletePicture();
+        });
+
+        dialog.show();
+    }
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        pickImageLauncher.launch(intent);
+    }
+    private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImageUri = result.getData().getData();
+                    if (selectedImageUri != null) {
+                        uploadImageToFirebase(selectedImageUri);
+                    }
+                }
+            }
+    );
+    private void uploadImageToFirebase(Uri imageUri) {
+        StorageReference profileImageRef = storageRef.child("images/" + user.getDeviceID() + ".jpg");
+
+        profileImageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String downloadUrl = uri.toString();
+                        user.setProfilePicture(downloadUrl);
+                        user.updateProfilePictureInDatabase();
+                        user.loadProfilePictureInto(profilePicture,requireContext());
+                        Toast.makeText(getContext(), "Profile picture updated!", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to upload picture.", Toast.LENGTH_SHORT).show());
+    }
+
 }

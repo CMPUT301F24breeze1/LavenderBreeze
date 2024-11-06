@@ -14,8 +14,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import com.example.myapplication.DeviceUtils;
 import com.example.myapplication.QRCodeGenerator;
 import com.example.myapplication.model.Event;
+import com.example.myapplication.model.User;
+import com.example.myapplication.model.UserIDCallback;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.myapplication.R;
 
@@ -154,14 +158,12 @@ public class OrgAddEvent extends Fragment {
         QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
         String eventQRCode = qrCode.getQRCodeAsBase64();
 
-        // implement organizerID
-        String organizerID = "1700";
-
+        String organizerID = DeviceUtils.getDeviceId(requireContext());
         Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
-                                eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
-                                eventQRCode, organizerID);
+                        eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
+                       eventQRCode, organizerID);
         event.saveEvent();
-        Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+
     }
 
     public Date parseDate(String dateString) {
