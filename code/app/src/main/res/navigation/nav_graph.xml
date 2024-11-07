@@ -114,6 +114,12 @@
         <action
             android:id="@+id/action_org_events_lst_to_org_edit_organizer"
             app:destination="@id/OrgEditOrganizer" />
+        <action
+            android:id="@+id/action_OrgEventLst_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
+        <action
+            android:id="@+id/action_OrgEventLst_to_orgFacilityList"
+            app:destination="@id/orgFacilityList" />
     </fragment>
     <fragment
         android:id="@+id/OrgEvent"
@@ -231,6 +237,33 @@
         tools:layout="@layout/entranteventdescription" >
         <action
             android:id="@+id/action_entranteventdescription_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/orgAddFacility"
+        android:name="com.example.myapplication.organization.OrgAddFacility"
+        android:label="fragment_org_add_facility"
+        tools:layout="@layout/fragment_org_add_facility" >
+        <action
+            android:id="@+id/action_orgAddFacility_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
+        <action
+            android:id="@+id/action_orgAddFacility_to_orgFacilityList"
+            app:destination="@id/orgFacilityList" />
+    </fragment>
+    <fragment
+        android:id="@+id/orgFacilityList"
+        android:name="com.example.myapplication.organization.OrgFacilityList"
+        android:label="fragment_org_facility_list"
+        tools:layout="@layout/fragment_org_facility_list" >
+        <action
+            android:id="@+id/action_orgFacilityList_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
+        <action
+            android:id="@+id/action_orgFacilityList_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
+        <action
+            android:id="@+id/action_entrantSelectedPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
     </fragment>
 
