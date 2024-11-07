@@ -168,6 +168,7 @@ public class OrgEventSelectedLst extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No users to notify in this list.", Toast.LENGTH_SHORT).show();
         }
+    }
 }
 
     
@@ -175,5 +176,5 @@ public class OrgEventSelectedLst extends Fragment {
             
     
 
-}
+
 
