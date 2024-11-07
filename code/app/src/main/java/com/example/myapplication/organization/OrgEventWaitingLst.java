@@ -162,38 +162,6 @@ public class OrgEventWaitingLst extends Fragment {
 
     private void fetchEntrantData(String entrantId) {
         // Fetch user data for each entrant from Firestore
-//        CollectionReference usersRef = db.collection("users");
-//        usersRef.document(entrantId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        // Create a User object and load the data using loadUserData
-////                        new User(getContext(), new User.OnUserDataLoadedListener() {
-////                           @Override
-////                            public void onUserDataLoaded() {
-////                                // At this point, user data has been loaded
-////                               entrantList.add(new User(getContext(), this)); // Add the loaded user to the list after the data has been fully loaded
-////                                updateListView(); // Update the list view when a new entrant is fetched
-////                            }
-////                        });
-//                        User entrant = new User(entrantId, new User.OnUserDataLoadedListener() {
-//                            @Override
-//                            public void onUserDataLoaded() {
-//
-//                            }
-//
-//                            @Override
-//                            public void onUserLoaded(User user) {
-//                                entrantList.add(user);
-//                                updateListView();
-//                            }
-//                        });
-//                }
-//            }
-//        });
-//    });
         User entrant = new User(entrantId, loadedUser -> {
             if (loadedUser != null) {
                 entrantList.add(loadedUser);
