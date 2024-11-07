@@ -244,7 +244,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantSelectedPage"
-        android:name="com.example.myapplication.entrantSelectedPage"
+        android:name="com.example.myapplication.entrant.entrantSelectedPage"
         android:label="entrantselectedpage"
         tools:layout="@layout/entrantselectedpage" >
         <action
@@ -253,7 +253,7 @@
     </fragment>
     <fragment
         android:id="@+id/entranteventdescription"
-        android:name="com.example.myapplication.entranteventdescription"
+        android:name="com.example.myapplication.entrant.entranteventdescription"
         android:label="entranteventdescription"
         tools:layout="@layout/entranteventdescription" >
         <action

@@ -75,7 +75,8 @@ public class EntrantLeavePage extends Fragment {
             // Assuming you have a user instance
             //User user = new User(requireContext(), null); // or retrieve your existing user instance
             Log.d("EntrantLeavePage", "User: " + user.getRequestedEvents());
-            user.removeRequestedEvent(event.getEventId()); // Adjust this method as necessary
+            user.removeRequestedEvent(event.getEventId());
+            event.removeFromWaitlist(user.getDeviceID()); // Remove the user from the waitlist// Adjust this method as necessary
 
             // Navigate back to the event list
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantLeavePage_to_entrantEventsList);
