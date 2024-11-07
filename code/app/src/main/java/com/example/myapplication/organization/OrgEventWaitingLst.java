@@ -123,7 +123,7 @@ public class OrgEventWaitingLst extends Fragment {
 
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container_layout, fragment) // Update with your container ID
+                    .replace(R.id.list_view_event_selected_list, fragment) // Update with your container ID
                     .addToBackStack(null)
                     .commit();
         });

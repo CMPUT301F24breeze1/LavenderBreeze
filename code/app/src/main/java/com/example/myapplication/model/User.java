@@ -79,6 +79,29 @@ public class User implements java.io.Serializable {
             }
         });
     }
+    public User(String deviceID, OnUserDataLoadedListener listener) {
+        Log.d("Device ID", "Android ID: " + deviceID);
+        database = FirebaseFirestore.getInstance();
+        users = database.collection("users");
+
+        // Check if user exists
+        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        // Document exists, pull data
+                        loadUserData(document,listener);
+                    } else {
+                        // Document doesn't exist, create new user
+                        createNewUser();
+                    }
+                }
+            }
+        });
+    }
 
 
     /**
