@@ -1,52 +1,45 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/white"
+    android:background="@color/backgroundColored"
     android:gravity="center"
     android:paddingHorizontal="10dp">
 
 
-    <ImageButton
+    <Button
         android:id="@+id/homeButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_weight="1"
+        android:background="@drawable/buttonborder"
         android:contentDescription="Home"
-        android:background="@drawable/baseline_home"
         android:gravity="center"
         android:text="Home"
         android:textAllCaps="false"
         android:textColor="@color/black" />
-
-    <ImageButton
+    <Button
         android:id="@+id/profileButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_weight="1"
+        android:background="@drawable/buttonborder"
         android:contentDescription="Profile"
-        android:background="@drawable/profilepicture"
         android:gravity="center"
         android:text="Profile"
         android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_margin="5dp"/>
-    <ImageButton
+        android:textColor="@color/black" />
+    <Button
         android:id="@+id/eventsButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_weight="1"
+        android:background="@drawable/buttonborder"
         android:contentDescription="Events"
-        android:background="@drawable/baseline_library_books"
         android:gravity="center"
         android:text="Events"
         android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_margin="5dp"/>
+        android:textColor="@color/black" />
 
 </LinearLayout>
