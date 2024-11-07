@@ -106,8 +106,7 @@ public class OrgEventLst extends Fragment {
 
         ArrayList < ArrayList < String >> waitlists = new ArrayList<>();
         ArrayList<ArrayList<String>> selecteds = new ArrayList<>();
-        ArrayList<ArrayList<String>> accepteds = new ArrayList<>();
-        ArrayList<ArrayList<String>> cancelleds = new ArrayList<>();
+        ArrayList<ArrayList<String>> declineds = new ArrayList<>();
 
         Task<QuerySnapshot> task = eventsRef.get();
 
@@ -122,14 +121,12 @@ public class OrgEventLst extends Fragment {
                     int capacity = events.get(i).getDouble("capacity").intValue();
                     ArrayList<String> waitlist = (ArrayList<String>) events.get(i).get("waitlist");
                     ArrayList<String> selected = (ArrayList<String>) events.get(i).get("selectedEntrants");
-                    ArrayList<String> accepted = (ArrayList<String>) events.get(i).get("acceptedEntrants");
-                    ArrayList<String> cancelled = ((ArrayList<String>) events.get(i).get("declinedEntrants"));
+                    ArrayList<String> declined = (ArrayList<String>) events.get(i).get("declinedEntrants");
 
                     // add waitlist and selected list to respective lists
                     waitlists.add(waitlist);
                     selecteds.add(selected);
-                    accepteds.add(accepted);
-                    cancelleds.add(cancelled);
+                    declineds.add(declined);
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
@@ -166,8 +163,7 @@ public class OrgEventLst extends Fragment {
                 bundle.putString("eventDescription",eventDataList.get(i).getEventDescription());
                 bundle.putStringArrayList("waitlist",waitlists.get(i));
                 bundle.putStringArrayList("selected",selecteds.get(i));
-                bundle.putStringArrayList("accepted",accepteds.get(i));
-                bundle.putStringArrayList("cancelled",cancelleds.get(i));
+
                 bundle.putInt("capacity",eventDataList.get(i).getCapacity());
                 String pattern = "dd-MM-yyyy";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -179,6 +175,7 @@ public class OrgEventLst extends Fragment {
                 bundle.putString("location",eventDataList.get(i).getLocation());
                 bundle.putString("posterURL",eventDataList.get(i).getPosterUrl());
                 bundle.putString("qrCodeHash",eventDataList.get(i).getQrCodeHash());
+                bundle.putStringArrayList("declined",declineds.get(i));
 
                 Navigation.findNavController(view).navigate(R.id.action_org_events_lst_to_org_event,bundle);
             }
@@ -189,7 +186,7 @@ public class OrgEventLst extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_home)
         );
 
-// Button to navigate to Event Details
+        // Button to navigate to Event Details
         Button button_go_to_event_from_org_event_list = view.findViewById(R.id.button_go_to_event_from_org_event_list);
         button_go_to_event_from_org_event_list.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_event)
@@ -202,6 +199,9 @@ public class OrgEventLst extends Fragment {
         buttonGoToEditOrganizer.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_edit_organizer)
         );
+        Button buttonGoToFacility = view.findViewById(R.id.button_go_to_facility_from_org_event_lst);
+        buttonGoToFacility.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_OrgEventLst_to_orgAddFacility));
 
         return view;
     }

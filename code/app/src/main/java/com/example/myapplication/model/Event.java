@@ -40,6 +40,9 @@ public class Event implements java.io.Serializable {
     private FirebaseFirestore database;
     private CollectionReference events;
 
+    public interface OnEventDataLoadedListener {
+        void onEventDataLoaded(Event loadedEvent);
+    }
     // Constructor retrieves data for an existing event using eventId
     public Event(String eventId) {
         this.eventId = eventId;
@@ -47,6 +50,26 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
 
         loadEventData();
+    }
+    public Event(String eventId, Event.OnEventDataLoadedListener listener) {
+        this.eventId = eventId;
+        database = FirebaseFirestore.getInstance();
+        events = database.collection("events");
+
+        // Check if the user document with deviceID exists
+        events.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    // Load user data if document exists
+                    DocumentSnapshot document = task.getResult();
+                    EventData(document, listener);
+                } else {
+                    listener.onEventDataLoaded(null);
+                    Log.d("User", "User document does not exist for deviceID: " + eventId);
+                }
+            }
+        });
     }
 
     public Event(){}
@@ -75,10 +98,26 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
     }
 
-    public interface OnEventDataLoadedListener {
-        void onEventDataLoaded(Event loadedEvent);
+    public void EventData(DocumentSnapshot document, Event.OnEventDataLoadedListener listener) {
+        this.eventDescription = document.getString("eventDescription");
+        this.eventStart = document.getDate("eventStart");
+        this.eventEnd = document.getDate("eventEnd");
+        this.registrationStart = document.getDate("registrationStart");
+        this.registrationEnd = document.getDate("registrationEnd");
+        this.location = document.getString("location");
+        this.capacity = document.getLong("capacity").intValue();
+        this.price = document.getLong("price").intValue();
+        this.posterUrl = document.getString("posterUrl");
+        this.qrCodeHash = document.getString("qrCodeHash");
+        this.organizerId = document.getString("organizerId");
+        this.waitlist = (List<String>) document.get("waitlist");
+        this.selectedEntrants = (List<String>) document.get("selectedEntrants");
+        this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
+        this.declinedEntrants = (List<String>) document.get("declinedEntrants");
+        if (listener != null) {
+            listener.onEventDataLoaded(this);
+        }
     }
-
     public void loadEventDataAsync(OnEventDataLoadedListener listener) {
         // Example of fetching data asynchronously, such as with Firestore
         database.collection("events").document(eventId).get()

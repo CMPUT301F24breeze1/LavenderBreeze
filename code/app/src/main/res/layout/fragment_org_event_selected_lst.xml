@@ -3,18 +3,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/button_go_to_event_from_org_event_selected_lst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/left_arrow"
-        android:backgroundTint="@color/white"
-        android:textSize="40sp"/>
-    <Spinner
-        android:id="@+id/status_spinner"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/status_options" />
+        android:orientation="horizontal">
+
+        <!-- Button to go back to event -->
+
+        <Button
+            android:id="@+id/button_go_to_event_from_org_event_selected_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/left_arrow"
+            android:backgroundTint="@color/white"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:textSize="40sp"/>
+
+        <!-- Title: Selected List -->
+        <TextView
+            android:id="@+id/waitlist_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selected List"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true" />
+
+        <!-- Button to go to Notifications -->
+
+        <Button
+            android:id="@+id/button_go_to_notif_from_org_event_selected_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/send_notification"
+            android:backgroundTint="@color/white"
+            android:layout_gravity="right"
+            android:textSize="40sp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"/>
+    </RelativeLayout>
+
+    <!-- Filter buttons -->
+    <LinearLayout
+        android:id="@+id/filterButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/filterAll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="All" />
+
+        <Button
+            android:id="@+id/filterAccepted"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Accepted" />
+
+        <Button
+            android:id="@+id/filterCancelled"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancelled" />
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/list_view_event_selected_list"
@@ -22,6 +84,5 @@
         android:layout_height="wrap_content"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp" />
-
 
 </LinearLayout>

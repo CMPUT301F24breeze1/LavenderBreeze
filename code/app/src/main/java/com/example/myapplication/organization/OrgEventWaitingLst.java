@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -13,9 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.NotificationSender;
 import com.example.myapplication.model.EntrantAdapter;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
@@ -26,7 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +34,7 @@ import java.util.Map;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 
 public class OrgEventWaitingLst extends Fragment {
@@ -45,13 +44,9 @@ public class OrgEventWaitingLst extends Fragment {
     private List<User> entrantList; // List of entrants
     private FirebaseFirestore db; // Firestore instance
     private String eventId; // Event ID to fetch the correct entrants
-    private ArrayList<String> waitlist, selected;
+    private List<String> waitlist, selected;
     private int capacity;
     private CollectionReference eventsRef;
-    List<DocumentSnapshot> users;
-    ArrayList<Bundle> userDataList;
-    ArrayList<String> userIds;
-
 
     @Nullable
     @Override
@@ -125,17 +120,32 @@ public class OrgEventWaitingLst extends Fragment {
             }
         });
 
-        Bundle bundle = new Bundle();
-        bundle.putString("eventId",eventId);
-
         Button goToSelectedEntrants = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
         goToSelectedEntrants.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst,getArguments())
         );
 
+        Button goToNotifButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
+        goToNotifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationSender notificationSender = new NotificationSender();
+                notificationSender.sendNotification(
+                        waitlist,               // List of device IDs (from waitlist)
+                        "Event Update",         // Notification title
+                        "Please check for updates on your event waitlist" // Notification message
+                );
+
+                // Display toast message
+                Toast.makeText(v.getContext(), "Sent to waitlist", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
         return view;
     }
+
 
     private void loadEventData() {
         eventsRef.document(eventId).get().addOnSuccessListener(documentSnapshot -> {
@@ -163,8 +173,6 @@ public class OrgEventWaitingLst extends Fragment {
                                 fetchEntrantData(entrantId);
                             }
                         }
-                    } else {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getContext(), "Error fetching entrants", Toast.LENGTH_SHORT).show();
@@ -175,25 +183,10 @@ public class OrgEventWaitingLst extends Fragment {
 
     private void fetchEntrantData(String entrantId) {
         // Fetch user data for each entrant from Firestore
-        CollectionReference usersRef = db.collection("users");
-        usersRef.document(entrantId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        // Create a User object and load the data using loadUserData
-                        new User(getContext(), new User.OnUserDataLoadedListener() {
-                            @Override
-                            public void onUserDataLoaded() {
-                                // At this point, user data has been loaded
-                                entrantList.add(new User(getContext(), this)); // Add the loaded user to the list after the data has been fully loaded
-                                updateListView(); // Update the list view when a new entrant is fetched
-                            }
-                        });
-
-                    }
-                }
+        User entrant = new User(entrantId, loadedUser -> {
+            if (loadedUser != null) {
+                entrantList.add(loadedUser);
+                updateListView();
             }
         });
     }
@@ -210,7 +203,6 @@ public class OrgEventWaitingLst extends Fragment {
 
     private void selectEntrants() {
         Log.d("Kenny", "Starting entrant selection...");
-
 
         // Ensure waitlist and selected lists are initialized
         if (waitlist == null) {
@@ -243,85 +235,7 @@ public class OrgEventWaitingLst extends Fragment {
         }
 
         Log.d("Kenny", "Selecting entrants based on capacity: " + capacity);
-        CollectionReference usersRef = db.collection("users");
-        Task<QuerySnapshot> task = usersRef.get();
 
-        task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                users = task.getResult().getDocuments();
-                for(int i = 0; i < users.size(); i++) {
-                    DocumentSnapshot current = users.get(i);
-                    Bundle bundle = new Bundle();
-
-                    bundle.putStringArrayList("requestedEvents",(ArrayList<String>) current.get("requestedEvents"));
-                    bundle.putStringArrayList("selectedEvents",(ArrayList<String>) current.get("selectedEvents"));
-
-                    userIds.add(current.getId());
-                }
-
-                if (capacity >= waitlist.size()) {
-                    selected.addAll(waitlist);
-                    waitlist.clear();
-                    Log.d("Kenny", "Added all waitlisted entrants to selected.");
-                } else {
-                    Collections.shuffle(waitlist);
-                    for (int i = 0; i < capacity; i++) {
-                        Bundle bundle = userDataList.get(userIds.indexOf(waitlist.get(0)));
-                        ArrayList<String> tempRequested = bundle.getStringArrayList("requestedEvents");
-                        ArrayList<String> tempSelected = bundle.getStringArrayList("selectedEvents");
-
-                        if(tempRequested.contains(eventId)){
-                            tempSelected.add(eventId);
-                            tempRequested.remove(eventId);
-                        } else {
-                            tempSelected.add(eventId);
-                        }
-                        bundle.putStringArrayList("requestedEvents",tempRequested);
-                        bundle.putStringArrayList("selectedEvents",tempSelected);
-
-                        selected.add(waitlist.remove(0));
-                        Log.d("Kenny", "Added entrant " + selected.get(selected.size() - 1) + " to selected list.");
-                    }
-                }
-
-                // Ensure `eventsRef` and `eventId` are valid before updating Firestore
-                if (eventsRef == null || eventId == null || eventId.isEmpty()) {
-                    Log.e("Kenny", "Firestore reference or event ID is null/empty. Cannot update database.");
-                    Toast.makeText(getActivity(), "Failed to update the database. Event ID is missing.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                // Prepare data for Firestore update
-                Map<String, Object> eventData = new HashMap<>();
-                eventData.put("waitlist", waitlist);
-                eventData.put("selectedEntrants", selected);
-                getArguments().putStringArrayList("waitlist",waitlist);
-                getArguments().putStringArrayList("selectedEntrants",selected);
-
-                // Update Firestore document
-                eventsRef.document(eventId).update(eventData)
-                        .addOnSuccessListener(aVoid -> Log.d("Kenny", "Event updated successfully in Firestore."))
-                        .addOnFailureListener(e -> {
-                            Log.e("Kenny", "Error updating event in Firestore", e);
-                            Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
-                        });
-                for (int i = 0; i < userIds.size(); i++) {
-                    Map<String, Object> userData = new HashMap<>();
-                    userData.put("requestedEvents",userDataList.get(i).getStringArrayList("requestedEvents"));
-                    userData.put("selectedEvents",userDataList.get(i).getStringArrayList("selectedEvents"));
-                    usersRef.document(userIds.get(i)).update(userData)
-                            .addOnSuccessListener(aVoid -> Log.d("Kenny", "User updated successfully in Firestore."))
-                            .addOnFailureListener(e -> {
-                                Log.e("Kenny", "Error updating user in Firestore", e);
-                                Toast.makeText(getActivity(), "Failed to update user in Firestore.", Toast.LENGTH_LONG).show();
-                            });
-
-                }
-
-
-            }
-        });
         // Shuffle and select entrants based on capacity
         if (capacity >= waitlist.size()) {
             selected.addAll(waitlist);
@@ -346,8 +260,6 @@ public class OrgEventWaitingLst extends Fragment {
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("waitlist", waitlist);
         eventData.put("selectedEntrants", selected);
-        getArguments().putStringArrayList("waitlist",waitlist);
-        getArguments().putStringArrayList("selectedEntrants",selected);
 
         // Update Firestore document
         eventsRef.document(eventId).update(eventData)
