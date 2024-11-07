@@ -40,18 +40,26 @@
             android:hint="Facility Phone Number"
             android:inputType="phone" />
 
-        <Button
-            android:id="@+id/buttonCreateFacility"
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Facility"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"/>
-        <Button
-            android:id="@+id/button_go_to_facility_list_from_add_facility"
-            android:text="Back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_gravity="center_horizontal">
+            <Button
+                android:id="@+id/button_go_to_home_from_add_facility"
+                android:text="Back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/buttonCreateFacility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

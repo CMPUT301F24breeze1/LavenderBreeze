@@ -30,6 +30,7 @@ public class EntrantEventsList extends Fragment {
     private ListView eventList;
     private EventAdapter eventAdapter;  // Use EventAdapter instead of ArrayAdapter
     private User user;
+    Button homeButton, profileButton, eventsButton;
 
     public EntrantEventsList() {
         // Required empty public constructor
@@ -52,7 +53,7 @@ public class EntrantEventsList extends Fragment {
         eventList.setAdapter(eventAdapter);  // Set adapter here to avoid NullPointerException
 
         // Initialize navigation buttons
-        initializeButtons(view);
+        intializeBottomNavButton(view);
 
         // Button listeners to filter lists based on the category
         setupFilterButtons(view);
@@ -60,25 +61,29 @@ public class EntrantEventsList extends Fragment {
         return view;
     }
 
-    // Method to initialize navigation buttons
-    private void initializeButtons(View view) {
-        view.findViewById(R.id.button_go_to_entrant_profile).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantProfile3)
-        );
-        view.findViewById(R.id.button_go_to_entrant_event_page).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantEventPage)
-        );
-        view.findViewById(R.id.button_go_to_qr_scanner).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantQrScan)
-        );
-        view.findViewById(R.id.button_go_to_home).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_home)
-        );
-        view.findViewById(R.id.button_go_to_Leave_page).setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantLeavePage2)
-        );
+    public void intializeBottomNavButton(View view){
+        homeButton = view.findViewById(R.id.homeButton);
+        profileButton = view.findViewById(R.id.profileButton);
+        eventsButton = view.findViewById(R.id.eventsButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_home); // ID of the destination in nav_graph.xml
+            }
+        });
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantProfile3); // ID of the destination in nav_graph.xml
+            }
+        });
+        eventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_self); // ID of the destination in nav_graph.xml
+            }
+        });
     }
-
     // Method to set up filter buttons for different event lists
     private void setupFilterButtons(View view) {
         view.findViewById(R.id.button_show_waitlist).setOnClickListener(v -> showEventList(waitlist, "Requested"));

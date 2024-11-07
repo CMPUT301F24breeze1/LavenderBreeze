@@ -1,15 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".organization.OrgEventSelectedLst">
 
+    <!-- Top row container for buttons aligned to the right -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="end">
+
+        <!-- Cancelled Button -->
+        <Button
+            android:id="@+id/button_notify_top_right_cancelled_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelled"
+            android:backgroundTint="@color/white"
+            android:textSize="16sp"
+            android:padding="8dp" />
+
+        <!-- Spacing between buttons -->
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <!-- Accepted Button -->
+        <Button
+            android:id="@+id/button_notify_top_right_selected_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accepted"
+            android:backgroundTint="@color/white"
+            android:textSize="16sp"
+            android:padding="8dp" />
+    </LinearLayout>
+
+    <!-- Main Container Layout for Content -->
     <LinearLayout
         android:id="@+id/container_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp"/>
+        android:padding="16dp" />
 
-</FrameLayout>
+</LinearLayout>

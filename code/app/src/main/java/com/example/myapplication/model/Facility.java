@@ -22,6 +22,13 @@ public class Facility {
     private FirebaseFirestore db;
     private CollectionReference facilities;
 
+    public Facility() {
+        this.facilityName = "Default Name";
+        this.facilityAddress = "Default Address";
+        this.facilityEmail = "email@default.com";
+        this.facilityPhoneNumber = "123456789";
+    }
+
     public Facility(Context context) {
         this.facilityName = "Default Name";
         this.facilityAddress = "Default Address";
