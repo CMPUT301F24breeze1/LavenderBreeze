@@ -32,6 +32,7 @@ public class OrgEventSelectedLst extends Fragment {
     private List<String> selectedList;
     private List<String> acceptedList;
     private List<String> canceledList;
+     private List<String> notifyList;
     private List<User> displayedUsers = new ArrayList<>();
     private ListView userListView;
     private UserAdapter userAdapter;  // Use EventAdapter instead of ArrayAdapter;
@@ -81,25 +82,8 @@ public class OrgEventSelectedLst extends Fragment {
         });
       
       // Set up the notification button for selected participants
-        Button notifySelectedButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
-        notifySelectedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendNotificationToSelected();
-                Toast.makeText(getActivity(), "Notification sent to selected users", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Set up the notification button for declined participants
-        Button notifyDeclinedButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
-        notifyDeclinedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendNotificationToDeclined();
-                Toast.makeText(getActivity(), "Notification sent to declined users", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        Button notifyButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
+        notifyButton.setOnClickListener(v -> sendNotification());
 
         return view;
     }
@@ -139,10 +123,13 @@ public class OrgEventSelectedLst extends Fragment {
         List<String> userIdsToDisplay = new ArrayList<>();
         if ("accepted".equals(filter)) {
             userIdsToDisplay.addAll(acceptedList);
+            notifyList = acceptedList;
         } else if ("canceled".equals(filter)) {
             userIdsToDisplay.addAll(canceledList);
+            notifyList = canceledList;
         } else {
             userIdsToDisplay.addAll(selectedList);
+            notifyList = selectedList;
         }
         Log.d("OrgEventSelectedLst", "User Ids to Display: " + userIdsToDisplay);
 
@@ -158,34 +145,35 @@ public class OrgEventSelectedLst extends Fragment {
             });
     }
 
-    /**
-     * Method to send a notification to all users in the selected list
-     */
-    private void sendNotificationToSelected() {
-        if (selectedList != null && !selectedList.isEmpty()) {
+    private void sendNotification() {
+        if (notifyList != null && !notifyList.isEmpty()) {
             NotificationSender notificationSender = new NotificationSender();
+            
+            String message;
+            if (notifyList == canceledList) {
+                message = "We're sorry, but your registration has been declined.";
+            } else if (notifyList == selectedList) {
+                message = "You've been selected for the event!";
+            } else {
+                // For canceled list or other cases, set an appropriate message
+                message = "We're sorry, but your registration has been declined.";
+            }
+    
             notificationSender.sendNotification(
-                    selectedList,                // List of device IDs
-                    "Event Update",              // Notification title
-                    "You've been selected for the event!" // Notification message
+                notifyList,              // List of device IDs based on current filter
+                "Event Update",          // Notification title
+                message                  // Notification message
             );
+            Toast.makeText(getActivity(), "Notification sent to " + currentFilter + " users", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "No users to notify in this list.", Toast.LENGTH_SHORT).show();
         }
-    }
+}
 
-    /**
-     * Method to send a notification to all users in the declined list
-     */
-    private void sendNotificationToDeclined() {
-        if (canceledList != null && !canceledList.isEmpty()) {
-            NotificationSender notificationSender = new NotificationSender();
-            notificationSender.sendNotification(
-                    canceledList,                // List of device IDs
-                    "Event Update",              // Notification title
-                    "We're sorry, but your registration has been declined." // Notification message
-            );
-        }
-    }
-
+    
+            
+            
+    
 
 }
 
