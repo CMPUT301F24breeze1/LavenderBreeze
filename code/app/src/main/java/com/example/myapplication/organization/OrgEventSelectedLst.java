@@ -143,6 +143,7 @@ public class OrgEventSelectedLst extends Fragment {
                     userAdapter.notifyDataSetChanged();
                 }
             });
+        }
     }
 
     private void sendNotification() {
