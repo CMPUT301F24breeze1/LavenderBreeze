@@ -9,21 +9,30 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EntrantAddPage extends Fragment {
 
     private String eventID;
-    private Event event; // Store the event object
+    private Event event;
     private User user;
+
+//    private FirebaseFirestore db;
+//    private CollectionReference cRef = db.collection("events");
+//    private DocumentReference dRef;
+//    private DocumentSnapshot ds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,19 @@ public class EntrantAddPage extends Fragment {
         }
         user = new User(requireContext(), null); // Initialize user and load data
         event = new Event(eventID);
+//        dRef = cRef.document(eventID);
+//        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    ds = task.getResult();
+//                    if (!ds.exists()) {
+//                        Log.d("Event", "No such event in Firestore");
+//                        Log.d("Event", ds.toString());
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
