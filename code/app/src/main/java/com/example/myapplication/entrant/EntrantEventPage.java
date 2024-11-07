@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.myapplication.R;
 
@@ -23,7 +25,7 @@ public class EntrantEventPage extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    Button homeButton, profileButton, eventsButton;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -57,6 +59,7 @@ public class EntrantEventPage extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -64,7 +67,7 @@ public class EntrantEventPage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_event_page, container, false);
-
+        intializeBottomNavButton(view);
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
         Button events = view.findViewById(R.id.button_go_to_entrant_event_list);
         events.setOnClickListener(v ->
@@ -72,4 +75,28 @@ public class EntrantEventPage extends Fragment {
         );
         return view;
     }
+    public void intializeBottomNavButton(View view){
+        homeButton = view.findViewById(R.id.homeButton);
+        profileButton = view.findViewById(R.id.profileButton);
+        eventsButton = view.findViewById(R.id.eventsButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventPage_to_home); // ID of the destination in nav_graph.xml
+            }
+        });
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventPage_to_entrantProfile3); // ID of the destination in nav_graph.xml
+            }
+        });
+        eventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventPage_to_entrantEventsList); // ID of the destination in nav_graph.xml
+            }
+        });
+    }
+
 }

@@ -44,7 +44,7 @@ public class EntrantEditProfile extends Fragment {
     private User user;
     private static final int PICK_IMAGE_REQUEST = 1;
     private StorageReference storageRef;
-
+    Button homeButton, profileButton, eventsButton;
 
     public EntrantEditProfile() {
         // Required empty public constructor
@@ -55,7 +55,13 @@ public class EntrantEditProfile extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
-        user = new User(requireContext(), () -> updateUserData());
+        if(getArguments() != null) {
+            user = (User) getArguments().getSerializable("updated_user");
+        }
+        if(user == null) {
+            user = new User(requireContext(), () -> updateUserData());
+
+        }
     }
 
     @Override
@@ -63,7 +69,7 @@ public class EntrantEditProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_edit_profile, container, false);
-
+        intializeBottomNavButton(view);
         // Find the views
         doneEditButton = view.findViewById(R.id.doneEdit);
         editPhotoButton = view.findViewById(R.id.editPhotoButton);
@@ -82,6 +88,9 @@ public class EntrantEditProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 // Navigate to ProfileActivity
+                Bundle result = new Bundle();
+                result.putSerializable("updated_user", user);
+                getParentFragmentManager().setFragmentResult("requestKey", result);
                 Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3);
             }
         });
@@ -111,6 +120,30 @@ public class EntrantEditProfile extends Fragment {
             }
         });
         return view;
+    }
+
+    public void intializeBottomNavButton(View view){
+        homeButton = view.findViewById(R.id.homeButton);
+        profileButton = view.findViewById(R.id.profileButton);
+        eventsButton = view.findViewById(R.id.eventsButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_home); // ID of the destination in nav_graph.xml
+            }
+        });
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3); // ID of the destination in nav_graph.xml
+            }
+        });
+        eventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantEventsList); // ID of the destination in nav_graph.xml
+            }
+        });
     }
 
     private void updateUserData() {
