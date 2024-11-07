@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.EventAdapter;
@@ -66,6 +68,22 @@ public class OrgEventSelectedLst extends Fragment {
 
         // Button listeners to filter lists based on the category
         setupFilterButtons(view);
+
+        Button backButton = view.findViewById(R.id.button_go_to_event_from_org_event_selected_lst);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        Button sendNotificationButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
+        sendNotificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotificationToEntrants();
+            }
+        });
 
         return view;
     }
@@ -123,6 +141,11 @@ public class OrgEventSelectedLst extends Fragment {
                 }
             });
         }
+    }
+
+
+    private void sendNotificationToEntrants() {
+        Toast.makeText(getContext(), "Notification sent to entrants in the selected list", Toast.LENGTH_SHORT).show();
     }
 }
 
