@@ -49,6 +49,7 @@ public class Event implements java.io.Serializable {
         loadEventData();
     }
 
+
     // Constructors for creating a new Event
     public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd, String location, int capacity, int price,
