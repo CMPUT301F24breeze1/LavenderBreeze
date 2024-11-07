@@ -23,7 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class EntrantAddPage extends Fragment {
+public class entrantJoinPage extends Fragment {
 
     private String eventID;
     private Event event;
@@ -59,7 +59,7 @@ public class EntrantAddPage extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_entrant_add_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_entrant_join_page, container, false);
 
         // Reference UI elements
         ImageButton eventList = view.findViewById(R.id.backArrowButton);
@@ -77,7 +77,7 @@ public class EntrantAddPage extends Fragment {
         }
 
         // Back button to navigate to the event list
-        eventList.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_entrantAddPage_to_entrantEventsList));
+        eventList.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_entrantJoinPage_to_entrantEventsList));
 
         // Expand description
         expandDescriptionButton.setOnClickListener(v -> {
@@ -105,7 +105,7 @@ public class EntrantAddPage extends Fragment {
             event.addToWaitlist(user.getDeviceID());
 
             // Navigate back to the event list
-            Navigation.findNavController(requireView()).navigate(R.id.action_entrantAddPage_to_entrantEventsList);
+            Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
         }
     }
 }

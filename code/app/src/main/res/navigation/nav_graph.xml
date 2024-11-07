@@ -103,6 +103,9 @@
         <action
             android:id="@+id/action_entrantQrScan_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+        <action
+            android:id="@+id/action_entrantQrScan_to_entrantJoinPage"
+            app:destination="@id/entrantJoinPage" />
     </fragment>
     <fragment
         android:id="@+id/entrantEditProfile"
@@ -291,6 +294,15 @@
             app:destination="@id/OrgEventLst" />
         <action
             android:id="@+id/action_entrantSelectedPage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantJoinPage"
+        android:name="com.example.myapplication.entrant.entrantJoinPage"
+        android:label="fragment_entrant_join_page"
+        tools:layout="@layout/fragment_entrant_join_page" >
+        <action
+            android:id="@+id/action_entrantJoinPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
     </fragment>
 

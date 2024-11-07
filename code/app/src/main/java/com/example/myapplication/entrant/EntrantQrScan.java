@@ -111,7 +111,7 @@ public class EntrantQrScan extends Fragment {
             if (result.getContents().length() == 20) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("eventID", result.getContents());
-                Navigation.findNavController(requireView()).navigate(R.id.action_entrantQrScan_to_entrantAddPage, bundle);
+                Navigation.findNavController(requireView()).navigate(R.id.action_entrantQrScan_to_entrantJoinPage, bundle);
             }
             else {
                 Toast.makeText(requireContext(), "Invalid QR Code", Toast.LENGTH_SHORT).show();
