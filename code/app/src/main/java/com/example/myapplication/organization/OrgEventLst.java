@@ -106,6 +106,8 @@ public class OrgEventLst extends Fragment {
 
         ArrayList < ArrayList < String >> waitlists = new ArrayList<>();
         ArrayList<ArrayList<String>> selecteds = new ArrayList<>();
+        ArrayList<ArrayList<String>> accepteds = new ArrayList<>();
+        ArrayList<ArrayList<String>> cancelleds = new ArrayList<>();
 
         Task<QuerySnapshot> task = eventsRef.get();
 
@@ -120,10 +122,14 @@ public class OrgEventLst extends Fragment {
                     int capacity = events.get(i).getDouble("capacity").intValue();
                     ArrayList<String> waitlist = (ArrayList<String>) events.get(i).get("waitlist");
                     ArrayList<String> selected = (ArrayList<String>) events.get(i).get("selectedEntrants");
+                    ArrayList<String> accepted = (ArrayList<String>) events.get(i).get("acceptedEntrants");
+                    ArrayList<String> cancelled = ((ArrayList<String>) events.get(i).get("declinedEntrants"));
 
                     // add waitlist and selected list to respective lists
                     waitlists.add(waitlist);
                     selecteds.add(selected);
+                    accepteds.add(accepted);
+                    cancelleds.add(cancelled);
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
@@ -160,6 +166,8 @@ public class OrgEventLst extends Fragment {
                 bundle.putString("eventDescription",eventDataList.get(i).getEventDescription());
                 bundle.putStringArrayList("waitlist",waitlists.get(i));
                 bundle.putStringArrayList("selected",selecteds.get(i));
+                bundle.putStringArrayList("accepted",accepteds.get(i));
+                bundle.putStringArrayList("cancelled",cancelleds.get(i));
                 bundle.putInt("capacity",eventDataList.get(i).getCapacity());
                 String pattern = "dd-MM-yyyy";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);

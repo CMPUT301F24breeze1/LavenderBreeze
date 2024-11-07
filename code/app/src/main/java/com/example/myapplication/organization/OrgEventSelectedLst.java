@@ -62,6 +62,10 @@ public class OrgEventSelectedLst extends Fragment {
     private static final String ARG_PARAM10 = "registrationStart";
     private static final String ARG_PARAM11 = "registrationEnd";
     private static final String ARG_PARAM12 = "qrCodeHash";
+    private static final String ARG_PARAM13 = "accepted";
+    private static final String ARG_PARAM14 = "cancelled";
+
+
 
 
 
@@ -80,6 +84,8 @@ public class OrgEventSelectedLst extends Fragment {
     private String registrationStart;
     private String registrationEnd;
     private String qrCodeHash;
+    private ArrayList<String> accepted;
+    private ArrayList<String> cancelled;
 
     // Firebase stuff
     private FirebaseFirestore db;
@@ -109,7 +115,8 @@ public class OrgEventSelectedLst extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static OrgEventSelectedLst newInstance(String param1, ArrayList<String> param2, ArrayList<String> param3, int param4, String param5,
-                                                  String param6, String param7, String param8, int param9, String param10, String param11, String param12) {
+                                                  String param6, String param7, String param8, int param9, String param10, String param11, String param12,
+                                                  ArrayList<String> param13,ArrayList<String> param14) {
         OrgEventSelectedLst fragment = new OrgEventSelectedLst();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -124,6 +131,8 @@ public class OrgEventSelectedLst extends Fragment {
         args.putString(ARG_PARAM10, param10);
         args.putString(ARG_PARAM11, param11);
         args.putString(ARG_PARAM12, param12);
+        args.putStringArrayList(ARG_PARAM13,param13);
+        args.putStringArrayList(ARG_PARAM14,param14);
         fragment.setArguments(args);
         return fragment;
     }
@@ -144,6 +153,9 @@ public class OrgEventSelectedLst extends Fragment {
             registrationStart = getArguments().getString(ARG_PARAM10);
             registrationEnd = getArguments().getString(ARG_PARAM11);
             qrCodeHash = getArguments().getString(ARG_PARAM12);
+            accepted = getArguments().getStringArrayList(ARG_PARAM13);
+            cancelled = getArguments().getStringArrayList(ARG_PARAM14);
+
         }
     }
 
@@ -164,16 +176,33 @@ public class OrgEventSelectedLst extends Fragment {
                 for(int i = 0; i < users.size(); i++){
                     DocumentSnapshot current = users.get(i);
                     String userName = current.getString("name");
+                    ArrayList<String> selectedEvents = (ArrayList<String>) current.get("selectedEvents");
+                    ArrayList<String> acceptedEvents = (ArrayList<String>) current.get("acceptedEvents");
+                    ArrayList<String> cancelledEvents = (ArrayList<String>) current.get("cancelledEvents");
+
 
                     Bundle bundle = new Bundle();
                     bundle.putString("name",userName);
+                    bundle.putStringArrayList("selectedEvents", selectedEvents);
+                    bundle.putStringArrayList("acceptedEvents", acceptedEvents);
+                    bundle.putStringArrayList("cancelledEvents", cancelledEvents);
                     if (selected.contains(current.getId())){
                         bundle.putString("status","selected");
+                        userIds.add(current.getId());
+                        sentEntrants.add(bundle);
+                    } else if (accepted.contains(current.getId())) {
+                        bundle.putString("status","accepted");
+                        userIds.add(current.getId());
+                        sentEntrants.add(bundle);
+                    } else if (cancelled.contains(current.getId())){
+                        bundle.putString("status","cancelled");
+                        userIds.add(current.getId());
+                        sentEntrants.add(bundle);
+                        //cancelledEntrants.add(bundle)
                     } else {
                         bundle.putString("status","not registered");
+                        userIds.add(current.getId());
                     }
-
-                    userIds.add(current.getId());
                     sentEntrants.add(bundle);
 
 
@@ -215,12 +244,51 @@ public class OrgEventSelectedLst extends Fragment {
                     Toast.makeText(getActivity(), "Invalid event capacity!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
+                // Cancel entrant that was clicked on and draw a replacement
                 Log.d("Kenny", "Selecting replecement entrant");
+                {
+                    // Change arrays within User class for entrant being selected
+                    Bundle bundle = sentEntrants.get(userIds.indexOf(waitlist.get(0)));
+                    ArrayList<String> tempRequested = bundle.getStringArrayList("requestedEvents");
+                    ArrayList<String> tempSelected = bundle.getStringArrayList("selectedEvents");
+
+                    if (tempRequested.contains(eventId)) {
+                        tempSelected.add(eventId);
+                        tempRequested.remove(eventId);
+                    } else {
+                        tempSelected.add(eventId);
+                    }
+                    bundle.putStringArrayList("requestedEvents", tempRequested);
+                    bundle.putStringArrayList("selectedEvents", tempSelected);
+                }
+                // Change arrays within User class for entrant being cancelled
+                {
+                    Bundle bundle = sentEntrants.get(userIds.indexOf(waitlist.get(0)));
+                    ArrayList<String> tempCancelled = bundle.getStringArrayList("cancelledEvents");
+                    ArrayList<String> tempSelected = bundle.getStringArrayList("selectedEvents");
+
+                    if (tempSelected.contains(eventId)) {
+                        tempCancelled.add(eventId);
+                        tempSelected.remove(eventId);
+                    } else {
+                        tempCancelled.add(eventId);
+                    }
+                    bundle.putStringArrayList("cancelledEvents", tempCancelled);
+                    bundle.putStringArrayList("selectedEvents", tempSelected);
+                }
+                String replacementId = waitlist.get(0);
+                sentEntrants.get(userIds.indexOf(replacementId)).putString("status","selected");
                 selected.add(waitlist.remove(0));
-                sentEntrants.get(i).putString("Status","Not Registered");
+
+
+                if(selected.contains(userIds.get(i))) {
+                    selected.remove(userIds.get(i));
+                    sentEntrants.get(i).putString("status","cancelled");
+                } else if (accepted.contains(userIds.get(i))){
+                    accepted.remove(userIds.get(i));
+                    sentEntrants.get(i).putString("status","cancelled");
+                }
                 entrantAdapter.notifyDataSetChanged();
-                // Shuffle and select entrants based on capacity
 
 
                 // Ensure `eventsRef` and `eventId` are valid before updating Firestore
@@ -234,6 +302,8 @@ public class OrgEventSelectedLst extends Fragment {
                 Map<String, Object> eventData = new HashMap<>();
                 eventData.put("waitlist", waitlist);
                 eventData.put("selectedEntrants", selected);
+                eventData.put("declinedEntrants",cancelled);
+                eventData.put("acceptedEntrants",accepted);
 
 
                 CollectionReference eventsRef = db.collection("events");
