@@ -90,6 +90,7 @@ public class EntrantEventsList extends Fragment {
         view.findViewById(R.id.button_show_selected).setOnClickListener(v -> showEventList(selectedlist, "Selected"));
         view.findViewById(R.id.button_show_cancelled).setOnClickListener(v -> showEventList(cancelledlist, "Cancelled"));
         view.findViewById(R.id.button_show_accepted).setOnClickListener(v -> showEventList(acceptedlist, "Accepted"));
+        view.findViewById(R.id.addEventButton).setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantQrScan));
     }
 
     // Load the appropriate event list based on the filter
