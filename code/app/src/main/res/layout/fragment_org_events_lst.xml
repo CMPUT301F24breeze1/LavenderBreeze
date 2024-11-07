@@ -6,32 +6,53 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/button_go_to_home_from_org_event_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to home" />
-
-    <Button
-        android:id="@+id/button_go_to_event_from_org_event_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to event" />
-    <Button
-        android:id="@+id/button_go_to_add_event_from_org_events_lst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Event" />
-    <Button
-        android:id="@+id/button_go_to_edit_organizer_from_org_events_lst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Organizer" />
+    <!-- ListView at the top with weight to take remaining space -->
     <ListView
         android:id="@+id/event_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1" />
 
-    </ListView>
+    <!-- LinearLayout to hold buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center|bottom">
+
+        <Button
+            android:id="@+id/button_go_to_home_from_org_event_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go to home" />
+
+        <Button
+            android:id="@+id/button_go_to_event_from_org_event_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go to event" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|bottom">
+        <Button
+            android:id="@+id/button_go_to_add_event_from_org_events_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Event" />
+        <Button
+            android:id="@+id/button_go_to_facility_from_org_event_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facility"/>
+
+        <Button
+            android:id="@+id/button_go_to_edit_organizer_from_org_events_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Organizer" />
+    </LinearLayout>
+
 </LinearLayout>
