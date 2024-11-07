@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.NotificationSender;
 import com.example.myapplication.model.EntrantAdapter;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
@@ -118,18 +119,27 @@ public class OrgEventWaitingLst extends Fragment {
             }
         });
         Button goToSelectedListButton = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
-        goToSelectedListButton.setOnClickListener(v -> {
-            OrgEventSelectedLst fragment = OrgEventSelectedLst.newInstance(eventId);
 
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.container_layout, fragment) // Update with your container ID
-                    .addToBackStack(null)
-                    .commit();
+        Button goToNotifButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
+        goToNotifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationSender notificationSender = new NotificationSender();
+                notificationSender.sendNotification(
+                        waitlist,               // List of device IDs (from waitlist)
+                        "Event Update",         // Notification title
+                        "Please check for updates on your event waitlist" // Notification message
+                );
+
+                // Display toast message
+                Toast.makeText(v.getContext(), "Sent to waitlist", Toast.LENGTH_SHORT).show();
+            }
         });
+
 
         return view;
     }
+
 
     private void loadEventData() {
         eventsRef.document(eventId).get().addOnSuccessListener(documentSnapshot -> {
