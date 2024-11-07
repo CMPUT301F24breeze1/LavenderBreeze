@@ -165,7 +165,7 @@ public class OrgEventSelectedLst extends Fragment {
                 "Event Update",          // Notification title
                 message                  // Notification message
             );
-            Toast.makeText(getActivity(), "Notification sent to " + currentFilter + " users", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Notification sent!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "No users to notify in this list.", Toast.LENGTH_SHORT).show();
         }
