@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.myapplication.R;
 
@@ -57,6 +59,7 @@ public class EntrantEventPage extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -64,7 +67,15 @@ public class EntrantEventPage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_event_page, container, false);
-
+        ImageButton homeButton = view.findViewById(R.id.homeButton);
+        ImageButton profileButton = view.findViewById(R.id.profileButton);
+        ImageButton eventsButton = view.findViewById(R.id.eventsButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantEventPage_to_entrantProfile3); // ID of the destination in nav_graph.xml
+            }
+        });
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
         Button events = view.findViewById(R.id.button_go_to_entrant_event_list);
         events.setOnClickListener(v ->

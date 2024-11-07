@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_entrantProfile3_to_entrantEditProfile"
             app:destination="@id/entrantEditProfile" />
+        <action
+            android:id="@+id/action_entrantProfile3_to_entrantEventPage"
+            app:destination="@id/entrantEventPage" />
     </fragment>
     <fragment
         android:id="@+id/entrantNotification"
@@ -49,6 +52,9 @@
         <action
             android:id="@+id/action_entrantEventPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+        <action
+            android:id="@+id/action_entrantEventPage_to_entrantProfile3"
+            app:destination="@id/entrantProfile3" />
     </fragment>
     <fragment
         android:id="@+id/entrantEventsList"

@@ -68,7 +68,16 @@ public class EntrantProfile extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-        user = new User(requireContext(), () -> updateUserData());
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+            User updatedUser = (User) bundle.getSerializable("updated_user");
+            if (updatedUser != null) {
+                user = updatedUser; // Update the local user instance
+                updateUserData(); // Refresh the displayed user data
+            }
+        });
+        if(user == null) {
+            user = new User(requireContext(), () -> updateUserData());
+        }
         // Update UI with new user data
          BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
          NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
@@ -86,7 +95,9 @@ public class EntrantProfile extends Fragment {
 
         edit.setOnClickListener(v ->
         {
-            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile);
+            Bundle result = new Bundle();
+            result.putSerializable("updated_user", user);
+            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile,result);
         });
 
         notifications = view.findViewById(R.id.notificationButton);

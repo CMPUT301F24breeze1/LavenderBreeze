@@ -55,7 +55,13 @@ public class EntrantEditProfile extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
-        user = new User(requireContext(), () -> updateUserData());
+        if(getArguments() != null) {
+            user = (User) getArguments().getSerializable("updated_user");
+        }
+        if(user == null) {
+            user = new User(requireContext(), () -> updateUserData());
+
+        }
     }
 
     @Override
@@ -82,6 +88,9 @@ public class EntrantEditProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 // Navigate to ProfileActivity
+                Bundle result = new Bundle();
+                result.putSerializable("updated_user", user);
+                getParentFragmentManager().setFragmentResult("requestKey", result);
                 Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3);
             }
         });

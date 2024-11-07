@@ -11,5 +11,6 @@
         android:icon="@drawable/profilepicture" />
     <item
         android:id="@id/entrantEventPage"
-        android:title="Events"    android:icon="@drawable/baseline_library_books" />
+        android:title="Events"
+        android:icon="@drawable/baseline_library_books" />
 </menu>
