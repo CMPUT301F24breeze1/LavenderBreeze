@@ -8,14 +8,19 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.test.internal.runner.intent.IntentMonitorImpl;
 
+import android.os.Debug;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,11 +37,7 @@ import java.lang.ref.Reference;
  */
 public class EntrantQrScan extends Fragment {
 
-//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    private CollectionReference cRef = db.collection("events");
-//    private DocumentReference dRef;
-
-    private Event event;
+    //private Event event;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -96,25 +97,28 @@ public class EntrantQrScan extends Fragment {
 
         Button scanQR = view.findViewById(R.id.scanQR);
         scanQR.setOnClickListener(v -> {
-            if (activateCamera()) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("event", event);
-                Navigation.findNavController(v).navigate(R.id.action_entrantQrScan_to_entrantAddPage, bundle);
-            }
+            ScanOptions options = new ScanOptions();
+            options.setCaptureActivity(Camera.class);
+            barLauncher.launch(options);
         });
         return view;
     }
 
-    private boolean activateCamera() {
-        ScanOptions options = new ScanOptions();
-        options.setCaptureActivity(Camera.class);
-        barLauncher.launch(options);
-        return event != null;
-    }
-
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result->{
         if (result.getContents() != null) {
-            event = new Event(result.getContents());
+            Log.d("QR", result.getContents());
+            Log.d("QR", String.valueOf(result.getContents().length()));
+            if (result.getContents().length() == 20) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("eventID", result.getContents());
+                Navigation.findNavController(requireView()).navigate(R.id.action_entrantQrScan_to_entrantAddPage, bundle);
+            }
+            else {
+                Toast.makeText(requireContext(), "Invalid QR Code", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            Log.d("QR", "No QR code");
         }
     });
 }

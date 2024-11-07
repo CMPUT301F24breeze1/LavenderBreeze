@@ -15,18 +15,24 @@ import androidx.navigation.Navigation;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EntrantAddPage extends Fragment {
 
+    private String eventID;
     private Event event; // Store the event object
     private User user;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            event = (Event) getArguments().getSerializable("event"); // Retrieve the event
+            eventID = (String) getArguments().getSerializable("eventID"); // Retrieve the event
         }
         user = new User(requireContext(), null); // Initialize user and load data
+        event = new Event(eventID);
     }
 
     @Override
@@ -74,6 +80,7 @@ public class EntrantAddPage extends Fragment {
             //User user = new User(requireContext(), null); // or retrieve your existing user instance
             Log.d("EntrantAddPage", "User: " + user.getRequestedEvents());
             user.addRequestedEvent(event.getEventId()); // Adjust this method as necessary
+            event.addToWaitlist(user.getDeviceID());
 
             // Navigate back to the event list
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantAddPage_to_entrantEventsList);

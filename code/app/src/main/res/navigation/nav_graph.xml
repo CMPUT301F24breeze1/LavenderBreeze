@@ -238,7 +238,9 @@
     </fragment>
     <fragment
         android:id="@+id/entrantAddPage"
-        android:label="fragment_entrant_add_page" >
+        android:name="com.example.myapplication.entrantAddPage"
+        android:label="fragment_entrant_add_page"
+        tools:layout="@layout/fragment_entrant_add_page" >
         <action
             android:id="@+id/action_entrantAddPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
