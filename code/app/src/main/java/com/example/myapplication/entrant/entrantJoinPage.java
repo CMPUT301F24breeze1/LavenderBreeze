@@ -21,6 +21,10 @@ public class entrantJoinPage extends Fragment {
     private String eventID;
     private User user;
 
+    /**
+     * Pulls eventID from bundle and initializes User object from deviceID
+     * @param savedInstanceState Bundle with saved instance state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,15 @@ public class entrantJoinPage extends Fragment {
         user = new User(requireContext(), null); // Initialize user and load data
     }
 
+    /**
+     * Sets up appropriate buttons on the entrantJoinPage
+     * Loads the event from FireStore DB using eventID with asynchronous methods from Event class
+     * Sets text views using information for the event stored in DB
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entrant_join_page, container, false);
@@ -72,6 +85,11 @@ public class entrantJoinPage extends Fragment {
         return view;
     }
 
+    /**
+     * Adds the event to the user's requested events in DB
+     * Adds the user to the event's waitlist in DB
+     * @param event Event object associated with the EventID obtained from QR
+     */
     private void addEvent(Event event) {
         if (event != null) {
             Log.d("EntrantAddPage", "User: " + user.getRequestedEvents());
