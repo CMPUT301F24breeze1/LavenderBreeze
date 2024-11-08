@@ -18,12 +18,24 @@ import com.example.myapplication.model.Event;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+/**
+ * A class that allows an entrant to open their phone's camera and scan the QR code of a specific event
+ * Switches to a different fragment describing the scanned event with the option to add yourself to the waitlist
+ * (Upon successful QR code scan)
+ */
 public class EntrantQrScan extends Fragment {
 
     public EntrantQrScan() {
         // Required empty public constructor?
     }
 
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,6 +56,9 @@ public class EntrantQrScan extends Fragment {
         return view;
     }
 
+    /**
+     * Journey Apps Zxing Barcode Scanner API Function
+     */
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result->{
         if (result.getContents() != null) { //Waits until results are gathered, a.k.a. a QR is scanned.
             //Log.d("QR", result.getContents());
@@ -60,6 +75,11 @@ public class EntrantQrScan extends Fragment {
         }
     });
 
+
+    /**
+     * Navigates to entrantJoinPage, whilst storing eventID in a bundle to pass on to that page.
+     * @param eventID String value identifying the event document in FireStore DB
+     */
     private void switchPage(String eventID) {
         // The QR Code is the eventID encoded, so we put it into a bundle
         Bundle bundle = new Bundle();
