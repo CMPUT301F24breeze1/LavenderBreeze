@@ -22,11 +22,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrgFacilityList#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for displaying a list of facilities
  */
-//
 public class OrgFacilityList extends Fragment {
 
     private ListView facilityList;
@@ -48,6 +45,11 @@ public class OrgFacilityList extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes a reference to the facilities collection in FireBase DB
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,17 @@ public class OrgFacilityList extends Fragment {
         facilities = db.collection("facilities");
     }
 
+    /**
+     * Sets up proper buttons and views for the facility list page
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +96,9 @@ public class OrgFacilityList extends Fragment {
         return view;
     }
 
+    /**
+     * Gets ALL facilities from the DB to display in list
+     */
     private void loadFacilitiesFromFirestore() {
         facilities.get()
                 .addOnCompleteListener(task -> {

@@ -30,7 +30,7 @@ public class EntrantQrScan extends Fragment {
     }
 
     /**
-     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * Opens a page with the option to open camera and scan QR
      * @param inflater LayoutInflater to inflate the view
      * @param container ViewGroup container for the fragment
      * @param savedInstanceState Bundle with saved instance state

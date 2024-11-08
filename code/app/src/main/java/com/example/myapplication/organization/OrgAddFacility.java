@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
 /**
  * Fragment for adding a Facility
  */
@@ -50,6 +51,17 @@ public class OrgAddFacility extends Fragment {
             }
     );
 
+    /**
+     * Opens and populates a page for an organizer to add their facility to their organizer profile.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_add_facility, container, false);
@@ -77,6 +89,9 @@ public class OrgAddFacility extends Fragment {
         return view;
     }
 
+    /**
+     * Loads the facility associated with the organizer's deviceID, if it exists
+     */
     private void fetchExistingFacility() {
         db.collection("facilities")
                 .whereEqualTo("organizerId", organizerId)
@@ -112,6 +127,9 @@ public class OrgAddFacility extends Fragment {
                 });
     }
 
+    /**
+     * Sets up any fields for the facility that can be auto-populated
+     */
     private void populateFieldsWithExistingFacility() {
         editFacilityName.setText(existingFacility.getFacilityName());
         editFacilityAddress.setText(existingFacility.getFacilityAddress());
@@ -123,6 +141,10 @@ public class OrgAddFacility extends Fragment {
         }
     }
 
+    /**
+     * Called when organizer attempts to save their facility.
+     * Ensures information is of proper type.
+     */
     private void saveOrUpdateFacility() {
         String facilityName = editFacilityName.getText().toString().trim();
         String facilityAddress = editFacilityAddress.getText().toString().trim();
@@ -141,6 +163,13 @@ public class OrgAddFacility extends Fragment {
         }
     }
 
+    /**
+     * Method to be called when there is an attempt to upload a poster
+     * @param name facility name
+     * @param address poster url
+     * @param email organizer's email
+     * @param phone organizer's phone number
+     */
     private void uploadImageAndSaveOrUpdate(String name, String address, String email, String phone) {
         StorageReference profileImageRef = storage.getReference().child("facilities/" + organizerId + "/profile.jpg");
         profileImageRef.putFile(profileImageUri)
@@ -150,6 +179,13 @@ public class OrgAddFacility extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Image upload failed", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Method to be called when there is an attempt to edit information about facility
+     * @param name facility name
+     * @param address poster url
+     * @param email organizer's email
+     * @param phone organizer's phone number
+     */
     private void saveOrUpdateFacilityDetails(String name, String address, String email, String phone, String imageUrl) {
         if (existingFacility != null) {
             // Update existing facility
