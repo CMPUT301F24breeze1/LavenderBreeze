@@ -53,14 +53,9 @@ public class OrgEventLst extends Fragment {
     ArrayList<String> eventIds = new ArrayList<>();
 
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-
+    /**
+     * Empty Constructor for navGraph to use
+     */
     public OrgEventLst() {
         // Required empty public constructor
     }
@@ -69,31 +64,30 @@ public class OrgEventLst extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment org_events_lst.
+     * @return A new instance of fragment OrgEventLst.
      */
-    // TODO: Rename and change types and number of parameters
-    public static OrgEventLst newInstance(String param1, String param2) {
+    public static OrgEventLst newInstance() {
         OrgEventLst fragment = new OrgEventLst();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * This method assigns passed arguments to declared variables if any are passed
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-        }
+        if (getArguments() != null) {}
     }
 
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

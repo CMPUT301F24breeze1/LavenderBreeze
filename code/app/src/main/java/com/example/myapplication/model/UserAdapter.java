@@ -12,25 +12,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.example.myapplication.R;
+import com.example.myapplication.organization.OrgEventLst;
 import com.example.myapplication.organization.OrgEventSelectedLst;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * A {@link ArrayAdapter<User>} subclass.
+ * Use the {@link UserAdapter(Context, List, String, String, Bundle)} constructor to
+ * create an instance of this fragment.
+ */
 public class UserAdapter extends ArrayAdapter<User> {
     private String status;
     private String eventId;
     private Event event;
     private List<String> waitlist;
-    private List<String> selectedList;
-    private List<String> acceptedList;
-    private List<String> canceledList;
     private User replacement;
     private User replaced;
     private Bundle arguments;
 
+    /**
+     * Constructs an an instance of the user adapter with a list of users
+     * eventId, and bundle which goes on to have a user put into it when a
+     * user in the list gets clicked
+     *
+     * @param context
+     * @param users
+     * @param status
+     * @param eventId
+     * @param bundle
+     */
     public UserAdapter(Context context, List<User> users, String status, String eventId, Bundle bundle) {
         super(context, 0,users);
         this.status = status;
@@ -39,6 +53,17 @@ public class UserAdapter extends ArrayAdapter<User> {
     // Pass the status to determine the action on click
     }
 
+    /**
+     * Provides a view for an adapter view, displaying the user's name, status,
+     * and a button.
+     * Sets up click listeners on the button for each user that will cancel the user if clicked
+     * and draw a replacement, the cancellation will not occur if there is nobody in the waitlist
+     *
+     * @param position the position of the item within the adapter's data set
+     * @param convertView the old view to reuse, if possible
+     * @param parent the parent view that this view will eventually be attached to
+     * @return the view corresponding to the data at the specified position
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -61,18 +86,19 @@ public class UserAdapter extends ArrayAdapter<User> {
             Bundle bundle = new Bundle();
             bundle.putSerializable("user", user);
             replaced = (User) bundle.getSerializable("user");
+
+            // Load event data from passed eventId
             event = new Event(eventId);
             event.loadEventDataAsync(new Event.OnEventDataLoadedListener() {
                 @Override
                 public void onEventDataLoaded(Event loadedEvent) {
                     if (loadedEvent != null) {
-                        selectedList = loadedEvent.getSelectedEntrants();
-                        acceptedList = loadedEvent.getAcceptedEntrants();
-                        canceledList = loadedEvent.getDeclinedEntrants();
                         waitlist = loadedEvent.getWaitlist();
 
                     }
                     Log.d("OrgEventSelectedLst", "Received Accepted List: ");
+
+                    // Check if a replacement entrant can be drawn
                     if(waitlist.isEmpty()){
                         Toast.makeText(v.getContext(), "There is nobody to replace this entrant", Toast.LENGTH_SHORT).show();
                     } else {

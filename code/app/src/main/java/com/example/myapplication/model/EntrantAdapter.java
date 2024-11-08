@@ -1,6 +1,7 @@
 package com.example.myapplication.model;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +14,34 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.R;
 
 import java.util.List;
-
+/**
+ * A {@link ArrayAdapter<User>} subclass.
+ * Use the {@link UserAdapter(Context, List)} constructor to
+ * create an instance of this fragment.
+ */
 public class EntrantAdapter extends ArrayAdapter<User> {
     private Context context;
     private List<User> entrants; // List of entrants
 
-    // Constructor
-    public EntrantAdapter(@NonNull Context context, List<User> entrants) {
+    /**
+     * Constructs an an instance of the Entrant Adapter with a list of users
+     *
+     * @param context
+     * @param entrants
+     */    public EntrantAdapter(@NonNull Context context, List<User> entrants) {
         super(context, 0, entrants);
         this.context = context;
         this.entrants = entrants;
     }
 
-    // Create the view for each item in the ListView
-    @NonNull
+    /**
+     * Provides a view for an adapter view, displaying the user's name
+     *
+     * @param position the position of the item within the adapter's data set
+     * @param convertView the old view to reuse, if possible
+     * @param parent the parent view that this view will eventually be attached to
+     * @return the view corresponding to the data at the specified position
+     */    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
