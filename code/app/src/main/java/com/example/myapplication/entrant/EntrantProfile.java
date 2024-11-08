@@ -1,3 +1,6 @@
+// From chatgpt, openai, "write a java implementation with java documentation of EntrantProfile
+//class with methods to show the profile of the entrant
+//given here is the xml code for it", 2024-11-02
 package com.example.myapplication.entrant;
 
 import android.content.pm.PackageManager;
@@ -29,9 +32,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.myapplication.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link EntrantProfile#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment that displays the profile information of an entrant, including name, email,
+ * phone number, and profile picture. It allows navigation to an edit profile page and
+ * manages updates to the profile data.
  */
 public class EntrantProfile extends Fragment {
     private User user;
@@ -40,11 +43,18 @@ public class EntrantProfile extends Fragment {
     private ImageView profilePicture;
     private SwitchCompat emailNotificationSwitch;
     Button homeButton, profileButton, eventsButton;
-
+    /**
+     * Default constructor required for instantiating the fragment.
+     */
     public EntrantProfile() {
         // Required empty public constructor
     }
-
+    /**
+     * Called after the fragment's view has been created. It listens for updated user data
+     * and initializes the bottom navigation buttons.
+     * @param view the fragment's root view
+     * @param savedInstanceState Bundle containing the saved instance state
+     */
     @Override
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
@@ -61,7 +71,14 @@ public class EntrantProfile extends Fragment {
         // Update UI with new user data
         intializeBottomNavButton(view);
     }
-
+    /**
+     * Inflates the view for the fragment, sets up the UI components, and configures
+     * the edit button to navigate to the profile editing page.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle containing the saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,6 +103,9 @@ public class EntrantProfile extends Fragment {
         profilePicture = view.findViewById(R.id.profilePicture);
         return view;
     }
+    /**
+     * Updates the displayed user data in the UI components.
+     */
     private void updateUserData() {
         // Update the TextViews and Switch with User's data
         if (user != null) {
@@ -97,6 +117,10 @@ public class EntrantProfile extends Fragment {
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
+    /**
+     * Initializes the bottom navigation buttons.
+     * @param view the fragment's root view
+     */
     public void intializeBottomNavButton(View view){
         homeButton = view.findViewById(R.id.homeButton);
         profileButton = view.findViewById(R.id.profileButton);
