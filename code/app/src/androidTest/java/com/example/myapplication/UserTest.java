@@ -3,7 +3,10 @@ package com.example.myapplication;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -168,5 +171,89 @@ public class UserTest {
         assertThrows(IllegalArgumentException.class, () -> {
             user.setIsFacility(null);
         });
+    }
+
+    /**
+     * Test the addRequestedEvent method
+     */
+    @Test
+    public void testAddRequestedEvent() {
+        String eventId = "event123";
+        user.addRequestedEvent(eventId);
+        assertTrue(user.getRequestedEvents().contains(eventId));
+    }
+
+    /**
+     * Test the removeRequestedEvent method
+     */
+    @Test
+    public void testRemoveRequestedEvent() {
+        String eventId = "event123";
+        user.addRequestedEvent(eventId);
+        user.removeRequestedEvent(eventId);
+        assertFalse(user.getRequestedEvents().contains(eventId));
+    }
+
+    /**
+     * Test the addSelectedEvent method
+     */
+    @Test
+    public void testAddSelectedEvent() {
+        String eventId = "event456";
+        user.addSelectedEvent(eventId);
+        assertTrue(user.getSelectedEvents().contains(eventId));
+    }
+
+    /**
+     * Test the removeSelectedEvent method
+     */
+    @Test
+    public void testRemoveSelectedEvent() {
+        String eventId = "event456";
+        user.addSelectedEvent(eventId);
+        user.removeSelectedEvent(eventId);
+        assertFalse(user.getSelectedEvents().contains(eventId));
+    }
+
+    /**
+     * Test the addCancelledEvent method
+     */
+    @Test
+    public void testAddCancelledEvent() {
+        String eventId = "event789";
+        user.addCancelledEvent(eventId);
+        assertTrue(user.getCancelledEvents().contains(eventId));
+    }
+
+    /**
+     * Test the removeCancelledEvent method
+     */
+    @Test
+    public void testRemoveCancelledEvent() {
+        String eventId = "event789";
+        user.addCancelledEvent(eventId);
+        user.removeCancelledEvent(eventId);
+        assertFalse(user.getCancelledEvents().contains(eventId));
+    }
+
+    /**
+     * Test the addAcceptedEvent method
+     */
+    @Test
+    public void testAddAcceptedEvent() {
+        String eventId = "event101";
+        user.addAcceptedEvent(eventId);
+        assertTrue(user.getAcceptedEvents().contains(eventId));
+    }
+
+    /**
+     * Test the removeAcceptedEvent method
+     */
+    @Test
+    public void testRemoveAcceptedEvent() {
+        String eventId = "event101";
+        user.addAcceptedEvent(eventId);
+        user.removeAcceptedEvent(eventId);
+        assertFalse(user.getAcceptedEvents().contains(eventId));
     }
 }
