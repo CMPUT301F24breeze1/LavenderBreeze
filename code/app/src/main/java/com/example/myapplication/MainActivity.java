@@ -26,48 +26,34 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
-import com.example.myapplication.controller.NotificationCheckService;
+
 import com.example.myapplication.controller.NotificationSender;
+import com.example.myapplication.controller.PollingService;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     // Ensure your ActivityResultLauncher is registered in a context that has access to an Activity
-    private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
-    private NotificationCheckService notificationCheckService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ActivityResultLauncher<String> activityResultLauncher =
-                registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-                    @Override
-                    public void onActivityResult(Boolean isGranted) {
-                        if (isGranted) {
-                            Toast.makeText(MainActivity.this, "Post notification permission granted", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Post notification permission not granted", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        Intent intent = new Intent(this, NotificationCheckService.class);
-        startService(intent);
 
+        Intent intent = new Intent(MainActivity.this, PollingService.class);
+        startService(intent);
+        Log.d("ServiceStatus", "Attempting to start PollingService");
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Obtain the running service instance and set the launcher
-        notificationCheckService = new NotificationCheckService(MainActivity.this, requestNotificationPermissionLauncher);
-        notificationCheckService.startPollingForNotifications();
-    }
-
-
 }

@@ -73,5 +73,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.firebase:firebase-messaging:23.1.1")
-
+    implementation("androidx.work:work-runtime:2.7.1")
+    implementation("com.google.guava:guava:29.0-android")
 }
