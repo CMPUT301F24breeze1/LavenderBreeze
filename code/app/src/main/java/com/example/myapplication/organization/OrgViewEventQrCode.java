@@ -22,9 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrgViewEventQrCode#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment to allow organizer to view QR Code to be scanned or to be shared
  */
 public class OrgViewEventQrCode extends Fragment {
 
@@ -39,13 +37,10 @@ public class OrgViewEventQrCode extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param eventID Parameter 1.
-     * @return A new instance of fragment org_view_event_qrcode.
+     * Passing of required information from Event page (eventId) to indentify a particular event
+     * @param eventID
+     * @return
      */
-    // TODO: Rename and change types and number of parameters
     public static OrgViewEventQrCode newInstance(String eventID) {
         OrgViewEventQrCode fragment = new OrgViewEventQrCode();
         Bundle args = new Bundle();
@@ -54,11 +49,28 @@ public class OrgViewEventQrCode extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initialize the Fragment
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Inflation of view, initialization of database, and retrieval of required data
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,6 +94,9 @@ public class OrgViewEventQrCode extends Fragment {
         return view;
     }
 
+    /**
+     * Retrieval QR Code from database if available.
+     */
     private void fetchQRCodeHash(){
         if (eventId == null || eventId.isEmpty()) {
             Log.d("EventId null", "Failed to fetch eventId");
@@ -105,6 +120,10 @@ public class OrgViewEventQrCode extends Fragment {
         );
     }
 
+    /**
+     * To display QR Code as ImageView
+     * @param qrCodeHash
+     */
     private void displayQrCode(String qrCodeHash){
         // Initialize QRCodeGenerator with the base64-encoded QR code hash
         QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(qrCodeHash);
