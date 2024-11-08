@@ -508,4 +508,4 @@ public class User implements java.io.Serializable {
             imageView.setImageResource(R.drawable.account_circle);
         }
     }
-}
+}s
