@@ -20,8 +20,6 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 public class EntrantQrScan extends Fragment {
 
-    private Event event;
-
     public EntrantQrScan() {
         // Required empty public constructor?
     }
