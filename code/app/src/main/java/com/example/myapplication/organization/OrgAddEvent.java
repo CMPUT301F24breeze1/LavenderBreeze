@@ -43,9 +43,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrgAddEvent#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment that allow organizers to create an event details they wish to have.
+ * Prompting the organizer to add Event Name, Details, Location, Capacity, Price, Poster URl
+ * Event Start and End Date, Registration Start and End Date
  */
 public class OrgAddEvent extends Fragment {
 
@@ -90,6 +90,11 @@ public class OrgAddEvent extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes fragment
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +103,20 @@ public class OrgAddEvent extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
+    /**
+     * Inflates the view, sets up UI elements, and configures click listeners for navigation
+     * Allows organizer to enter information about the event, including uploading a poster
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return view
+     */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -166,6 +185,10 @@ public class OrgAddEvent extends Fragment {
         return view;
     }
 
+    /**
+     * Validates the fields to make sure the information entered are safe
+     * @return true
+     */
     public boolean validateFields() {
         String eventName = editTextEventName.getText().toString();
         String eventDescription = editTextEventDescription.getText().toString();
@@ -206,7 +229,9 @@ public class OrgAddEvent extends Fragment {
     }
 
 
-    // Upload Poster Image and Trigger Event Creation after Upload
+    /**
+     * Allows the upload of Poster image and URL
+     */
     private void uploadPosterImage() {
         if (imageUri != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -226,7 +251,10 @@ public class OrgAddEvent extends Fragment {
         }
     }
 
-    // Create Event Method
+    /**
+     * To create the event, generate QR Code, save to Facility if possible, and save to Firestore Firebase
+     * @param eventPosterURL
+     */
     public void createEvent(String eventPosterURL) {
         // Retrieve other event information
         String eventName = editTextEventName.getText().toString();
@@ -261,6 +289,12 @@ public class OrgAddEvent extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
     }
 
+    /**
+     * To save the event to Facility if possible, if the event location of an event matches a Facility name in database
+     * the Event is added to a List in the document for the particular Facility
+     * @param eventLocation
+     * @param event
+     */
     void saveToFacility(String eventLocation, Event event) {
         // Check if facility with given location exists
         database.collection("facilities")
@@ -287,6 +321,13 @@ public class OrgAddEvent extends Fragment {
                     }
                 });
     }
+
+    /**
+     * This is if the event has a location that does not match a Facility name in the database
+     * Creates a new Facility and stores the event in a list in the document
+     * @param eventLocation
+     * @param event
+     */
     private void createDefaultFacility(String eventLocation, Event event) {
         String organizerID = DeviceUtils.getDeviceId(requireContext());
 
@@ -315,6 +356,20 @@ public class OrgAddEvent extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
     }
 
+    /**
+     * to validate data with parameters to ensure the information provide is safe
+     * @param eventName
+     * @param eventDescription
+     * @param eventLocation
+     * @param eventPosterURL
+     * @param eventCapacity
+     * @param eventPrice
+     * @param eventStart
+     * @param eventEnd
+     * @param registrationStart
+     * @param registrationEnd
+     * @return
+     */
     public boolean validateEventData(String eventName, String eventDescription, String eventLocation, String eventPosterURL,
                                      int eventCapacity, int eventPrice,
                                      Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
@@ -339,6 +394,11 @@ public class OrgAddEvent extends Fragment {
         return true;
     }
 
+    /**
+     * To turn a String into a Date data type
+     * @param dateString
+     * @return
+     */
     public Date parseDate(String dateString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         try {
