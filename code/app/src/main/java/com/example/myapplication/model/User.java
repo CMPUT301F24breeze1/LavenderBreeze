@@ -40,6 +40,9 @@ public class User implements java.io.Serializable {
     public interface OnUserDataLoadedListener {
         void onUserDataLoaded();
     }
+    /**
+     * Interface for callback when user data is loaded.
+     */
     public interface OnUserLoadedListener {
         void onUserLoaded(User user); // Dedicated listener for User object
     }
@@ -67,10 +70,9 @@ public class User implements java.io.Serializable {
     private CollectionReference users;
 
     /**
-     * Constructs a User object and initializes data from Firestore if it exists, or creates
-     * a new user record if none is found.
-     * @param context the context from which the user is created
-     * @param listener a callback interface for when user data is loaded
+     * Constructs a User object with a specified deviceID.
+     * @param deviceID
+     * @param listener
      */
     // Constructor for creating a User with a specified deviceID
     public User(String deviceID, OnUserLoadedListener listener) {
@@ -93,7 +95,12 @@ public class User implements java.io.Serializable {
             }
         });
     }
-    // Constructor
+    /**
+     * Constructs a User object and initializes data from Firestore if it exists, or creates
+     * a new user record if none is found.
+     * @param context the context from which the user is created
+     * @param listener a callback interface for when user data is loaded
+     */
     public User(Context context, OnUserDataLoadedListener listener) {
         // Extract the device ID
         this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -144,6 +151,12 @@ public class User implements java.io.Serializable {
             listener.onUserDataLoaded();
         }
     }
+
+    /**
+     * Loads user data from a Firestore document.
+     * @param document
+     * @param listener
+     */
     private void UserData(DocumentSnapshot document,OnUserLoadedListener listener) {
         name = document.getString("name");
         email = document.getString("email");
