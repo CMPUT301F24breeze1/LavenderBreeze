@@ -26,7 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
+/**
+ * Fragment for adding a Facility
+ */
 public class OrgAddFacility extends Fragment {
 
     private EditText editFacilityName, editFacilityAddress, editFacilityEmail, editFacilityPhoneNumber;
