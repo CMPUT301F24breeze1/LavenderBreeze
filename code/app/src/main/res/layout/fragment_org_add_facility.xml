@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".organization.OrgAddFacility">
+
+    <ImageView
+        android:id="@+id/facilityProfileImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Facility Profile Picture"
+        android:scaleType="centerCrop"
+        android:src="@drawable/account_circle" />
+    <Button
+        android:id="@+id/buttonSelectProfileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload Profile Picture"
+        android:layout_gravity="center" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:gravity="center|bottom">
 
         <EditText
             android:id="@+id/editTextFacilityName"
@@ -62,4 +79,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>
