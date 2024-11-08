@@ -17,13 +17,26 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
-
+/**
+ * A fragment that allows the user to scan a QR code which, if valid, will
+ * redirect the user to the event page for the event associated with that
+ * QR code
+ */
 public class EntrantQrScan extends Fragment {
 
+    /**
+     * Empty Constructor for navGraph to use
+     */
     public EntrantQrScan() {
         // Required empty public constructor?
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment EntrantQrScan.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +73,13 @@ public class EntrantQrScan extends Fragment {
         }
     });
 
+    /**
+     * @param eventID
+     *
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     */
     private void switchPage(String eventID) {
         // The QR Code is the eventID encoded, so we put it into a bundle
         Bundle bundle = new Bundle();

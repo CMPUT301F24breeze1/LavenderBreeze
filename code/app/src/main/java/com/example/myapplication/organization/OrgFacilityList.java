@@ -26,6 +26,7 @@ import java.util.ArrayList;
  * Use the {@link OrgFacilityList#newInstance} factory method to
  * create an instance of this fragment.
  */
+//
 public class OrgFacilityList extends Fragment {
 
     private ListView facilityList;

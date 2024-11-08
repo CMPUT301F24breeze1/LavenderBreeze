@@ -19,7 +19,7 @@ import androidx.core.app.NotificationCompat;
 import com.example.myapplication.DeviceUtils;
 import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+//
 public class PollingService extends Service {
 
     private static final String CHANNEL_ID = "polling_notification_channel";
