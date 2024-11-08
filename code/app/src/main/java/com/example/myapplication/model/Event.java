@@ -532,6 +532,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void addToWaitlist(String userId) {
+        if (waitlist == null) {
+            waitlist = new ArrayList<>();  // Initialize if null
+        }
         if (!waitlist.contains(userId)) {
             waitlist.add(userId);
             events.document(eventId).update("waitlist", waitlist);
@@ -543,6 +546,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void removeFromWaitlist(String userId) {
+        if (waitlist == null) {
+            waitlist = new ArrayList<>();  // Initialize if null
+        }
         if (waitlist.contains(userId)) {
             waitlist.remove(userId);
             events.document(eventId).update("waitlist", waitlist);
@@ -554,6 +560,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void addToSelectedlist(String userId) {
+        if (selectedEntrants == null) {
+            selectedEntrants = new ArrayList<>();  // Initialize if null
+        }
         if (!selectedEntrants.contains(userId)) {
             selectedEntrants.add(userId);
             events.document(eventId).update("selectedEntrants", selectedEntrants);
@@ -565,6 +574,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void removeFromSelectedlist(String userId) {
+        if (selectedEntrants == null) {
+            selectedEntrants = new ArrayList<>();  // Initialize if null
+        }
         if (selectedEntrants.contains(userId)) {
             selectedEntrants.remove(userId);
             events.document(eventId).update("selectedEntrants", selectedEntrants);
@@ -576,6 +588,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void addToAcceptedlist(String userId) {
+        if (acceptedEntrants == null) {
+            acceptedEntrants = new ArrayList<>();  // Initialize if null
+        }
         if (!acceptedEntrants.contains(userId)) {
             acceptedEntrants.add(userId);
             events.document(eventId).update("acceptedEntrants", acceptedEntrants);
@@ -587,6 +602,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void removeFromAcceptedlist(String userId) {
+        if (acceptedEntrants == null) {
+            acceptedEntrants = new ArrayList<>();  // Initialize if null
+        }
         if (acceptedEntrants.contains(userId)) {
             acceptedEntrants.remove(userId);
             events.document(eventId).update("acceptedEntrants", acceptedEntrants);
@@ -598,6 +616,9 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void addToDeclinedlist(String userId) {
+        if (declinedEntrants == null) {
+            declinedEntrants = new ArrayList<>();  // Initialize if null
+        }
         if (!declinedEntrants.contains(userId)) {
             declinedEntrants.add(userId);
             events.document(eventId).update("declinedEntrants", declinedEntrants);
@@ -609,15 +630,12 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void removeFromDeclinedlist(String userId) {
+        if (declinedEntrants == null) {
+            declinedEntrants = new ArrayList<>();  // Initialize if null
+        }
         if (declinedEntrants.contains(userId)) {
             declinedEntrants.remove(userId);
             events.document(eventId).update("declinedEntrants", declinedEntrants);
         }
     }
-
-
-
-
-
-
 }
