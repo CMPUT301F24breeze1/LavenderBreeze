@@ -22,13 +22,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrgViewEventQrCode#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment which displays the QR Code for a particular Event
+ * Makes use of eventId to identify event and fetch the QR Code associated with that event
  */
 public class OrgViewEventQrCode extends Fragment {
-
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
     private FirebaseFirestore db;
@@ -54,11 +51,28 @@ public class OrgViewEventQrCode extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initialization of the fragment
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Inflation of view, initialization of buttons and navigation, and Firestore Firebase
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,6 +96,9 @@ public class OrgViewEventQrCode extends Fragment {
         return view;
     }
 
+    /**
+     * Fetching QR code from database using eventId
+     */
     private void fetchQRCodeHash(){
         if (eventId == null || eventId.isEmpty()) {
             Log.d("EventId null", "Failed to fetch eventId");
@@ -105,6 +122,10 @@ public class OrgViewEventQrCode extends Fragment {
         );
     }
 
+    /**
+     * Display QR Code as ImageView
+     * @param qrCodeHash
+     */
     private void displayQrCode(String qrCodeHash){
         // Initialize QRCodeGenerator with the base64-encoded QR code hash
         QRCodeGenerator qrCodeGenerator = new QRCodeGenerator(qrCodeHash);
