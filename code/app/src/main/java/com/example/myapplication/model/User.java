@@ -55,10 +55,10 @@ public class User implements java.io.Serializable {
     private Boolean isFacility;
     private String deviceID;
     private String profilePicture;
-    private List<String> requestedEvents;
-    private List<String> selectedEvents;
-    private List<String> cancelledEvents;
-    private List<String> acceptedEvents;
+    private List<String> requestedEvents=new ArrayList<>();
+    private List<String> selectedEvents=new ArrayList<>();
+    private List<String> cancelledEvents=new ArrayList<>();
+    private List<String> acceptedEvents=new ArrayList<>();
     private static final long serialVersionUID = 1L;
     private String userID;
 
