@@ -44,6 +44,7 @@ public class entrantJoinPage extends Fragment {
         Event temp = new Event(eventID, loadedEvent -> { // Means of loading the event asynchronously
             if (loadedEvent != null) {
                 Log.d("entrantJoinPage_LoadedEvent", "Loaded Event: " + loadedEvent.getEventId());
+                // Populate information for event on page.
                 organizerNameTextView.setText("Organized by: " + loadedEvent.getOrganizerId());
                 eventDescriptionTextView.setText(loadedEvent.getEventDescription());
                 eventDateTextView.setText("Date: " + loadedEvent.getEventStart());
@@ -58,7 +59,8 @@ public class entrantJoinPage extends Fragment {
         // Return to event list
         eventList.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_entrantJoinPage_to_entrantEventsList));
 
-        expandDescriptionButton.setOnClickListener(v -> { // If description is long, user can choose whether or not to expand
+        // If description is long, user can choose whether or not to expand
+        expandDescriptionButton.setOnClickListener(v -> {
             if (eventDescriptionTextView.getMaxLines() == 2) {
                 eventDescriptionTextView.setMaxLines(Integer.MAX_VALUE);
                 expandDescriptionButton.setImageResource(R.drawable.arrow_up);
@@ -67,7 +69,6 @@ public class entrantJoinPage extends Fragment {
                 expandDescriptionButton.setImageResource(R.drawable.arrow_down);
             }
         });
-
         return view;
     }
 
