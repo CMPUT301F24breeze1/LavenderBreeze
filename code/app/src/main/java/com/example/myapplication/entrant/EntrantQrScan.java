@@ -49,10 +49,7 @@ public class EntrantQrScan extends Fragment {
             //Log.d("QR", result.getContents());
             //Log.d("QR", String.valueOf(result.getContents().length()));
             if (result.getContents().length() == 20) {
-                // The QR Code is the eventID encoded, so we put it into a bundle
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("eventID", result.getContents());
-                Navigation.findNavController(requireView()).navigate(R.id.action_entrantQrScan_to_entrantJoinPage, bundle);
+                switchPage(result.getContents());
             }
             else {
                 Toast.makeText(requireContext(), "Invalid QR Code", Toast.LENGTH_SHORT).show();
@@ -62,4 +59,11 @@ public class EntrantQrScan extends Fragment {
             Log.d("QR", "No QR code");
         }
     });
+
+    private void switchPage(String eventID) {
+        // The QR Code is the eventID encoded, so we put it into a bundle
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("eventID", eventID);
+        Navigation.findNavController(requireView()).navigate(R.id.action_entrantQrScan_to_entrantJoinPage, bundle);
+    }
 }
