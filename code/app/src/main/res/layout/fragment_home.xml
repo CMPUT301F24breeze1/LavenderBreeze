@@ -6,17 +6,15 @@
     android:orientation="vertical"
     android:gravity="center">
 
-    <!-- Organizer Event List Button on Top -->
     <Button
-        android:id="@+id/button_go_to_org_event_list"
+        android:id="@+id/button_go_to_add_facility"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Organizer Event List"
+        android:text="Organizer Profile"
         android:textSize="24dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp" />
 
-    <!-- Entrant Profile Button Below -->
     <Button
         android:id="@+id/button_go_to_entrant_profile"
         android:layout_width="wrap_content"

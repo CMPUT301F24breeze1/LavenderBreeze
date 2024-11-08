@@ -40,6 +40,9 @@ public class User implements java.io.Serializable {
     public interface OnUserDataLoadedListener {
         void onUserDataLoaded();
     }
+    public interface OnUserLoadedListener {
+        void onUserLoaded(User user); // Dedicated listener for User object
+    }
     private String name;
     private String email;
     private String phoneNumber;
@@ -69,6 +72,28 @@ public class User implements java.io.Serializable {
      * @param context the context from which the user is created
      * @param listener a callback interface for when user data is loaded
      */
+    // Constructor for creating a User with a specified deviceID
+    public User(String deviceID, OnUserLoadedListener listener) {
+        this.deviceID = deviceID;
+        database = FirebaseFirestore.getInstance();
+        users = database.collection("users");
+
+        // Check if the user document with deviceID exists
+        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    // Load user data if document exists
+                    DocumentSnapshot document = task.getResult();
+                    UserData(document, listener);
+                } else {
+                    listener.onUserLoaded(null);
+                    Log.d("User", "User document does not exist for deviceID: " + deviceID);
+                }
+            }
+        });
+    }
+    // Constructor
     public User(Context context, OnUserDataLoadedListener listener) {
         // Extract the device ID
         this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -101,6 +126,7 @@ public class User implements java.io.Serializable {
      * @param document Firestore document containing user data
      * @param listener callback for when data is loaded
      */
+    // Load user data from Firestore
     private void loadUserData(DocumentSnapshot document,OnUserDataLoadedListener listener) {
         name = document.getString("name");
         email = document.getString("email");
@@ -114,7 +140,26 @@ public class User implements java.io.Serializable {
         cancelledEvents = (List<String>) document.get("cancelledEvents");
         acceptedEvents = (List<String>) document.get("acceptedEvents");
         profilePicture = document.getString("profilePicture");
-        if (listener != null) listener.onUserDataLoaded();
+        if (listener != null) {
+            listener.onUserDataLoaded();
+        }
+    }
+    private void UserData(DocumentSnapshot document,OnUserLoadedListener listener) {
+        name = document.getString("name");
+        email = document.getString("email");
+        phoneNumber = document.getString("phoneNumber");
+        isEntrant = document.getBoolean("isEntrant");
+        isOrganizer = document.getBoolean("isOrganizer");
+        isAdmin = document.getBoolean("isAdmin");
+        isFacility = document.getBoolean("isFacility");
+        requestedEvents = (List<String>) document.get("requestedEvents");
+        selectedEvents = (List<String>) document.get("selectedEvents");
+        cancelledEvents = (List<String>) document.get("cancelledEvents");
+        acceptedEvents = (List<String>) document.get("acceptedEvents");
+        profilePicture = document.getString("profilePicture");
+        if (listener != null) {
+            listener.onUserLoaded(this);
+        }
     }
 
     /**
@@ -132,8 +177,9 @@ public class User implements java.io.Serializable {
     }
 
     /**
-     * Creates a new user with default values and writes to Firestore.
+     * Create new user with default values
      */
+    // Create new user with default values
     private void createNewUser() {
         HashMap<String, Object> userData = new HashMap<>();
         userData.put("name", "Default Name");
@@ -508,4 +554,4 @@ public class User implements java.io.Serializable {
             imageView.setImageResource(R.drawable.account_circle);
         }
     }
-}s
+}

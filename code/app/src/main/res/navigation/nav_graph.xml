@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_home_to_entrantProfile3"
             app:destination="@id/entrantProfile3" />
+        <action
+            android:id="@+id/action_home_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
     </fragment>
     <fragment
         android:id="@+id/entrantProfile3"
@@ -268,6 +271,12 @@
         <action
             android:id="@+id/action_orgAddFacility_to_orgFacilityList"
             app:destination="@id/orgFacilityList" />
+        <action
+            android:id="@+id/action_orgAddFacility_to_OrgEventLst2"
+            app:destination="@id/OrgEventLst" />
+        <action
+            android:id="@+id/action_orgAddFacility_to_home"
+            app:destination="@id/home" />
     </fragment>
     <fragment
         android:id="@+id/orgFacilityList"

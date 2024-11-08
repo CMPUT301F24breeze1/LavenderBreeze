@@ -34,6 +34,7 @@ import java.util.Map;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 
 public class OrgEventWaitingLst extends Fragment {
@@ -118,7 +119,11 @@ public class OrgEventWaitingLst extends Fragment {
                 sendNotificationToEntrants();
             }
         });
-        Button goToSelectedListButton = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+
+        Button goToSelectedEntrants = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
+        goToSelectedEntrants.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst,getArguments())
+        );
 
         Button goToNotifButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
         goToNotifButton.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +140,7 @@ public class OrgEventWaitingLst extends Fragment {
                 Toast.makeText(v.getContext(), "Sent to waitlist", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
         return view;
@@ -177,25 +183,10 @@ public class OrgEventWaitingLst extends Fragment {
 
     private void fetchEntrantData(String entrantId) {
         // Fetch user data for each entrant from Firestore
-        CollectionReference usersRef = db.collection("users");
-        usersRef.document(entrantId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        // Create a User object and load the data using loadUserData
-                        new User(getContext(), new User.OnUserDataLoadedListener() {
-                            @Override
-                            public void onUserDataLoaded() {
-                                // At this point, user data has been loaded
-                                entrantList.add(new User(getContext(), this)); // Add the loaded user to the list after the data has been fully loaded
-                                updateListView(); // Update the list view when a new entrant is fetched
-                            }
-                        });
-
-                    }
-                }
+        User entrant = new User(entrantId, loadedUser -> {
+            if (loadedUser != null) {
+                entrantList.add(loadedUser);
+                updateListView();
             }
         });
     }

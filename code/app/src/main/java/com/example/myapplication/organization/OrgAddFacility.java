@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 import com.example.myapplication.DeviceUtils;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Facility;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +42,8 @@ public class OrgAddFacility extends Fragment {
     private EditText editFacilityPhoneNumber;
     private Button createFacilityButton;
     private String organizerId;
+    private Facility existingFacility;
+    private FirebaseFirestore db;
 
     public OrgAddFacility() {
         // Required empty public constructor
@@ -69,6 +75,7 @@ public class OrgAddFacility extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         organizerId = DeviceUtils.getDeviceId(requireContext());
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -83,30 +90,86 @@ public class OrgAddFacility extends Fragment {
         editFacilityPhoneNumber = view.findViewById(R.id.editTextFacilityPhone);
         createFacilityButton = view.findViewById(R.id.buttonCreateFacility);
 
+        fetchExistingFacility();
+
         createFacilityButton.setOnClickListener(v -> {
             String facilityName = editFacilityName.getText().toString().trim();
             String facilityAddress = editFacilityAddress.getText().toString().trim();
             String facilityEmail = editFacilityEmail.getText().toString().trim();
             String facilityPhoneNumber = editFacilityPhoneNumber.getText().toString().trim();
 
-            // Validate inputs
             if (facilityName.isEmpty() || facilityAddress.isEmpty() || facilityEmail.isEmpty() || facilityPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (!facilityPhoneNumber.matches("\\d{7,15}")){
+            if (!facilityPhoneNumber.matches("\\d{7,15}")) {
                 Toast.makeText(getContext(), "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Facility facility = new Facility(facilityName, facilityAddress, facilityEmail, facilityPhoneNumber, organizerId);
-            facility.saveToFirestore();
-            Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_orgFacilityList);
+
+            if (existingFacility != null) {
+                // Update existing facility
+                existingFacility.setFacilityName(facilityName);
+                existingFacility.setFacilityAddress(facilityAddress);
+                existingFacility.setFacilityEmail(facilityEmail);
+                existingFacility.setFacilityPhoneNumber(facilityPhoneNumber);
+                updateFacilityInFirestore();
+            } else {
+                // Create new facility
+                Facility facility = new Facility(facilityName, facilityAddress, facilityEmail, facilityPhoneNumber, organizerId);
+                facility.saveToFirestore();
+                Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_OrgEventLst);
+            }
         });
 
-        Button buttonGoToFacilityList = view.findViewById(R.id.button_go_to_facility_list_from_add_facility);
-        buttonGoToFacilityList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_orgFacilityList));
+        Button buttonGoToHome = view.findViewById(R.id.button_go_to_home_from_add_facility);
+        buttonGoToHome.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_home));
 
         return view;
+    }
+    private void fetchExistingFacility() {
+        db.collection("facilities")
+                .whereEqualTo("organizerId", organizerId)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        existingFacility = document.toObject(Facility.class);
+
+                        if (existingFacility != null) {
+                            existingFacility.setFacilityId(document.getId());  // Store document ID
+                            editFacilityName.setText(existingFacility.getFacilityName());
+                            editFacilityAddress.setText(existingFacility.getFacilityAddress());
+                            editFacilityEmail.setText(existingFacility.getFacilityEmail());
+                            editFacilityPhoneNumber.setText(existingFacility.getFacilityPhoneNumber());
+                        } else {
+                            Log.d("OrgAddFacility", "existingFacility is null after conversion.");
+                        }
+                    } else {
+                        Log.d("OrgAddFacility", "No facility found with organizerId: " + organizerId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgAddFacility", "Error fetching facility details", e);
+                    Toast.makeText(getContext(), "Error fetching facility details", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void updateFacilityInFirestore() {
+        String facilityId = existingFacility.getFacilityId();
+        if (facilityId != null) {
+            db.collection("facilities").document(facilityId)
+                    .set(existingFacility)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Facility updated successfully", Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(requireView()).navigate(R.id.action_orgAddFacility_to_OrgEventLst);
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update facility", Toast.LENGTH_SHORT).show());
+        } else {
+            Log.e("OrgAddFacility", "Facility ID is null, cannot update");
+            Toast.makeText(getContext(), "Facility ID is missing", Toast.LENGTH_SHORT).show();
+        }
     }
 }
