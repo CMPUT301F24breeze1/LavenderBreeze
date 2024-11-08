@@ -1,4 +1,5 @@
-//
+// From chatgpt, openai, "write a java implementation of EditDialogFragment Class", 2024-11-02
+
 package com.example.myapplication.entrant;
 
 import android.app.AlertDialog;
