@@ -1,4 +1,7 @@
-package com.example.myapplication;
+// From chatgpt, openai, "write a java implementation with java documentation of EntrantSelectedPage
+//class with methods to show the event details and option to accept/decline the event
+//given here is the xml code for it", 2024-11-02
+package com.example.myapplication.entrant;
 
 import android.os.Bundle;
 
@@ -13,18 +16,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link entrantSelectedPage#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment that displays the details of a selected event and allows the user to accept or decline
+ * the event invitation. It includes options to expand the event description and navigate back to the
+ * event list.
  */
 public class entrantSelectedPage extends Fragment {
 
     private Event event; // Store the event object
     private User user;
+    /**
+     * Initializes the fragment, retrieves the Event data from arguments if available,
+     * and sets up the User object.
+     * @param savedInstanceState Bundle containing the saved instance state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +42,14 @@ public class entrantSelectedPage extends Fragment {
         }
         user = new User(requireContext(), null); // Initialize user and load data
     }
-
+    /**
+     * Inflates the view for the fragment, sets up UI elements, populates event details,
+     * and configures click listeners for navigation, description expansion, and accepting/declining the event.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle containing the saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.entrantselectedpage, container, false);
@@ -77,22 +93,33 @@ public class entrantSelectedPage extends Fragment {
         return view;
     }
 
-    // Accept event and add to the user's accepted events
+    /**
+     * Accepts the event by adding it to the user's accepted events and removing it from
+     * the selected events. It also updates the event's participant lists accordingly.
+     * After accepting, navigates back to the event list.
+     */
     private void acceptEvent() {
         if (event != null) {
             user.addAcceptedEvent(event.getEventId()); // Method to add to accepted events
             user.removeSelectedEvent(event.getEventId()); // Remove from selected events list
+            event.removeFromSelectedlist(user.getDeviceID());
+            event.addToAcceptedlist(user.getDeviceID());
             Log.d("EntrantSelectedPage", "Event accepted: " + event.getEventId());
 
             // Navigate back to the event list after accepting
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantSelectedPage_to_entrantEventsList);
         }
     }
-
-    // Decline event and remove from selected events list
+    /**
+     * Declines the event by removing it from the user's selected events and adding it to
+     * the declined events. Updates the event's participant lists accordingly.
+     * After declining, navigates back to the event list.
+     */
     private void declineEvent() {
         if (event != null) {
-            user.removeSelectedEvent(event.getEventId()); // Method to remove from selected events
+            user.removeSelectedEvent(event.getEventId());
+            event.removeFromSelectedlist(user.getDeviceID());
+            event.addToDeclinedlist(user.getDeviceID());// Method to remove from selected events
             Log.d("EntrantSelectedPage", "Event declined: " + event.getEventId());
 
             // Navigate back to the event list after declining

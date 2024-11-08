@@ -22,11 +22,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * Fragment to allow organizer to view QR Code to be scanned or to be shared
+ * Fragment which displays the QR Code for a particular Event
+ * Makes use of eventId to identify event and fetch the QR Code associated with that event
  */
 public class OrgViewEventQrCode extends Fragment {
-
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
     private FirebaseFirestore db;
@@ -41,6 +40,7 @@ public class OrgViewEventQrCode extends Fragment {
      * @param eventID
      * @return
      */
+    // TODO: Rename and change types and number of parameters
     public static OrgViewEventQrCode newInstance(String eventID) {
         OrgViewEventQrCode fragment = new OrgViewEventQrCode();
         Bundle args = new Bundle();
@@ -50,7 +50,7 @@ public class OrgViewEventQrCode extends Fragment {
     }
 
     /**
-     * Initialize the Fragment
+     * Initialization of the fragment
      * @param savedInstanceState If the fragment is being re-created from
      * a previous saved state, this is the state.
      */
@@ -60,7 +60,7 @@ public class OrgViewEventQrCode extends Fragment {
     }
 
     /**
-     * Inflation of view, initialization of database, and retrieval of required data
+     * Inflation of view, initialization of buttons and navigation, and Firestore Firebase
      * @param inflater The LayoutInflater object that can be used to inflate
      * any views in the fragment,
      * @param container If non-null, this is the parent view that the fragment's
@@ -121,7 +121,7 @@ public class OrgViewEventQrCode extends Fragment {
     }
 
     /**
-     * To display QR Code as ImageView
+     * Display QR Code as ImageView
      * @param qrCodeHash
      */
     private void displayQrCode(String qrCodeHash){

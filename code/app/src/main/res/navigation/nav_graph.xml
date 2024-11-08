@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_home_to_entrantProfile3"
             app:destination="@id/entrantProfile3" />
+        <action
+            android:id="@+id/action_home_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
     </fragment>
     <fragment
         android:id="@+id/entrantProfile3"
@@ -23,14 +26,17 @@
         android:label="fragment_entrant_profile"
         tools:layout="@layout/fragment_entrant_profile" >
         <action
-            android:id="@+id/action_entrantProfile3_to_entrantNotification"
-            app:destination="@id/entrantNotification" />
-        <action
             android:id="@+id/action_entrantProfile3_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
         <action
             android:id="@+id/action_entrantProfile3_to_entrantEditProfile"
             app:destination="@id/entrantEditProfile" />
+        <action
+            android:id="@+id/action_entrantProfile3_self"
+            app:destination="@id/entrantProfile3" />
+        <action
+            android:id="@+id/action_entrantProfile3_to_home"
+            app:destination="@id/home" />
     </fragment>
     <fragment
         android:id="@+id/entrantNotification"
@@ -49,6 +55,12 @@
         <action
             android:id="@+id/action_entrantEventPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+        <action
+            android:id="@+id/action_entrantEventPage_to_entrantProfile3"
+            app:destination="@id/entrantProfile3" />
+        <action
+            android:id="@+id/action_entrantEventPage_to_home"
+            app:destination="@id/home" />
     </fragment>
     <fragment
         android:id="@+id/entrantEventsList"
@@ -76,6 +88,9 @@
         <action
             android:id="@+id/action_entrantEventsList_to_entranteventdescription"
             app:destination="@id/entranteventdescription" />
+        <action
+            android:id="@+id/action_entrantEventsList_self"
+            app:destination="@id/entrantEventsList" />
     </fragment>
     <fragment
         android:id="@+id/entrantQrScan"
@@ -88,6 +103,9 @@
         <action
             android:id="@+id/action_entrantQrScan_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+        <action
+            android:id="@+id/action_entrantQrScan_to_entrantJoinPage"
+            app:destination="@id/entrantJoinPage" />
     </fragment>
     <fragment
         android:id="@+id/entrantEditProfile"
@@ -97,6 +115,12 @@
         <action
             android:id="@+id/action_entrantEditProfile_to_entrantProfile3"
             app:destination="@id/entrantProfile3" />
+        <action
+            android:id="@+id/action_entrantEditProfile_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_entrantEditProfile_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
     </fragment>
     <fragment
         android:id="@+id/OrgEventLst"
@@ -114,6 +138,12 @@
         <action
             android:id="@+id/action_org_events_lst_to_org_edit_organizer"
             app:destination="@id/OrgEditOrganizer" />
+        <action
+            android:id="@+id/action_OrgEventLst_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
+        <action
+            android:id="@+id/action_OrgEventLst_to_orgFacilityList"
+            app:destination="@id/orgFacilityList" />
     </fragment>
     <fragment
         android:id="@+id/OrgEvent"
@@ -178,7 +208,14 @@
         android:id="@+id/OrgEventSelectedLst"
         android:name="com.example.myapplication.organization.OrgEventSelectedLst"
         android:label="fragment_org_event_selected_lst"
-        tools:layout="@layout/fragment_org_event_selected_lst" />
+        tools:layout="@layout/fragment_org_event_selected_lst" >
+        <action
+            android:id="@+id/action_OrgEventSelectedLst_to_OrgEvent"
+            app:destination="@id/OrgEvent" />
+        <action
+            android:id="@+id/action_OrgEventSelectedLst_self"
+            app:destination="@id/OrgEventSelectedLst" />
+    </fragment>
     <fragment
         android:id="@+id/OrgAddEvent"
         android:name="com.example.myapplication.organization.OrgAddEvent"
@@ -217,7 +254,7 @@
     </fragment>
     <fragment
         android:id="@+id/entrantSelectedPage"
-        android:name="com.example.myapplication.entrantSelectedPage"
+        android:name="com.example.myapplication.entrant.entrantSelectedPage"
         android:label="entrantselectedpage"
         tools:layout="@layout/entrantselectedpage" >
         <action
@@ -226,11 +263,53 @@
     </fragment>
     <fragment
         android:id="@+id/entranteventdescription"
-        android:name="com.example.myapplication.entranteventdescription"
+        android:name="com.example.myapplication.entrant.entranteventdescription"
         android:label="entranteventdescription"
         tools:layout="@layout/entranteventdescription" >
         <action
             android:id="@+id/action_entranteventdescription_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/orgAddFacility"
+        android:name="com.example.myapplication.organization.OrgAddFacility"
+        android:label="fragment_org_add_facility"
+        tools:layout="@layout/fragment_org_add_facility" >
+        <action
+            android:id="@+id/action_orgAddFacility_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
+        <action
+            android:id="@+id/action_orgAddFacility_to_orgFacilityList"
+            app:destination="@id/orgFacilityList" />
+        <action
+            android:id="@+id/action_orgAddFacility_to_OrgEventLst2"
+            app:destination="@id/OrgEventLst" />
+        <action
+            android:id="@+id/action_orgAddFacility_to_home"
+            app:destination="@id/home" />
+    </fragment>
+    <fragment
+        android:id="@+id/orgFacilityList"
+        android:name="com.example.myapplication.organization.OrgFacilityList"
+        android:label="fragment_org_facility_list"
+        tools:layout="@layout/fragment_org_facility_list" >
+        <action
+            android:id="@+id/action_orgFacilityList_to_orgAddFacility"
+            app:destination="@id/orgAddFacility" />
+        <action
+            android:id="@+id/action_orgFacilityList_to_OrgEventLst"
+            app:destination="@id/OrgEventLst" />
+        <action
+            android:id="@+id/action_entrantSelectedPage_to_entrantEventsList"
+            app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entrantJoinPage"
+        android:name="com.example.myapplication.entrant.entrantJoinPage"
+        android:label="fragment_entrant_join_page"
+        tools:layout="@layout/fragment_entrant_join_page" >
+        <action
+            android:id="@+id/action_entrantJoinPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
     </fragment>
 

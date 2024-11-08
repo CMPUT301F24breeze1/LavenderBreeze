@@ -1,3 +1,6 @@
+// From chatgpt, openai, "write a java implementation with java documentation of EntrantProfile
+//class with methods to show the profile of the entrant
+//given here is the xml code for it", 2024-11-02
 package com.example.myapplication.entrant;
 
 import android.content.pm.PackageManager;
@@ -19,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,9 +32,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.example.myapplication.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link EntrantProfile#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment that displays the profile information of an entrant, including name, email,
+ * phone number, and profile picture. It allows navigation to an edit profile page and
+ * manages updates to the profile data.
  */
 public class EntrantProfile extends Fragment {
     private User user;
@@ -38,43 +42,43 @@ public class EntrantProfile extends Fragment {
     private ImageButton edit, notifications;
     private ImageView profilePicture;
     private SwitchCompat emailNotificationSwitch;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    Button homeButton, profileButton, eventsButton;
+    /**
+     * Default constructor required for instantiating the fragment.
+     */
     public EntrantProfile() {
         // Required empty public constructor
     }
-
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EntrantProfile.
+     * Called after the fragment's view has been created. It listens for updated user data
+     * and initializes the bottom navigation buttons.
+     * @param view the fragment's root view
+     * @param savedInstanceState Bundle containing the saved instance state
      */
-    // TODO: Rename and change types and number of parameters
-    public static EntrantProfile newInstance(String param1, String param2) {
-        EntrantProfile fragment = new EntrantProfile();
-        return fragment;
-    }
-
     @Override
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
-        user = new User(requireContext(), () -> updateUserData());
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+            User updatedUser = (User) bundle.getSerializable("updated_user");
+            if (updatedUser != null) {
+                user = updatedUser; // Update the local user instance
+                updateUserData(); // Refresh the displayed user data
+            }
+        });
+        if(user == null) {
+            user = new User(requireContext(), () -> updateUserData());
+        }
         // Update UI with new user data
-         BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
-         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
-         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        intializeBottomNavButton(view);
     }
-
+    /**
+     * Inflates the view for the fragment, sets up the UI components, and configures
+     * the edit button to navigate to the profile editing page.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle containing the saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,13 +90,10 @@ public class EntrantProfile extends Fragment {
 
         edit.setOnClickListener(v ->
         {
-            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile);
+            Bundle result = new Bundle();
+            result.putSerializable("updated_user", user);
+            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile,result);
         });
-
-        notifications = view.findViewById(R.id.notificationButton);
-        notifications.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantNotification)
-        );
 
         // Reference the views
         personName = view.findViewById(R.id.personName);
@@ -102,6 +103,9 @@ public class EntrantProfile extends Fragment {
         profilePicture = view.findViewById(R.id.profilePicture);
         return view;
     }
+    /**
+     * Updates the displayed user data in the UI components.
+     */
     private void updateUserData() {
         // Update the TextViews and Switch with User's data
         if (user != null) {
@@ -113,5 +117,31 @@ public class EntrantProfile extends Fragment {
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
-
+    /**
+     * Initializes the bottom navigation buttons.
+     * @param view the fragment's root view
+     */
+    public void intializeBottomNavButton(View view){
+        homeButton = view.findViewById(R.id.homeButton);
+        profileButton = view.findViewById(R.id.profileButton);
+        eventsButton = view.findViewById(R.id.eventsButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_home); // ID of the destination in nav_graph.xml
+            }
+        });
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_self); // ID of the destination in nav_graph.xml
+            }
+        });
+        eventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEventsList); // ID of the destination in nav_graph.xml
+            }
+        });
+    }
 }

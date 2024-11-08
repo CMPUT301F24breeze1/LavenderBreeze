@@ -11,24 +11,28 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.ByteArrayOutputStream;
 
+
 /**
- * To generate QR Code as Bitmap or as Base64 String
+ * A class that generates QR Code to be used for Event creation and Event view
+ * Allow user to generate QR code as a Base64 String to be store in the database
+ * Allow user to generate QR code as a Bitmap to be displayed
+ * Allow user to get QR code as a Base64 or Bitmap
  */
+
 public class QRCodeGenerator {
-    private final String code;      // Code to be encoded as a QR code
-    private ImageView qrCodeIV;     // Optional ImageView for displaying the QR code
+    private final String code;
+    private ImageView qrCodeIV;
 
     /**
      * Constructor
      * @param code
      */
-    // Constructor that initializes only the code (optional ImageView can be set later)
     public QRCodeGenerator(String code) {
         this.code = code;
     }
 
     /**
-     * Option to display QR Code as ImageView
+     * Optional method to set ImageView after creating the instance
      * @param qrCodeIV
      */
     public void setQrCodeImageView(ImageView qrCodeIV) {
@@ -60,7 +64,7 @@ public class QRCodeGenerator {
     }
 
     /**
-     *  Convert Bitmap to Base64
+     * Convert Bitmap to Base64
      * @param bitmap
      * @return
      */
@@ -83,7 +87,7 @@ public class QRCodeGenerator {
 
     /**
      * Generate the QR code and return as Base64 encoded string
-     * @return
+     * @return null
      */
     public String getQRCodeAsBase64() {
         Bitmap bitmap = generateQRCodeBitmap();

@@ -38,6 +38,7 @@ public class OrgEvent extends Fragment {
     private static final String ARG_PARAM10 = "registrationStart";
     private static final String ARG_PARAM11 = "registrationEnd";
     private static final String ARG_PARAM12 = "qrCodeHash";
+    private static final String ARG_PARAM13 = "declined";
 
 
     // TODO: Rename and change types of parameters
@@ -53,7 +54,7 @@ public class OrgEvent extends Fragment {
     private String registrationStart;
     private String registrationEnd;
     private String qrCodeHash;
-
+    private ArrayList<String> declined;
 
     public OrgEvent() {
         // Required empty public constructor
@@ -77,7 +78,8 @@ public class OrgEvent extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static OrgEvent newInstance(String param1,ArrayList<String> param2,ArrayList<String> param3, int param4, String param5,
-                                       String param6, String param7, String param8, int param9, String param10, String param11, String param12) {
+                                       String param6, String param7, String param8, int param9, String param10, String param11, String param12,
+                                        ArrayList<String> param13) {
         OrgEvent fragment = new OrgEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -92,6 +94,7 @@ public class OrgEvent extends Fragment {
         args.putString(ARG_PARAM10, param10);
         args.putString(ARG_PARAM11, param11);
         args.putString(ARG_PARAM12, param12);
+        args.putStringArrayList(ARG_PARAM13, param13);
 
         fragment.setArguments(args);
         return fragment;
@@ -119,6 +122,7 @@ public class OrgEvent extends Fragment {
             registrationStart = getArguments().getString(ARG_PARAM10);
             registrationEnd = getArguments().getString(ARG_PARAM11);
             qrCodeHash = getArguments().getString(ARG_PARAM12);
+            declined = getArguments().getStringArrayList(ARG_PARAM13);
         }
     }
 
@@ -174,6 +178,7 @@ public class OrgEvent extends Fragment {
         bundle.putString("registrationStart", registrationStart);
         bundle.putString("registrationEnd", registrationEnd);
         bundle.putString("qrCodeHash", qrCodeHash);
+        bundle.putStringArrayList("declined", declined);
 
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_qrcode_from_org_event);
         buttonGoToQRCode.setOnClickListener(v ->{
@@ -202,7 +207,7 @@ public class OrgEvent extends Fragment {
         // Button to navigate to the Selected List fragment
         Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event);
         buttonGoToSelectedList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst)
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst,bundle)
         );
 
         return view;

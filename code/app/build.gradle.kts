@@ -46,20 +46,22 @@ android {
 }
 
 dependencies {
+    implementation("com.squareup.picasso:picasso:2.8")
     implementation(libs.firebase.database)
     debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("org.mockito:mockito-core:3.9.0")
+    //implementation("com.google.zxing:core:3.4.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation(libs.qr.generator)
     androidTestImplementation ("androidx.test:runner:1.4.0")
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-firestore")
-    implementation ("com.google.firebase:firebase-storage")
-    implementation ("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -70,4 +72,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.google.firebase:firebase-messaging:23.1.1")
+    implementation("androidx.work:work-runtime:2.7.1")
+    implementation("com.google.guava:guava:29.0-android")
 }
