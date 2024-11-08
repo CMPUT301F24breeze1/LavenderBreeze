@@ -37,7 +37,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
-
+/**
+ * A fragment that displays a waiting list of an event,
+ * with an option to view the entrants' location on a map
+ * and sample a number of attendees to register for the event
+ */
 public class OrgEventWaitingLst extends Fragment {
 
     private ListView listView;
@@ -52,6 +56,13 @@ public class OrgEventWaitingLst extends Fragment {
     private List<String> userIds = new ArrayList<>();
 
 
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -143,11 +154,14 @@ public class OrgEventWaitingLst extends Fragment {
         });
 
 
+
+
         return view;
     }
 
-
-
+    /**
+     * This loads the event data from Firestore using event ID
+     */
     private void loadEventData() {
         eventsRef.document(eventId).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
@@ -159,6 +173,9 @@ public class OrgEventWaitingLst extends Fragment {
         }).addOnFailureListener(e -> Log.e("Kenny", "Error loading event data", e));
     }
 
+    /**
+     * This fetches the waitlist from Firestore based on the event ID
+     */
     private void fetchEntrants() {
         // Fetch the waitlist from Firestore based on the event ID
         eventsRef.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -195,6 +212,10 @@ public class OrgEventWaitingLst extends Fragment {
         });
     }
 
+    /**
+     * This fetches user data for each entrant from Firestore
+     * called by fetchEntrants()
+     */
     private void fetchEntrantData(String entrantId) {
         // Fetch user data for each entrant from Firestore
         User entrant = new User(entrantId, loadedUser -> {
@@ -205,6 +226,9 @@ public class OrgEventWaitingLst extends Fragment {
         });
     }
 
+    /**
+     * This creates and sets the adapter for the ListView
+     */
     private void updateListView() {
         // Create and set the adapter for the ListView
         if (entrantAdapter == null) {
@@ -215,6 +239,11 @@ public class OrgEventWaitingLst extends Fragment {
         }
     }
 
+    /**
+     * This handles the logic of the shuffle button
+     * to select the entrants on the waiting list
+     * and update to Firestore
+     */
     private void selectEntrants() {
         Log.d("Kenny", "Starting entrant selection...");
 
@@ -291,13 +320,18 @@ public class OrgEventWaitingLst extends Fragment {
 
     }
 
-
+    /**
+     * This sends the notifications to all entrants on the waiting list
+     */
     private void sendNotificationToEntrants() {
         Toast.makeText(getContext(), "Notification sent to entrants in the waiting list", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This shows the map for the entrants
+     */
     private void showEntrantMap() {
-        // Implement the logic to show the map for the selected entrant
+        // Implement the logic to show the map for the entrants
 
     }
 }

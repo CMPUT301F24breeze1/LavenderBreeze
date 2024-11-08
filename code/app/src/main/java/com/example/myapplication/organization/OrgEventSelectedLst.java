@@ -1,5 +1,6 @@
 package com.example.myapplication.organization;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.EventAdapter;
@@ -26,27 +31,43 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.example.myapplication.model.Event;
+import com.example.myapplication.model.EventAdapter;
+import com.example.myapplication.model.User;
+import com.example.myapplication.model.UserAdapter;
+import com.example.myapplication.controller.NotificationSender;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A fragment that displays a selected list of an event,
+ * with 3 filter buttons to view the desired list (selected, accepted, and declined)
+ */
 public class OrgEventSelectedLst extends Fragment {
     private String eventId;
     private Event event;
     private List<String> selectedList;
     private List<String> acceptedList;
     private List<String> canceledList;
-     private List<String> notifyList;
+    private List<String> notifyList;
     private List<User> displayedUsers = new ArrayList<>();
     private ListView userListView;
-    private UserAdapter userAdapter;
-    // Use EventAdapter instead of ArrayAdapter;
-
+    private UserAdapter userAdapter;  // Use EventAdapter instead of ArrayAdapter;
     private Button filterAllButton, filterAcceptedButton, filterCanceledButton;
+
+    /**
+     * Default constructor required for instantiating the fragment.
+     */
     public OrgEventSelectedLst() {
         // Required empty public constructor
     }
+
+    /**
+     * This creates a new instance of the OrgEventSelectedLst fragment,
+     * while also setting up some initial data (eventId)
+     */
     public static OrgEventSelectedLst newInstance(String eventId) {
         OrgEventSelectedLst fragment = new OrgEventSelectedLst();
         Bundle args = new Bundle();
@@ -55,6 +76,10 @@ public class OrgEventSelectedLst extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes the fragment, and loads event data.
+     * @param savedInstanceState Bundle with saved instance state
+     */
     @Nullable
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +90,13 @@ public class OrgEventSelectedLst extends Fragment {
         loadEventData();
     }
 
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,7 +118,7 @@ public class OrgEventSelectedLst extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
-      
+
       // Set up the notification button for selected participants
         Button notifyButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
         notifyButton.setOnClickListener(v -> sendNotification());
@@ -94,8 +126,9 @@ public class OrgEventSelectedLst extends Fragment {
         return view;
     }
 
-
-    // Method to set up filter buttons for different event lists
+    /**
+     * This sets up filter buttons for different event lists
+     */
     private void setupFilterButtons(View view) {
         filterAllButton = view.findViewById(R.id.filterAll);
         filterAcceptedButton = view.findViewById(R.id.filterAccepted);
@@ -106,6 +139,9 @@ public class OrgEventSelectedLst extends Fragment {
         filterCanceledButton.setOnClickListener(v -> showUserList("canceled"));
     }
 
+    /**
+     * This loads event data from Firestore
+     */
     private void loadEventData() {
         event = new Event(eventId);
         event.loadEventDataAsync(new Event.OnEventDataLoadedListener() {
@@ -121,9 +157,11 @@ public class OrgEventSelectedLst extends Fragment {
                 //userAdapter.notifyDataSetChanged();
             }
         });
-
     }
-    // Load the appropriate event list based on the filter
+
+    /**
+     * This loads the appropriate event list based on the filter
+     */
     private void showUserList(String filter) {
         displayedUsers.clear();
 
@@ -153,10 +191,13 @@ public class OrgEventSelectedLst extends Fragment {
         }
     }
 
+    /**
+     * This sends notification to the desired list (selected or canceled)
+     */
     private void sendNotification() {
         if (notifyList != null && !notifyList.isEmpty()) {
             NotificationSender notificationSender = new NotificationSender();
-            
+
             String message;
             if (notifyList == canceledList) {
                 message = "We're sorry, but your registration has been declined.";
@@ -166,7 +207,7 @@ public class OrgEventSelectedLst extends Fragment {
                 // For canceled list or other cases, set an appropriate message
                 message = "We're sorry, but your registration has been declined.";
             }
-    
+
             notificationSender.sendNotification(
                 notifyList,              // List of device IDs based on current filter
                 "Event Update",          // Notification title
@@ -179,10 +220,10 @@ public class OrgEventSelectedLst extends Fragment {
     }
 }
 
-    
-            
-            
-    
+
+
+
+
 
 
 

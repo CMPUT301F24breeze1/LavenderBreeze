@@ -1,4 +1,6 @@
-// From chatgpt, openai, "write a java implementation of User Class", 2024-10-25
+// From chatgpt, openai, "write a java implementation with java documentation of User Class
+// that contains the user data like name, email, phone number, device id
+// requested events, selected events, cancelled events, and accepted events", 2024-10-25
 package com.example.myapplication.model;
 
 import com.bumptech.glide.Glide;
@@ -26,11 +28,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * The User class represents a user in the application with properties such as name, email,
+ * phone number, roles, profile picture, and lists of events they are associated with. This class
+ * manages user data persistence in Firebase Firestore and provides methods to interact with user-related data.
+ */
 public class User implements java.io.Serializable {
+    /**
+     * Interface for callback when user data is loaded.
+     */
     public interface OnUserDataLoadedListener {
         void onUserDataLoaded();
     }
+    /**
+     * Interface for callback when user data is loaded.
+     */
     public interface OnUserLoadedListener {
         void onUserLoaded(User user); // Dedicated listener for User object
     }
@@ -57,11 +69,10 @@ public class User implements java.io.Serializable {
     private FirebaseFirestore database;
     private CollectionReference users;
 
-    public User(){}
-
     /**
-     * Constructor of the user class
+     * Constructs a User object with a specified deviceID.
      * @param deviceID
+     * @param listener
      */
     // Constructor for creating a User with a specified deviceID
     public User(String deviceID, OnUserLoadedListener listener) {
@@ -84,7 +95,12 @@ public class User implements java.io.Serializable {
             }
         });
     }
-    // Constructor
+    /**
+     * Constructs a User object and initializes data from Firestore if it exists, or creates
+     * a new user record if none is found.
+     * @param context the context from which the user is created
+     * @param listener a callback interface for when user data is loaded
+     */
     public User(Context context, OnUserDataLoadedListener listener) {
         // Extract the device ID
         this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -113,8 +129,9 @@ public class User implements java.io.Serializable {
 
 
     /**
-     * Load user data from Firestore
-     * @param document
+     * Loads user data from a Firestore document.
+     * @param document Firestore document containing user data
+     * @param listener callback for when data is loaded
      */
     // Load user data from Firestore
     private void loadUserData(DocumentSnapshot document,OnUserDataLoadedListener listener) {
@@ -134,6 +151,12 @@ public class User implements java.io.Serializable {
             listener.onUserDataLoaded();
         }
     }
+
+    /**
+     * Loads user data from a Firestore document.
+     * @param document
+     * @param listener
+     */
     private void UserData(DocumentSnapshot document,OnUserLoadedListener listener) {
         name = document.getString("name");
         email = document.getString("email");
@@ -151,6 +174,11 @@ public class User implements java.io.Serializable {
             listener.onUserLoaded(this);
         }
     }
+
+    /**
+     * Loads user data from a Firestore document.
+     * @param document
+     */
     private void loadUser(DocumentSnapshot document){
         name = document.getString("name");
         email = document.getString("email");
@@ -258,18 +286,34 @@ public class User implements java.io.Serializable {
         return isFacility;
     }
 
+    /**
+     * Get the requested events
+     * @return the requested events
+     */
     public List<String> getRequestedEvents() {
         return requestedEvents;
     }
 
+    /**
+     * Get the selected events
+     * @return the selected events
+     */
     public List<String> getSelectedEvents() {
         return selectedEvents;
     }
 
+    /**
+     * Get the cancelled events
+     * @return the cancelled events
+     */
     public List<String> getCancelledEvents() {
         return cancelledEvents;
     }
 
+    /**
+     * Get the accepted events
+     * @return the accepted events
+     */
     public List<String> getAcceptedEvents() {
         return acceptedEvents;
     }
@@ -289,6 +333,10 @@ public class User implements java.io.Serializable {
         users.document(deviceID).update("name", name);
     }
 
+    /**
+     * Get the device ID
+     * @return the device ID
+     */
     public String getDeviceID() {
         return deviceID;
     }
@@ -370,52 +418,95 @@ public class User implements java.io.Serializable {
         this.isFacility = isFacility;
         users.document(deviceID).update("isFacility", isFacility);
     }
+
+    /**
+     * Get the profile picture
+     * @return the profile picture
+     */
     public String getProfilePicture() {
         return profilePicture;
     }
 
+    /**
+     * Set the profile picture
+     * @param profilePicture
+     */
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
-    // Add and remove methods for requestedEvents
+
+    /**
+     * Add method for requestedEvents
+     * @param eventId
+     */
     public void addRequestedEvent(String eventId) {
         addEventToFirestoreList(eventId, "requestedEvents", requestedEvents);
     }
 
+    /**
+     * Remove method for requestedEvents
+     * @param eventId
+     */
     public void removeRequestedEvent(String eventId) {
         Log.d("User", "Removing event with ID: " + eventId);
         Log.d("User", "Current requestedEvents: " + requestedEvents);
         removeEventFromFirestoreList(eventId, "requestedEvents", requestedEvents);
     }
 
-    // Add and remove methods for selectedEvents
+    /**
+     * Add method for selectedEvents
+     * @param eventId
+     */
     public void addSelectedEvent(String eventId) {
         addEventToFirestoreList(eventId, "selectedEvents", selectedEvents);
     }
 
+    /**
+     * Remove method for selectedEvents
+     * @param eventId
+     */
     public void removeSelectedEvent(String eventId) {
         removeEventFromFirestoreList(eventId, "selectedEvents", selectedEvents);
     }
 
-    // Add and remove methods for cancelledEvents
+    /**
+     * Add method for cancelledEvents
+     * @param eventId
+     */
     public void addCancelledEvent(String eventId) {
         addEventToFirestoreList(eventId, "cancelledEvents", cancelledEvents);
     }
 
+    /**
+     * Remove method for cancelledEvents
+     * @param eventId
+     */
     public void removeCancelledEvent(String eventId) {
         removeEventFromFirestoreList(eventId, "cancelledEvents", cancelledEvents);
     }
 
-    // Add and remove methods for acceptedEvents
+    /**
+     * Add method for acceptedEvents
+     * @param eventId
+     */
     public void addAcceptedEvent(String eventId) {
         addEventToFirestoreList(eventId, "acceptedEvents", acceptedEvents);
     }
 
+    /**
+     * Remove method for acceptedEvents
+     * @param eventId
+     */
     public void removeAcceptedEvent(String eventId) {
         removeEventFromFirestoreList(eventId, "acceptedEvents", acceptedEvents);
     }
 
-    // Helper method to add an event to a list and update Firestore
+    /**
+     * Helper method to add an event to a list and update Firestore
+     * @param eventId
+     * @param firestoreField
+     * @param eventList
+     */
     private void addEventToFirestoreList(String eventId, String firestoreField, List<String> eventList) {
         if (eventList == null) {
             eventList = new ArrayList<>();
@@ -429,7 +520,12 @@ public class User implements java.io.Serializable {
         }
     }
 
-    // Helper method to remove an event from a list and update Firestore
+    /**
+     * Helper method to remove an event from a list and update Firestore
+     * @param eventId
+     * @param firestoreField
+     * @param eventList
+     */
     private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String> eventList) {
         Log.d("User", "Event removed from the list 1" + eventList);
         if (eventList != null && eventList.contains(eventId)) {
@@ -441,6 +537,10 @@ public class User implements java.io.Serializable {
                     .addOnFailureListener(e -> Log.e("User", "Error removing event from " + firestoreField, e));
         }
     }
+
+    /**
+     * Update the profile picture in the database
+     */
     public void updateProfilePictureInDatabase() {
         FirebaseFirestore.getInstance()
                 .collection("users")
@@ -449,6 +549,12 @@ public class User implements java.io.Serializable {
                 .addOnSuccessListener(aVoid -> Log.d("User", "Profile picture updated in Firestore"))
                 .addOnFailureListener(e -> Log.e("User", "Error updating profile picture", e));
     }
+
+    /**
+     * Load the profile picture into an ImageView
+     * @param imageView
+     * @param context
+     */
     public void loadProfilePictureInto(ImageView imageView,Context context) {
         if (profilePicture != null && !profilePicture.isEmpty()) {
             Glide.with(imageView.getContext())
