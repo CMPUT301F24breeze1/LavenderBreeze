@@ -18,10 +18,15 @@ import java.io.ByteArrayOutputStream;
  * Allow user to generate QR code as a Bitmap to be displayed
  * Allow user to get QR code as a Base64 or Bitmap
  */
+
 public class QRCodeGenerator {
     private final String code;
     private ImageView qrCodeIV;
 
+    /**
+     * Constructor
+     * @param code
+     */
     public QRCodeGenerator(String code) {
         this.code = code;
     }

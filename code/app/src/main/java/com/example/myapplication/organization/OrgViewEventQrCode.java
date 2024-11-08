@@ -36,11 +36,9 @@ public class OrgViewEventQrCode extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param eventID Parameter 1.
-     * @return A new instance of fragment org_view_event_qrcode.
+     * Passing of required information from Event page (eventId) to indentify a particular event
+     * @param eventID
+     * @return
      */
     // TODO: Rename and change types and number of parameters
     public static OrgViewEventQrCode newInstance(String eventID) {
@@ -97,7 +95,7 @@ public class OrgViewEventQrCode extends Fragment {
     }
 
     /**
-     * Fetching QR code from database using eventId
+     * Retrieval QR Code from database if available.
      */
     private void fetchQRCodeHash(){
         if (eventId == null || eventId.isEmpty()) {
