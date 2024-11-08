@@ -18,6 +18,7 @@ public class NotificationSender {
     /**
      * Send notification to multiple devices
      */
+
     public void sendNotification(List<String> deviceIds, String title, String message) {
         Map<String, Object> notificationData = new HashMap<>();
         notificationData.put("title", title);
