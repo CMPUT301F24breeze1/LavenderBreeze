@@ -14,7 +14,15 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * A {@link ArrayAdapter<Bundle>} subclass.
+ * Use the {@link UserAdapter(Context, ArrayList)} constructor to
+ * create an instance of this fragment.
+ *
+ * This Class is not yet implemented, so there is no Javadoc for the methods within
+ */
 public class UserListAdapter extends ArrayAdapter<Bundle> {
 
     private ArrayList<Bundle> users;
