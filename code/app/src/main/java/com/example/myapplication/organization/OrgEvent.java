@@ -182,7 +182,7 @@ public class OrgEvent extends Fragment {
         // Button to navigate to the Selected List fragment
         Button buttonGoToSelectedList = view.findViewById(R.id.button_go_to_selected_list_from_org_event);
         buttonGoToSelectedList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst)
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_selected_lst,bundle)
         );
 
         return view;

@@ -1,3 +1,6 @@
+// From chatgpt, openai, "write a java implementation with java documentation of entrantEventDescription
+// Class with methods to show the event description
+// given here is the xml code for it", 2024-11-02
 package com.example.myapplication.entrant;
 
 import android.os.Bundle;
@@ -16,14 +19,18 @@ import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link entranteventdescription#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment that displays details about a specific event, including the organizer's name,
+ * description, and date. It also includes functionality to expand or collapse the event description.
  */
 public class entranteventdescription extends Fragment {
 
     private Event event; // Store the event object
     private User user;
+    /**
+     * Initializes the fragment, retrieves the Event data if passed in arguments,
+     * and sets up the User object.
+     * @param savedInstanceState Bundle with saved instance state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +39,14 @@ public class entranteventdescription extends Fragment {
         }
         user = new User(requireContext(), null); // Initialize user and load data
     }
-
+    /**
+     * Inflates the view for the fragment, sets up UI elements, and populates the view with event details.
+     * Also handles the functionality for the back button and expanding/collapsing the event description.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.entranteventdescription, container, false);

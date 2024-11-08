@@ -17,6 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Event class represents an event object with attributes: Id, name, desciption, start and end date, registration period
+ * location, capacity, price, poster url, qrcode, organizer ID, and 4 lists associate with it.
+ * This class manages event data persistence with Firestore and provides methods to interact with event-related data.
+ */
 public class Event implements java.io.Serializable {
     private String eventId;
     private String eventName;
@@ -40,10 +45,16 @@ public class Event implements java.io.Serializable {
     private FirebaseFirestore database;
     private CollectionReference events;
 
+    /**
+     * Interface for callback when event data is loaded.
+     */
     public interface OnEventDataLoadedListener {
         void onEventDataLoaded(Event loadedEvent);
     }
-    // Constructor retrieves data for an existing event using eventId
+
+    /**
+     * Constructor retrieves data for an existing event using eventId
+     */
     public Event(String eventId) {
         this.eventId = eventId;
         this.database = FirebaseFirestore.getInstance();
@@ -51,28 +62,36 @@ public class Event implements java.io.Serializable {
 
         loadEventData();
     }
+
+    /**
+     * Constructs an Event object with a specified eventID.
+     * @param eventId
+     * @param listener
+     */
     public Event(String eventId, Event.OnEventDataLoadedListener listener) {
         this.eventId = eventId;
         database = FirebaseFirestore.getInstance();
         events = database.collection("events");
 
-        // Check if the user document with deviceID exists
+        // Check if the event document with eventId exists
         events.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful() && task.getResult().exists()) {
-                    // Load user data if document exists
+                    // Load event data if document exists
                     DocumentSnapshot document = task.getResult();
                     EventData(document, listener);
                 } else {
                     listener.onEventDataLoaded(null);
-                    Log.d("User", "User document does not exist for deviceID: " + eventId);
+                    Log.d("User", "Event document does not exist for eventId: " + eventId);
                 }
             }
         });
     }
 
-    // Constructors for creating a new Event
+    /**
+     * Constructors for creating a new Event
+     */
     public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd, String location, int capacity, int price,
                  String posterUrl, String qrCodeHash, String organizerId) {
@@ -96,6 +115,11 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
     }
 
+    /**
+     * This loads event data from Firestore.
+     * @param document Firestore document containing event data
+     * @param listener callback for when data is loaded
+     */
     public void EventData(DocumentSnapshot document, Event.OnEventDataLoadedListener listener) {
         this.eventDescription = document.getString("eventDescription");
         this.eventStart = document.getDate("eventStart");
@@ -116,8 +140,12 @@ public class Event implements java.io.Serializable {
             listener.onEventDataLoaded(this);
         }
     }
+
+    /**
+     * This fetches data asynchronously with Firestore
+     * @param listener
+     */
     public void loadEventDataAsync(OnEventDataLoadedListener listener) {
-        // Example of fetching data asynchronously, such as with Firestore
         database.collection("events").document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -134,8 +162,9 @@ public class Event implements java.io.Serializable {
                 });
     }
 
-
-    // Load event data from Firestore
+    /**
+     * This loads event data from Firestore
+     */
     private void loadEventData() {
         DocumentReference docRef = events.document(eventId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -153,8 +182,10 @@ public class Event implements java.io.Serializable {
         });
     }
 
-    // Called by loadEventData()
-    // Reads fields from the document and sets them to the object's attributes
+    /**
+     * This reads fields from the document and sets them to the object's attributes
+     * Called by loadEventData()
+     */
     private void populateEventData(DocumentSnapshot document) {
         this.eventName = document.getString("eventName");
         this.eventDescription = document.getString("eventDescription");
@@ -174,7 +205,9 @@ public class Event implements java.io.Serializable {
         this.declinedEntrants = (List<String>) document.get("declinedEntrants");
     }
 
-    // Save or update the current state of an Event object to Firestore
+    /**
+     * This saves or updates the current state of an Event object to Firestore
+     */
     public void saveEvent() {
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("eventName", eventName);
@@ -214,156 +247,290 @@ public class Event implements java.io.Serializable {
     }
 
     // Getters
+
+    /**
+     * Get the event ID
+     * @return the event ID
+     */
     public String getEventId() {
         return eventId;
     }
 
+    /**
+     * Get the event name
+     * @return the event name
+     */
     public String getEventName() {
         return eventName;
     }
 
+    /**
+     * Get the event desciption
+     * @return the event description
+     */
     public String getEventDescription() {
         return eventDescription;
     }
 
+    /**
+     * Get the event start date
+     * @return the event start date
+     */
     public Date getEventStart() {
         return eventStart;
     }
 
+    /**
+     * Get the event end date
+     * @return the event end date
+     */
     public Date getEventEnd() {
         return eventEnd;
     }
 
+    /**
+     * Get the event registration start date
+     * @return the event registration start date
+     */
     public Date getRegistrationStart() {
         return registrationStart;
     }
 
+    /**
+     * Get the event registration end date
+     * @return the event registration end date
+     */
     public Date getRegistrationEnd() {
         return registrationEnd;
     }
 
+    /**
+     * Get the event location
+     * @return the event location
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * Get the event capacity
+     * @return the event capacity
+     */
     public int getCapacity() {
         return capacity;
     }
 
+    /**
+     * Get the event price
+     * @return the event price
+     */
     public int getPrice() {
         return price;
     }
 
+    /**
+     * Get the event poster url
+     * @return the event poster url
+     */
     public String getPosterUrl() {
         return posterUrl;
     }
 
+    /**
+     * Get the event QR code
+     * @return the event QR code
+     */
     public String getQrCodeHash() {
         return qrCodeHash;
     }
 
+    /**
+     * Get the event's organizer ID
+     * @return the event's organizer ID
+     */
     public String getOrganizerId() {
         return organizerId;
     }
 
+    /**
+     * Get the event waitlist
+     * @return the event waitlist
+     */
     public List<String> getWaitlist() {
         return waitlist;
     }
 
+    /**
+     * Get the event selected entrants list
+     * @return the event selected entrants list
+     */
     public List<String> getSelectedEntrants() {
         return selectedEntrants;
     }
 
+    /**
+     * Get the event accepted entrants list
+     * @return the event accepted entrants list
+     */
     public List<String> getAcceptedEntrants() { return acceptedEntrants; }
 
+    /**
+     * Get the event declined entrants list
+     * @return the event declined entrants list
+     */
     public List<String> getDeclinedEntrants() { return declinedEntrants; }
 
+
     // Setters (updates corresponding field in Firestore)
+
+    /**
+     * Set the event name
+     * @param eventName
+     */
     public void setEventName(String eventName) {
         this.eventName = eventName;
         events.document(eventId).update("eventName", eventName);
     }
 
+    /**
+     * Set the event description
+     * @param eventDescription
+     */
     public void setEventDescription(String eventDescription) {
         this.eventDescription = eventDescription;
         events.document(eventId).update("eventDescription", eventDescription);
     }
 
+    /**
+     * Set the event start date
+     * @param eventStart
+     */
     public void setEventStart(Date eventStart) {
         this.eventStart = eventStart;
         events.document(eventId).update("eventStart", eventStart);
     }
 
+    /**
+     * Set the event end date
+     * @param eventEnd
+     */
     public void setEventEnd(Date eventEnd) {
         this.eventEnd = eventEnd;
         events.document(eventId).update("eventEnd", eventEnd);
     }
 
+    /**
+     * Set the event registration start date
+     * @param registrationStart
+     */
     public void setRegistrationStart(Date registrationStart) {
         this.registrationStart = registrationStart;
         events.document(eventId).update("registrationStart", registrationStart);
     }
 
+    /**
+     * Set the event registration end date
+     * @param registrationEnd
+     */
     public void setRegistrationEnd(Date registrationEnd) {
         this.registrationEnd = registrationEnd;
         events.document(eventId).update("registrationEnd", registrationEnd);
     }
 
+    /**
+     * Set the event location
+     * @param location
+     */
     public void setLocation(String location) {
         this.location = location;
         events.document(eventId).update("location", location);
     }
 
+    /**
+     * Set the event capacity
+     * @param capacity
+     */
     public void setCapacity(int capacity) {
         this.capacity = capacity;
         events.document(eventId).update("capacity", capacity);
     }
 
+    /**
+     * Set the event price
+     * @param price
+     */
     public void setPrice(int price) {
         this.price = price;
         events.document(eventId).update("price", price);
     }
 
+    /**
+     * Set the event poster url
+     * @param posterUrl
+     */
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
         events.document(eventId).update("posterUrl", posterUrl);
     }
 
+    /**
+     * Set the event QR code
+     * @param qrCodeHash
+     */
     public void setQrCodeHash(String qrCodeHash) {
         this.qrCodeHash = qrCodeHash;
         events.document(eventId).update("qrCodeHash", qrCodeHash);
     }
 
+    /**
+     * Set the event's organizer ID
+     * @param organizerId
+     */
     public void setOrganizerId(String organizerId) {
         this.organizerId = organizerId;
         events.document(eventId).update("organizerId", organizerId);
     }
 
+    /**
+     * Set the event waitlist
+     * @param waitlist
+     */
     public void setWaitlist(List<String> waitlist) {
         this.waitlist = waitlist;
         events.document(eventId).update("waitlist", waitlist);
     }
 
+    /**
+     * Set the event selected entrants list
+     * @param selectedEntrants
+     */
     public void setSelectedEntrants(List<String> selectedEntrants) {
         this.selectedEntrants = selectedEntrants;
         events.document(eventId).update("selectedEntrants", selectedEntrants);
     }
 
+    /**
+     * Set the event accepted entrants list
+     * @param acceptedEntrants
+     */
     public void setAcceptedEntrants(List<String> acceptedEntrants) {
         this.acceptedEntrants = acceptedEntrants;
         events.document(eventId).update("acceptedEntrants", acceptedEntrants);
     }
 
+    /**
+     * Set the event declined entrants list
+     * @param declinedEntrants
+     */
     public void setDeclinedEntrants(List<String> declinedEntrants) {
         this.declinedEntrants = declinedEntrants;
         events.document(eventId).update("selectedEntrants", declinedEntrants);
     }
 
-
     /**
-     * Add/remove methods for waitlist/selected/accepted/declined entrants
+     * Add entrants to the waiting list
+     * @param userId
      */
-
     public void addToWaitlist(String userId) {
         if (!waitlist.contains(userId)) {
             waitlist.add(userId);
@@ -371,6 +538,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Remove entrants from the waiting list
+     * @param userId
+     */
     public void removeFromWaitlist(String userId) {
         if (waitlist.contains(userId)) {
             waitlist.remove(userId);
@@ -378,6 +549,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Add entrants to the selected list
+     * @param userId
+     */
     public void addToSelectedlist(String userId) {
         if (!selectedEntrants.contains(userId)) {
             selectedEntrants.add(userId);
@@ -385,6 +560,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Remove entrants from the selected list
+     * @param userId
+     */
     public void removeFromSelectedlist(String userId) {
         if (selectedEntrants.contains(userId)) {
             selectedEntrants.remove(userId);
@@ -392,6 +571,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Add entrants to the accepted list
+     * @param userId
+     */
     public void addToAcceptedlist(String userId) {
         if (!acceptedEntrants.contains(userId)) {
             acceptedEntrants.add(userId);
@@ -399,6 +582,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Remove entrants from the accepted list
+     * @param userId
+     */
     public void removeFromAcceptedlist(String userId) {
         if (acceptedEntrants.contains(userId)) {
             acceptedEntrants.remove(userId);
@@ -406,6 +593,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Add entrants to the declined list
+     * @param userId
+     */
     public void addToDeclinedlist(String userId) {
         if (!declinedEntrants.contains(userId)) {
             declinedEntrants.add(userId);
@@ -413,6 +604,10 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    /**
+     * Remove entrants from the declined list
+     * @param userId
+     */
     public void removeFromDeclinedlist(String userId) {
         if (declinedEntrants.contains(userId)) {
             declinedEntrants.remove(userId);

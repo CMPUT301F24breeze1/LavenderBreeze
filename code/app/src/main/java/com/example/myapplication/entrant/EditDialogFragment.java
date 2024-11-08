@@ -1,3 +1,5 @@
+// From chatgpt, openai, "write a java implementation of EditDialogFragment Class", 2024-11-02
+
 package com.example.myapplication.entrant;
 
 import android.app.AlertDialog;
@@ -16,16 +18,31 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.myapplication.R;
 
+/**
+ * class to extend DialogFragment and create a dialog for editing text fields.
+ */
 public class EditDialogFragment extends DialogFragment {
-
+    /**
+     * Interface to handle the completion of edit actions.
+     *
+     */
     public interface OnEditCompleteListener {
+        /**
+         * Callback method triggered when editing is completed
+         * @param newValue
+         */
         void onEditComplete(String newValue);
     }
 
     private static final String ARG_FIELD_NAME = "field_name";
     private static final String ARG_CURRENT_VALUE = "current_value";
-
     private OnEditCompleteListener listener;
+    /**
+     * Creates a new instance of EditDialogFragment with the specified field name and current value.
+     * @param fieldName
+     * @param currentValue
+     * @return a new instance of EditDialogFragment
+     */
 
     public static EditDialogFragment newInstance(String fieldName, String currentValue) {
         EditDialogFragment fragment = new EditDialogFragment();
@@ -36,10 +53,21 @@ public class EditDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     *  Sets a listener for the edit completion event.
+     * @param listener
+     */
     public void setOnEditCompleteListener(OnEditCompleteListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Creates the dialog for editing text fields.
+     * @param savedInstanceState The last saved instance state of the Fragment,
+     * or null if this is a freshly created Fragment.
+     *
+     * @return the created dialog
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
