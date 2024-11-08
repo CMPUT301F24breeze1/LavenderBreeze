@@ -26,21 +26,33 @@ import com.example.myapplication.controller.NotificationSender;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A fragment that displays a selected list of an event,
+ * with 3 filter buttons to view the desired list (selected, accepted, and declined)
+ */
 public class OrgEventSelectedLst extends Fragment {
     private String eventId;
     private Event event;
     private List<String> selectedList;
     private List<String> acceptedList;
     private List<String> canceledList;
-     private List<String> notifyList;
+    private List<String> notifyList;
     private List<User> displayedUsers = new ArrayList<>();
     private ListView userListView;
     private UserAdapter userAdapter;  // Use EventAdapter instead of ArrayAdapter;
-
     private Button filterAllButton, filterAcceptedButton, filterCanceledButton;
+
+    /**
+     * Default constructor required for instantiating the fragment.
+     */
     public OrgEventSelectedLst() {
         // Required empty public constructor
     }
+
+    /**
+     * This creates a new instance of the OrgEventSelectedLst fragment,
+     * while also setting up some initial data (eventId)
+     */
     public static OrgEventSelectedLst newInstance(String eventId) {
         OrgEventSelectedLst fragment = new OrgEventSelectedLst();
         Bundle args = new Bundle();
@@ -49,6 +61,10 @@ public class OrgEventSelectedLst extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes the fragment, and loads event data.
+     * @param savedInstanceState Bundle with saved instance state
+     */
     @Nullable
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +75,13 @@ public class OrgEventSelectedLst extends Fragment {
         loadEventData();
     }
 
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,8 +111,9 @@ public class OrgEventSelectedLst extends Fragment {
         return view;
     }
 
-
-    // Method to set up filter buttons for different event lists
+    /**
+     * This sets up filter buttons for different event lists
+     */
     private void setupFilterButtons(View view) {
         filterAllButton = view.findViewById(R.id.filterAll);
         filterAcceptedButton = view.findViewById(R.id.filterAccepted);
@@ -100,6 +124,9 @@ public class OrgEventSelectedLst extends Fragment {
         filterCanceledButton.setOnClickListener(v -> showUserList("canceled"));
     }
 
+    /**
+     * This loads event data from Firestore
+     */
     private void loadEventData() {
         event = new Event(eventId);
         event.loadEventDataAsync(new Event.OnEventDataLoadedListener() {
@@ -116,7 +143,10 @@ public class OrgEventSelectedLst extends Fragment {
             }
         });
     }
-    // Load the appropriate event list based on the filter
+
+    /**
+     * This loads the appropriate event list based on the filter
+     */
     private void showUserList(String filter) {
         displayedUsers.clear();
 
@@ -146,6 +176,9 @@ public class OrgEventSelectedLst extends Fragment {
         }
     }
 
+    /**
+     * This sends notification to the desired list (selected or canceled)
+     */
     private void sendNotification() {
         if (notifyList != null && !notifyList.isEmpty()) {
             NotificationSender notificationSender = new NotificationSender();
