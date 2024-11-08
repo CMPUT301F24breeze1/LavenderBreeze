@@ -1,5 +1,6 @@
 package com.example.myapplication.organization;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,21 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.myapplication.R;
+import com.example.myapplication.model.Event;
+import com.example.myapplication.model.EventAdapter;
+import com.example.myapplication.model.User;
+import com.example.myapplication.model.UserAdapter;
+import com.example.myapplication.controller.NotificationSender;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.EventAdapter;
 import com.example.myapplication.model.User;
@@ -89,7 +104,7 @@ public class OrgEventSelectedLst extends Fragment {
 
         // Initialize the ListView and set an empty adapter initially
         userListView = view.findViewById(R.id.list_view_event_selected_list);
-        userAdapter = new UserAdapter(requireContext(),displayedUsers, "all");
+        userAdapter = new UserAdapter(requireContext(),displayedUsers, "all",eventId,getArguments());
         userListView.setAdapter(userAdapter);  // Set adapter here to avoid NullPointerException
 
 
@@ -103,7 +118,7 @@ public class OrgEventSelectedLst extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
-      
+
       // Set up the notification button for selected participants
         Button notifyButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
         notifyButton.setOnClickListener(v -> sendNotification());
@@ -163,7 +178,7 @@ public class OrgEventSelectedLst extends Fragment {
         }
         Log.d("OrgEventSelectedLst", "User Ids to Display: " + userIdsToDisplay);
 
-        userAdapter = new UserAdapter(requireContext(), displayedUsers, filter);
+        userAdapter = new UserAdapter(requireContext(), displayedUsers, filter,eventId,getArguments());
         userListView.setAdapter(userAdapter);
         for (String userId : userIdsToDisplay) {
             User user = new User(userId,loadedUser -> {
@@ -182,7 +197,7 @@ public class OrgEventSelectedLst extends Fragment {
     private void sendNotification() {
         if (notifyList != null && !notifyList.isEmpty()) {
             NotificationSender notificationSender = new NotificationSender();
-            
+
             String message;
             if (notifyList == canceledList) {
                 message = "We're sorry, but your registration has been declined.";
@@ -192,7 +207,7 @@ public class OrgEventSelectedLst extends Fragment {
                 // For canceled list or other cases, set an appropriate message
                 message = "We're sorry, but your registration has been declined.";
             }
-    
+
             notificationSender.sendNotification(
                 notifyList,              // List of device IDs based on current filter
                 "Event Update",          // Notification title
@@ -205,10 +220,10 @@ public class OrgEventSelectedLst extends Fragment {
     }
 }
 
-    
-            
-            
-    
+
+
+
+
 
 
 

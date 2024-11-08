@@ -25,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +52,9 @@ public class OrgEventWaitingLst extends Fragment {
     private List<String> waitlist, selected;
     private int capacity;
     private CollectionReference eventsRef;
+    private List<User> users = new ArrayList<>();
+    private List<String> userIds = new ArrayList<>();
+
 
     /**
      * Inflates the view for the fragment, sets up the ListView and buttons.
@@ -116,12 +120,9 @@ public class OrgEventWaitingLst extends Fragment {
         });
 
         Button backButton = view.findViewById(R.id.button_go_to_event_from_org_event_waiting_lst);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+        backButton.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_OrgEventWaitingLst_to_OrgEvent, getArguments())
+        );
 
         Button sendNotificationButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
         sendNotificationButton.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +134,7 @@ public class OrgEventWaitingLst extends Fragment {
 
         Button goToSelectedEntrants = view.findViewById(R.id.button_go_to_selected_list_from_org_event_waiting_lst);
         goToSelectedEntrants.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst,getArguments())
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst, getArguments())
         );
 
         Button goToNotifButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
@@ -151,6 +152,7 @@ public class OrgEventWaitingLst extends Fragment {
                 Toast.makeText(v.getContext(), "Sent to waitlist", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
 
@@ -175,6 +177,7 @@ public class OrgEventWaitingLst extends Fragment {
      * This fetches the waitlist from Firestore based on the event ID
      */
     private void fetchEntrants() {
+        // Fetch the waitlist from Firestore based on the event ID
         eventsRef.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -184,9 +187,22 @@ public class OrgEventWaitingLst extends Fragment {
                         waitlist = (ArrayList<String>) document.get("waitlist");
                         if (waitlist != null) {
                             // Fetch each entrant's data by their ID
+
                             for (String entrantId : waitlist) {
                                 fetchEntrantData(entrantId);
                             }
+                            for (int i = 0; i < waitlist.size(); i++) {
+                                User user = new User(waitlist.get(i),loadedUser -> {
+                                    if (loadedUser != null) {
+                                        users.add(loadedUser);
+                                        userIds.add(loadedUser.getDeviceID());
+                                        Log.d("OrgEventWaitLst", "Loaded User: " + loadedUser.getName());
+
+                                    }
+                                });
+                            }
+
+
                         }
                     }
                 } else {
@@ -201,6 +217,7 @@ public class OrgEventWaitingLst extends Fragment {
      * called by fetchEntrants()
      */
     private void fetchEntrantData(String entrantId) {
+        // Fetch user data for each entrant from Firestore
         User entrant = new User(entrantId, loadedUser -> {
             if (loadedUser != null) {
                 entrantList.add(loadedUser);
@@ -213,6 +230,7 @@ public class OrgEventWaitingLst extends Fragment {
      * This creates and sets the adapter for the ListView
      */
     private void updateListView() {
+        // Create and set the adapter for the ListView
         if (entrantAdapter == null) {
             entrantAdapter = new EntrantAdapter(getContext(), entrantList);
             listView.setAdapter(entrantAdapter);
@@ -262,23 +280,27 @@ public class OrgEventWaitingLst extends Fragment {
         Log.d("Kenny", "Selecting entrants based on capacity: " + capacity);
 
         // Shuffle and select entrants based on capacity
-        if (capacity >= waitlist.size()) {
-            selected.addAll(waitlist);
-            waitlist.clear();
-            Log.d("Kenny", "Added all waitlisted entrants to selected.");
-        } else {
-            Collections.shuffle(waitlist);
-            for (int i = 0; i < capacity; i++) {
-                selected.add(waitlist.remove(0));
-                Log.d("Kenny", "Added entrant " + selected.get(selected.size() - 1) + " to selected list.");
-            }
-        }
+
 
         // Ensure `eventsRef` and `eventId` are valid before updating Firestore
         if (eventsRef == null || eventId == null || eventId.isEmpty()) {
             Log.e("Kenny", "Firestore reference or event ID is null/empty. Cannot update database.");
             Toast.makeText(getActivity(), "Failed to update the database. Event ID is missing.", Toast.LENGTH_LONG).show();
             return;
+        }
+
+
+
+        // Shuffle and select entrants based on capacity
+        Collections.shuffle(waitlist);
+        for (int i = 0; i < Integer.min(capacity,waitlist.size()); i++) {
+            User winner = users.get(userIds.indexOf(waitlist.get(0)));
+            winner.addSelectedEvent(eventId);
+            winner.removeRequestedEvent(eventId);
+
+            // move entrants in event lists
+            selected.add(waitlist.remove(0));
+            Log.d("Kenny", "Added entrant " + selected.get(selected.size() - 1) + " to selected list.");
         }
 
         // Prepare data for Firestore update
@@ -293,6 +315,9 @@ public class OrgEventWaitingLst extends Fragment {
                     Log.e("Kenny", "Error updating event in Firestore", e);
                     Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
                 });
+
+
+
     }
 
     /**

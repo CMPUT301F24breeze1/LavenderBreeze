@@ -208,7 +208,14 @@
         android:id="@+id/OrgEventSelectedLst"
         android:name="com.example.myapplication.organization.OrgEventSelectedLst"
         android:label="fragment_org_event_selected_lst"
-        tools:layout="@layout/fragment_org_event_selected_lst" />
+        tools:layout="@layout/fragment_org_event_selected_lst" >
+        <action
+            android:id="@+id/action_OrgEventSelectedLst_to_OrgEvent"
+            app:destination="@id/OrgEvent" />
+        <action
+            android:id="@+id/action_OrgEventSelectedLst_self"
+            app:destination="@id/OrgEventSelectedLst" />
+    </fragment>
     <fragment
         android:id="@+id/OrgAddEvent"
         android:name="com.example.myapplication.organization.OrgAddEvent"
