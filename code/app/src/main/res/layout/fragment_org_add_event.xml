@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".organization.OrgAddEvent"
+    tools:context=".view.organization.OrgAddEvent"
     android:padding="16dp">
 
     <!-- Cancel Button at the Top Left Corner -->

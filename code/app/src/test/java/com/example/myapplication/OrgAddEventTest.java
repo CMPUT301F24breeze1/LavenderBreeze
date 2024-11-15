@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.example.myapplication.organization.OrgAddEvent;
+import com.example.myapplication.view.organization.OrgAddEvent;
 
 import java.util.Date;
 
