@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 
@@ -25,7 +26,7 @@ import com.example.myapplication.model.User;
 public class entranteventdescription extends Fragment {
 
     private Event event; // Store the event object
-    private User user;
+    private UserController user;
     /**
      * Initializes the fragment, retrieves the Event data if passed in arguments,
      * and sets up the User object.
@@ -37,7 +38,7 @@ public class entranteventdescription extends Fragment {
         if (getArguments() != null) {
             event = (com.example.myapplication.model.Event) getArguments().getSerializable("event"); // Retrieve the event
         }
-        user = new User(requireContext(), null); // Initialize user and load data
+        user = new UserController(requireContext(), null); // Initialize user and load data
     }
     /**
      * Inflates the view for the fragment, sets up UI elements, and populates the view with event details.

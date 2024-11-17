@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 
@@ -28,7 +29,7 @@ import com.example.myapplication.model.User;
 public class entrantSelectedPage extends Fragment {
 
     private Event event; // Store the event object
-    private User user;
+    private UserController user;
     /**
      * Initializes the fragment, retrieves the Event data from arguments if available,
      * and sets up the User object.
@@ -40,7 +41,7 @@ public class entrantSelectedPage extends Fragment {
         if (getArguments() != null) {
             event = (com.example.myapplication.model.Event) getArguments().getSerializable("event"); // Retrieve the event
         }
-        user = new User(requireContext(), null); // Initialize user and load data
+        user = new UserController(requireContext(), null); // Initialize user and load data
     }
     /**
      * Inflates the view for the fragment, sets up UI elements, populates event details,
@@ -102,8 +103,8 @@ public class entrantSelectedPage extends Fragment {
         if (event != null) {
             user.addAcceptedEvent(event.getEventId()); // Method to add to accepted events
             user.removeSelectedEvent(event.getEventId()); // Remove from selected events list
-            event.removeFromSelectedlist(user.getDeviceID());
-            event.addToAcceptedlist(user.getDeviceID());
+            event.removeFromSelectedlist(user.getUserDeviceID());
+            event.addToAcceptedlist(user.getUserDeviceID());
             Log.d("EntrantSelectedPage", "Event accepted: " + event.getEventId());
 
             // Navigate back to the event list after accepting
@@ -118,8 +119,8 @@ public class entrantSelectedPage extends Fragment {
     private void declineEvent() {
         if (event != null) {
             user.removeSelectedEvent(event.getEventId());
-            event.removeFromSelectedlist(user.getDeviceID());
-            event.addToDeclinedlist(user.getDeviceID());// Method to remove from selected events
+            event.removeFromSelectedlist(user.getUserDeviceID());
+            event.addToDeclinedlist(user.getUserDeviceID());// Method to remove from selected events
             Log.d("EntrantSelectedPage", "Event declined: " + event.getEventId());
 
             // Navigate back to the event list after declining

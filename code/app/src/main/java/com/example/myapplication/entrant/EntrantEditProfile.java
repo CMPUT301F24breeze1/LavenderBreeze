@@ -28,9 +28,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.Serializable;
 
 /**
  * A fragment that provides the interface for editing a user's profile, including
@@ -43,7 +46,7 @@ public class EntrantEditProfile extends Fragment {
     private ImageView profilePicture;
     private TextView personName, emailAddress, contactPhoneNumber;
     private SwitchCompat emailNotificationSwitch;
-    private User user;
+    private UserController user;
     private static final int PICK_IMAGE_REQUEST = 1;
     private StorageReference storageRef;
     Button homeButton, profileButton, eventsButton;
@@ -63,10 +66,10 @@ public class EntrantEditProfile extends Fragment {
         super.onCreate(savedInstanceState);
         storageRef = FirebaseStorage.getInstance().getReference();
         if(getArguments() != null) {
-            user = (User) getArguments().getSerializable("updated_user");
+            user = (UserController) getArguments().getSerializable("updated_user");
         }
         if(user == null) {
-            user = new User(requireContext(), () -> updateUserData());
+            user = new UserController(requireContext(), () -> updateUserData());
 
         }
     }
@@ -103,25 +106,25 @@ public class EntrantEditProfile extends Fragment {
             public void onClick(View v) {
                 // Navigate to ProfileActivity
                 Bundle result = new Bundle();
-                result.putSerializable("updated_user", user);
+                result.putSerializable("updated_user", (Serializable) user);
                 getParentFragmentManager().setFragmentResult("requestKey", result);
                 Navigation.findNavController(v).navigate(R.id.action_entrantEditProfile_to_entrantProfile3);
             }
         });
 
         // Set up edit buttons to open dialogs for editing
-        editNameButton.setOnClickListener(v -> showEditDialog("Name", user.getName(), newValue -> {
-            user.setName(newValue);
+        editNameButton.setOnClickListener(v -> showEditDialog("Name", user.getUserName(), newValue -> {
+            user.setUserName(newValue);
             updateUserData();
         }));
 
-        editEmailButton.setOnClickListener(v -> showEditDialog("Email", user.getEmail(), newValue -> {
-            user.setEmail(newValue);
+        editEmailButton.setOnClickListener(v -> showEditDialog("Email", user.getUserEmail(), newValue -> {
+            user.setUserEmail(newValue);
             updateUserData();
         }));
 
-        editPhoneButton.setOnClickListener(v -> showEditDialog("Phone Number", user.getPhoneNumber(), newValue -> {
-            user.setPhoneNumber(newValue);
+        editPhoneButton.setOnClickListener(v -> showEditDialog("Phone Number", user.getUserPhoneNumber(), newValue -> {
+            user.setUserPhoneNumber(newValue);
             updateUserData();
         }));
 
@@ -167,10 +170,10 @@ public class EntrantEditProfile extends Fragment {
      */
     private void updateUserData() {
         // Update the TextViews and Switch with User's data
-        personName.setText(user.getName());
-        emailAddress.setText(user.getEmail());
-        contactPhoneNumber.setText(user.getPhoneNumber());
-        user.loadProfilePictureInto(profilePicture,requireContext());
+        personName.setText(user.getUserName());
+        emailAddress.setText(user.getUserEmail());
+        contactPhoneNumber.setText(user.getUserPhoneNumber());
+        user.loadProfilePictureInto(profilePicture,requireContext(),user.getUserProfilePicture());
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
@@ -244,15 +247,15 @@ public class EntrantEditProfile extends Fragment {
      * @param imageUri the URI of the selected image
      */
     private void uploadImageToFirebase(Uri imageUri) {
-        StorageReference profileImageRef = storageRef.child("images/" + user.getDeviceID() + ".jpg");
+        StorageReference profileImageRef = storageRef.child("images/" + user.getUserDeviceID() + ".jpg");
 
         profileImageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String downloadUrl = uri.toString();
-                        user.setProfilePicture(downloadUrl);
-                        user.updateProfilePictureInDatabase();
-                        user.loadProfilePictureInto(profilePicture,requireContext());
+                        user.setUserProfilePicture(downloadUrl);
+                        user.updateProfilePictureInDatabase(user.getUserProfilePicture());
+                        user.loadProfilePictureInto(profilePicture,requireContext(),user.getUserProfilePicture());
                         Toast.makeText(getContext(), "Profile picture updated!", Toast.LENGTH_SHORT).show();
                     });
                 })

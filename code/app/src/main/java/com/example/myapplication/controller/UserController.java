@@ -29,6 +29,9 @@ import com.example.myapplication.model.User;
 
 public class UserController {
     private User user;
+    private String deviceID;
+    private FirebaseFirestore database;
+    private CollectionReference users;
     /**
      * Interface for callback when user data is loaded.
      */
@@ -39,19 +42,11 @@ public class UserController {
      * Interface for callback when user data is loaded.
      */
     public interface OnUserLoadedListener {
-        void onUserLoaded(com.example.myapplication.model.User user); // Dedicated listener for User object
+        void onUserLoaded(User user); // Dedicated listener for User object
     }
 
-    private FirebaseFirestore database;
-    private CollectionReference users;
-
-    /**
-     * Constructs a User object with a specified deviceID.
-     * @param deviceID
-     * @param listener
-     */
     // Constructor for creating a User with a specified deviceID
-    public User(String deviceID, com.example.myapplication.model.User.OnUserLoadedListener listener) {
+    public UserController(String deviceID, OnUserLoadedListener listener) {
         this.deviceID = deviceID;
         database = FirebaseFirestore.getInstance();
         users = database.collection("users");
@@ -71,13 +66,8 @@ public class UserController {
             }
         });
     }
-    /**
-     * Constructs a User object and initializes data from Firestore if it exists, or creates
-     * a new user record if none is found.
-     * @param context the context from which the user is created
-     * @param listener a callback interface for when user data is loaded
-     */
-    public User(Context context, com.example.myapplication.model.User.OnUserDataLoadedListener listener) {
+
+    public UserController(Context context, OnUserDataLoadedListener listener) {
         // Extract the device ID
         this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.d("Device ID", "Android ID: " + deviceID);
@@ -104,25 +94,23 @@ public class UserController {
     }
 
 
-    /**
-     * Loads user data from a Firestore document.
-     * @param document Firestore document containing user data
-     * @param listener callback for when data is loaded
-     */
+
     // Load user data from Firestore
-    private void loadUserData(DocumentSnapshot document, com.example.myapplication.model.User.OnUserDataLoadedListener listener) {
-        name = document.getString("name");
-        email = document.getString("email");
-        phoneNumber = document.getString("phoneNumber");
-        isEntrant = document.getBoolean("isEntrant");
-        isOrganizer = document.getBoolean("isOrganizer");
-        isAdmin = document.getBoolean("isAdmin");
-        isFacility = document.getBoolean("isFacility");
-        requestedEvents = (List<String>) document.get("requestedEvents");
-        selectedEvents = (List<String>) document.get("selectedEvents");
-        cancelledEvents = (List<String>) document.get("cancelledEvents");
-        acceptedEvents = (List<String>) document.get("acceptedEvents");
-        profilePicture = document.getString("profilePicture");
+    private void loadUserData(DocumentSnapshot document, OnUserDataLoadedListener listener) {
+        this.setUserName(document.getString("name"));
+        this.setUserEmail(document.getString("email"));
+        this.setUserPhoneNumber(document.getString("phoneNumber"));
+        this.setUserIsEntrant(document.getBoolean("isEntrant"));
+        this.setUserIsOrganizer(document.getBoolean("isOrganizer"));
+        this.setUserIsAdmin(document.getBoolean("isAdmin"));
+        this.setUserIsFacility(document.getBoolean("isFacility"));
+        this.setUserRequestedEvents((List<String>) document.get("requestedEvents"));
+        this.setUserSelectedEvents((List<String>) document.get("selectedEvents"));
+        this.setUserCancelledEvents((List<String>) document.get("cancelledEvents"));
+        this.setUserAcceptedEvents((List<String>) document.get("acceptedEvents"));
+        this.setUserProfilePicture(document.getString("profilePicture"));
+        this.setUserDeviceID(deviceID);
+
         if (listener != null) {
             listener.onUserDataLoaded();
         }
@@ -133,37 +121,26 @@ public class UserController {
      * @param document
      * @param listener
      */
-    private void UserData(DocumentSnapshot document, com.example.myapplication.model.User.OnUserLoadedListener listener) {
-        name = document.getString("name");
-        email = document.getString("email");
-        phoneNumber = document.getString("phoneNumber");
-        isEntrant = document.getBoolean("isEntrant");
-        isOrganizer = document.getBoolean("isOrganizer");
-        isAdmin = document.getBoolean("isAdmin");
-        isFacility = document.getBoolean("isFacility");
-        requestedEvents = (List<String>) document.get("requestedEvents");
-        selectedEvents = (List<String>) document.get("selectedEvents");
-        cancelledEvents = (List<String>) document.get("cancelledEvents");
-        acceptedEvents = (List<String>) document.get("acceptedEvents");
-        profilePicture = document.getString("profilePicture");
+    private void UserData(DocumentSnapshot document, OnUserLoadedListener listener) {
+        this.setUserName(document.getString("name"));
+        this.setUserEmail(document.getString("email"));
+        this.setUserPhoneNumber(document.getString("phoneNumber"));
+        this.setUserIsEntrant(document.getBoolean("isEntrant"));
+        this.setUserIsOrganizer(document.getBoolean("isOrganizer"));
+        this.setUserIsAdmin(document.getBoolean("isAdmin"));
+        this.setUserIsFacility(document.getBoolean("isFacility"));
+        this.setUserRequestedEvents((List<String>) document.get("requestedEvents"));
+        this.setUserSelectedEvents((List<String>) document.get("selectedEvents"));
+        this.setUserCancelledEvents((List<String>) document.get("cancelledEvents"));
+        this.setUserAcceptedEvents((List<String>) document.get("acceptedEvents"));
+        this.setUserProfilePicture(document.getString("profilePicture"));
+        this.setUserDeviceID(deviceID);
+
         if (listener != null) {
-            listener.onUserLoaded(this);
+            listener.onUserLoaded(user);
         }
     }
 
-    /**
-     * Loads user data from a Firestore document.
-     * @param document
-     */
-    private void loadUser(DocumentSnapshot document){
-        name = document.getString("name");
-        email = document.getString("email");
-        phoneNumber = document.getString("phoneNumber");
-        isEntrant = document.getBoolean("isEntrant");
-        isOrganizer = document.getBoolean("isOrganizer");
-        isAdmin = document.getBoolean("isAdmin");
-        isFacility = document.getBoolean("isFacility");
-    }
 
     /**
      * Create new user with default values
@@ -190,18 +167,6 @@ public class UserController {
             Log.w("User", "Error writing document", e);
         });
         // Set local attributes to default values
-        this.name = "Default Name";
-        this.email = "default@example.com";
-        this.phoneNumber = "0000000000";
-        this.isEntrant = false;
-        this.isOrganizer = false;
-        this.isAdmin = false;
-        this.isFacility = false;
-        this.profilePicture = "";
-        this.requestedEvents = new ArrayList<>();
-        this.selectedEvents = new ArrayList<>();
-        this.cancelledEvents = new ArrayList<>();
-        this.acceptedEvents = new ArrayList<>();
     }
 
     // Getters that return local values
@@ -210,90 +175,96 @@ public class UserController {
      * Get the device ID
      * @return the device ID
      */
-    public String getName() {
-        return this.name;
+    public String getUserName() {
+        return user.getName();
     }
 
     /**
      * Get the email
      * @return the email
      */
-    public String getEmail() {
-        return email;
+    public String getUserEmail() {
+        return user.getEmail();
     }
 
     /**
      * Get the phone number
      * @return the phone number
      */
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getUserPhoneNumber() {
+        return user.getPhoneNumber();
     }
 
     /**
      * Get the isEntrant
      * @return the isEntrant
      */
-    public Boolean getIsEntrant() {
-        return isEntrant;
+    public Boolean getUserIsEntrant() {
+        return user.getIsEntrant();
     }
 
     /**
      * Get the isOrganizer
      * @return the isOrganizer
      */
-    public Boolean getIsOrganizer() {
-        return isOrganizer;
+    public Boolean getUserIsOrganizer() {
+        return user.getIsOrganizer();
     }
 
     /**
      * Get the isAdmin
      * @return the isAdmin
      */
-    public Boolean getIsAdmin() {
-        return isAdmin;
+    public Boolean getUserIsAdmin() {
+        return user.getIsAdmin();
     }
 
     /**
      * Get the isFacility
      * @return the isFacility
      */
-    public Boolean getIsFacility() {
-        return isFacility;
+    public Boolean getUserIsFacility() {
+        return user.getIsFacility();
     }
 
     /**
      * Get the requested events
      * @return the requested events
      */
-    public List<String> getRequestedEvents() {
-        return requestedEvents;
+    public List<String> getUserRequestedEvents() {
+        return user.getRequestedEvents();
     }
 
     /**
      * Get the selected events
      * @return the selected events
      */
-    public List<String> getSelectedEvents() {
-        return selectedEvents;
+    public List<String> getUserSelectedEvents() {
+        return user.getSelectedEvents();
     }
 
     /**
      * Get the cancelled events
      * @return the cancelled events
      */
-    public List<String> getCancelledEvents() {
-        return cancelledEvents;
+    public List<String> getUserCancelledEvents() {
+        return user.getCancelledEvents();
     }
 
     /**
      * Get the accepted events
      * @return the accepted events
      */
-    public List<String> getAcceptedEvents() {
-        return acceptedEvents;
+    public List<String> getUserAcceptedEvents() {
+        return user.getAcceptedEvents();
     }
-
+    /**
+     * Get the device ID
+     * @return the device ID
+     */
+    public String getUserDeviceID() {
+        return user.getDeviceID();
+    }
     // Setters with validation
 
     /**
@@ -301,20 +272,12 @@ public class UserController {
      * @param name
      * @throws IllegalArgumentException if name is null or empty
      */
-    public void setName(String name) {
+    public void setUserName(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        this.name = name;
+        user.setName(name);
         users.document(deviceID).update("name", name);
-    }
-
-    /**
-     * Get the device ID
-     * @return the device ID
-     */
-    public String getDeviceID() {
-        return deviceID;
     }
 
     /**
@@ -322,11 +285,11 @@ public class UserController {
      * @param email
      * @throws IllegalArgumentException if email is null or does not contain an "@"
      */
-    public void setEmail(String email) {
+    public void setUserEmail(String email) {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address.");
         }
-        this.email = email;
+        user.setEmail(email);
         users.document(deviceID).update("email", email);
     }
 
@@ -335,11 +298,11 @@ public class UserController {
      * @param phoneNumber
      * @throws IllegalArgumentException if phoneNumber is null or does not contain 10 digits
      */
-    public void setPhoneNumber(String phoneNumber) {
+    public void setUserPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || !phoneNumber.matches("\\d{10}")) {
             throw new IllegalArgumentException("Phone number must be a 10-digit number.");
         }
-        this.phoneNumber = phoneNumber;
+        user.setPhoneNumber(phoneNumber);
         users.document(deviceID).update("phoneNumber", phoneNumber);
     }
 
@@ -348,11 +311,11 @@ public class UserController {
      * @param isEntrant
      * @throws IllegalArgumentException if isEntrant is null
      */
-    public void setIsEntrant(Boolean isEntrant) {
+    public void setUserIsEntrant(Boolean isEntrant) {
         if (isEntrant == null) {
             throw new IllegalArgumentException("isEntrant cannot be null.");
         }
-        this.isEntrant = isEntrant;
+        user.setIsEntrant(isEntrant);
         users.document(deviceID).update("isEntrant", isEntrant);
     }
 
@@ -361,11 +324,11 @@ public class UserController {
      * @param isOrganizer
      * @throws IllegalArgumentException if isOrganizer is null
      */
-    public void setIsOrganizer(Boolean isOrganizer) {
+    public void setUserIsOrganizer(Boolean isOrganizer) {
         if (isOrganizer == null) {
             throw new IllegalArgumentException("isOrganizer cannot be null.");
         }
-        this.isOrganizer = isOrganizer;
+        user.setIsOrganizer(isOrganizer);
         users.document(deviceID).update("isOrganizer", isOrganizer);
     }
 
@@ -374,11 +337,11 @@ public class UserController {
      * @param isAdmin
      * @throws IllegalArgumentException if isAdmin is null
      */
-    public void setIsAdmin(Boolean isAdmin) {
+    public void setUserIsAdmin(Boolean isAdmin) {
         if (isAdmin == null) {
             throw new IllegalArgumentException("isAdmin cannot be null.");
         }
-        this.isAdmin = isAdmin;
+        user.setIsAdmin(isAdmin);
         users.document(deviceID).update("isAdmin", isAdmin);
     }
 
@@ -387,11 +350,11 @@ public class UserController {
      * @param isFacility
      * @throws IllegalArgumentException if isFacility is null
      */
-    public void setIsFacility(Boolean isFacility) {
+    public void setUserIsFacility(Boolean isFacility) {
         if (isFacility == null) {
             throw new IllegalArgumentException("isFacility cannot be null.");
         }
-        this.isFacility = isFacility;
+        user.setIsFacility(isFacility);
         users.document(deviceID).update("isFacility", isFacility);
     }
 
@@ -399,24 +362,47 @@ public class UserController {
      * Get the profile picture
      * @return the profile picture
      */
-    public String getProfilePicture() {
-        return profilePicture;
+    public String getUserProfilePicture() {
+        return user.getProfilePicture();
     }
 
     /**
      * Set the profile picture
      * @param profilePicture
      */
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setUserProfilePicture(String profilePicture) {
+        user.setProfilePicture(profilePicture);
+    }
+    public void setUserDeviceID(String deviceID) { this.deviceID = deviceID; }
+    public void setUserRequestedEvents(List<String> requestedEvents) {
+        user.setRequestedEvents(requestedEvents);
     }
 
+    public void setUserSelectedEvents(List<String> selectedEvents) {
+        user.setSelectedEvents(selectedEvents);
+    }
+
+    public void setUserCancelledEvents(List<String> cancelledEvents) {
+        user.setCancelledEvents(cancelledEvents);
+    }
+
+    public void setUserAcceptedEvents(List<String> acceptedEvents) {
+        user.setAcceptedEvents(acceptedEvents);
+    }
     /**
      * Add method for requestedEvents
      * @param eventId
      */
     public void addRequestedEvent(String eventId) {
+        List<String> requestedEvents = this.getUserRequestedEvents();
         addEventToFirestoreList(eventId, "requestedEvents", requestedEvents);
+        if (requestedEvents == null) {
+            requestedEvents = new ArrayList<>();
+        }
+        if (!requestedEvents.contains(eventId)) {
+            Boolean result=requestedEvents.add(eventId);
+            if(result){ this.setUserRequestedEvents(requestedEvents);}
+        }
     }
 
     /**
@@ -425,8 +411,13 @@ public class UserController {
      */
     public void removeRequestedEvent(String eventId) {
         Log.d("User", "Removing event with ID: " + eventId);
-        Log.d("User", "Current requestedEvents: " + requestedEvents);
+        Log.d("User", "Current requestedEvents: " + this.getUserRequestedEvents());
+        List<String> requestedEvents = this.getUserRequestedEvents();
         removeEventFromFirestoreList(eventId, "requestedEvents", requestedEvents);
+        if (requestedEvents != null && requestedEvents.contains(eventId)) {
+            Boolean result=requestedEvents.remove(eventId);
+            if(result){ this.setUserRequestedEvents(requestedEvents);}
+        }
     }
 
     /**
@@ -434,7 +425,15 @@ public class UserController {
      * @param eventId
      */
     public void addSelectedEvent(String eventId) {
+        List<String> selectedEvents = this.getUserSelectedEvents();
         addEventToFirestoreList(eventId, "selectedEvents", selectedEvents);
+        if (selectedEvents == null) {
+            selectedEvents = new ArrayList<>();
+        }
+        if (!selectedEvents.contains(eventId)) {
+            Boolean result=selectedEvents.add(eventId);
+            if(result){ this.setUserSelectedEvents(selectedEvents);}
+        }
     }
 
     /**
@@ -442,7 +441,12 @@ public class UserController {
      * @param eventId
      */
     public void removeSelectedEvent(String eventId) {
-        removeEventFromFirestoreList(eventId, "selectedEvents", selectedEvents);
+        List<String> selectedEvents = this.getUserSelectedEvents();
+        removeEventFromFirestoreList(eventId, "selectedEvents",selectedEvents);
+        if (selectedEvents != null && selectedEvents.contains(eventId)) {
+            Boolean result=selectedEvents.remove(eventId);
+            if(result){ this.setUserSelectedEvents(selectedEvents);}
+        }
     }
 
     /**
@@ -450,7 +454,15 @@ public class UserController {
      * @param eventId
      */
     public void addCancelledEvent(String eventId) {
+        List<String> cancelledEvents = this.getUserCancelledEvents();
         addEventToFirestoreList(eventId, "cancelledEvents", cancelledEvents);
+        if (cancelledEvents == null) {
+            cancelledEvents = new ArrayList<>();
+        }
+        if (!cancelledEvents.contains(eventId)) {
+            Boolean result=cancelledEvents.add(eventId);
+            if(result){ this.setUserCancelledEvents(cancelledEvents);}
+        }
     }
 
     /**
@@ -458,7 +470,12 @@ public class UserController {
      * @param eventId
      */
     public void removeCancelledEvent(String eventId) {
+        List<String> cancelledEvents = this.getUserCancelledEvents();
         removeEventFromFirestoreList(eventId, "cancelledEvents", cancelledEvents);
+        if (cancelledEvents != null && cancelledEvents.contains(eventId)) {
+            Boolean result=cancelledEvents.remove(eventId);
+            if(result){ this.setUserCancelledEvents(cancelledEvents);}
+        }
     }
 
     /**
@@ -466,7 +483,15 @@ public class UserController {
      * @param eventId
      */
     public void addAcceptedEvent(String eventId) {
-        addEventToFirestoreList(eventId, "acceptedEvents", acceptedEvents);
+        List<String> eventList = this.getUserAcceptedEvents();
+        addEventToFirestoreList(eventId, "acceptedEvents", eventList);
+        if (eventList == null) {
+            eventList = new ArrayList<>();
+        }
+        if (!eventList.contains(eventId)) {
+            Boolean result=eventList.add(eventId);
+            if(result){ this.setUserAcceptedEvents(eventList);}
+        }
     }
 
     /**
@@ -474,7 +499,12 @@ public class UserController {
      * @param eventId
      */
     public void removeAcceptedEvent(String eventId) {
-        removeEventFromFirestoreList(eventId, "acceptedEvents", acceptedEvents);
+        List<String> acceptedEvents = this.getUserAcceptedEvents();
+        removeEventFromFirestoreList(eventId, "acceptedEvents", acceptedEvents );
+        if (acceptedEvents  != null && acceptedEvents .contains(eventId)) {
+            Boolean result=acceptedEvents.remove(eventId);
+            if(result){ this.setUserAcceptedEvents(acceptedEvents);}
+        }
     }
 
     /**
@@ -502,7 +532,7 @@ public class UserController {
      * @param firestoreField
      * @param eventList
      */
-    private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String> eventList) {
+    private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String>eventList) {
         Log.d("User", "Event removed from the list 1" + eventList);
         if (eventList != null && eventList.contains(eventId)) {
             eventList.remove(eventId);
@@ -517,7 +547,7 @@ public class UserController {
     /**
      * Update the profile picture in the database
      */
-    public void updateProfilePictureInDatabase() {
+    public void updateProfilePictureInDatabase(String profilePicture) {
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(deviceID)
@@ -531,7 +561,7 @@ public class UserController {
      * @param imageView
      * @param context
      */
-    public void loadProfilePictureInto(ImageView imageView, Context context) {
+    public void loadProfilePictureInto(ImageView imageView, Context context,String profilePicture) {
         if (profilePicture != null && !profilePicture.isEmpty()) {
             Glide.with(imageView.getContext())
                     .load(profilePicture)

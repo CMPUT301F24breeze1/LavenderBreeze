@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.organization.OrgEventLst;
 import com.example.myapplication.organization.OrgEventSelectedLst;
 
@@ -30,7 +31,7 @@ public class UserAdapter extends ArrayAdapter<User> {
     private String eventId;
     private Event event;
     private List<String> waitlist;
-    private User replacement;
+    private UserController replacement;
     private User replaced;
     private Bundle arguments;
 
@@ -102,7 +103,7 @@ public class UserAdapter extends ArrayAdapter<User> {
                     if(waitlist.isEmpty()){
                         Toast.makeText(v.getContext(), "There is nobody to replace this entrant", Toast.LENGTH_SHORT).show();
                     } else {
-                        replacement = new User(waitlist.get(0),loadedUser -> {
+                        replacement = new UserController(waitlist.get(0), loadedUser -> {
                             if (loadedUser != null) {
                                 Log.d("UserAdapter", "Loaded User: " + loadedUser.getName());
                             }
@@ -111,34 +112,34 @@ public class UserAdapter extends ArrayAdapter<User> {
                         switch (status) {
                             case "all":
                                 // move event in the profile of the entrant being cancelled
-                                replaced.removeSelectedEvent(event.getEventId());
-                                replaced.addCancelledEvent(event.getEventId());
+                                //replaced.removeSelectedEvent(event.getEventId());
+                                //replaced.addCancelledEvent(event.getEventId());
 
                                 // move event in the profile of the entrant being drawn
                                 replacement.addSelectedEvent(event.getEventId());
                                 replacement.removeRequestedEvent(event.getEventId());
 
                                 // move entrants in event lists
-                                event.removeFromWaitlist(replacement.getDeviceID());
-                                event.addToSelectedlist(replacement.getDeviceID());
-                                event.removeFromSelectedlist(replaced.getDeviceID());
-                                event.addToDeclinedlist(replaced.getDeviceID());
+                                event.removeFromWaitlist(replacement.getUserDeviceID());
+                                event.addToSelectedlist(replacement.getUserDeviceID());
+                                //event.removeFromSelectedlist(replaced.getUserDeviceID());
+                                //event.addToDeclinedlist(replaced.getUserDeviceID());
                                 notifyDataSetChanged();
                                 break;
                             case "accepted":
                                 // move event in the profile of the entrant being cancelled
-                                replaced.removeAcceptedEvent(event.getEventId());
-                                replaced.addCancelledEvent(event.getEventId());
+                                //replaced.removeAcceptedEvent(event.getEventId());
+                                //replaced.addCancelledEvent(event.getEventId());
 
                                 // move event in the profile of the entrant being drawn
                                 replacement.addSelectedEvent(event.getEventId());
                                 replacement.removeRequestedEvent(event.getEventId());
 
                                 // move entrants in event lists
-                                event.removeFromWaitlist(replacement.getDeviceID());
-                                event.addToSelectedlist(replacement.getDeviceID());
-                                event.removeFromAcceptedlist(replaced.getDeviceID());
-                                event.addToDeclinedlist(replaced.getDeviceID());
+                                event.removeFromWaitlist(replacement.getUserDeviceID());
+                                event.addToSelectedlist(replacement.getUserDeviceID());
+                                //event.removeFromAcceptedlist(replaced.getUserDeviceID());
+                                //event.addToDeclinedlist(replaced.getUserDeviceID());
                                 notifyDataSetChanged();
                                 break;
                             case "canceled":

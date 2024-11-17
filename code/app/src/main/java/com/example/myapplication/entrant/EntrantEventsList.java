@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.EventAdapter;
 import com.example.myapplication.model.User;
@@ -36,7 +37,7 @@ public class EntrantEventsList extends Fragment {
     private List<Event> displayedEvents = new ArrayList<>();
     private ListView eventList;
     private EventAdapter eventAdapter;  // Use EventAdapter instead of ArrayAdapter
-    private User user;
+    private UserController user;
     Button homeButton, profileButton, eventsButton;
     /**
      * Default constructor required for instantiating the fragment.
@@ -51,7 +52,7 @@ public class EntrantEventsList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = new User(requireContext(), this::extractData); // Initialize user and load data
+        user = new UserController(requireContext(), this::extractData); // Initialize user and load data
     }
     /**
      * Inflates the view for the fragment, sets up the ListView, and configures navigation and filter buttons.
@@ -163,10 +164,10 @@ public class EntrantEventsList extends Fragment {
      */
     private void extractData() {
         if (user != null) {
-            waitlist = user.getRequestedEvents();
-            selectedlist = user.getSelectedEvents();
-            cancelledlist = user.getCancelledEvents();
-            acceptedlist = user.getAcceptedEvents();
+            waitlist = user.getUserRequestedEvents();
+            selectedlist = user.getUserSelectedEvents();
+            cancelledlist = user.getUserCancelledEvents();
+            acceptedlist = user.getUserAcceptedEvents();
             showEventList(waitlist, "Requested"); // Show waitlist events by default
         }
     }

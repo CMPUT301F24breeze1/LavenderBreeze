@@ -34,18 +34,7 @@ import java.util.Map;
  * manages user data persistence in Firebase Firestore and provides methods to interact with user-related data.
  */
 public class User implements java.io.Serializable {
-    /**
-     * Interface for callback when user data is loaded.
-     */
-    public interface OnUserDataLoadedListener {
-        void onUserDataLoaded();
-    }
-    /**
-     * Interface for callback when user data is loaded.
-     */
-    public interface OnUserLoadedListener {
-        void onUserLoaded(User user); // Dedicated listener for User object
-    }
+
     private String name;
     private String email;
     private String phoneNumber;
@@ -60,160 +49,8 @@ public class User implements java.io.Serializable {
     private List<String> cancelledEvents=new ArrayList<>();
     private List<String> acceptedEvents=new ArrayList<>();
     private static final long serialVersionUID = 1L;
-    private String userID;
 
-    private Long timestamp;
-    private String msg;
-    private String title;
-
-    private FirebaseFirestore database;
-    private CollectionReference users;
-
-    /**
-     * Constructs a User object with a specified deviceID.
-     * @param deviceID
-     * @param listener
-     */
-    // Constructor for creating a User with a specified deviceID
-    public User(String deviceID, OnUserLoadedListener listener) {
-        this.deviceID = deviceID;
-        database = FirebaseFirestore.getInstance();
-        users = database.collection("users");
-
-        // Check if the user document with deviceID exists
-        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful() && task.getResult().exists()) {
-                    // Load user data if document exists
-                    DocumentSnapshot document = task.getResult();
-                    UserData(document, listener);
-                } else {
-                    listener.onUserLoaded(null);
-                    Log.d("User", "User document does not exist for deviceID: " + deviceID);
-                }
-            }
-        });
-    }
-    /**
-     * Constructs a User object and initializes data from Firestore if it exists, or creates
-     * a new user record if none is found.
-     * @param context the context from which the user is created
-     * @param listener a callback interface for when user data is loaded
-     */
-    public User(Context context, OnUserDataLoadedListener listener) {
-        // Extract the device ID
-        this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        Log.d("Device ID", "Android ID: " + deviceID);
-        database = FirebaseFirestore.getInstance();
-        users = database.collection("users");
-
-        // Check if user exists
-        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-
-                    if (document.exists()) {
-                        // Document exists, pull data
-                        loadUserData(document,listener);
-                    } else {
-                        // Document doesn't exist, create new user
-                        createNewUser();
-                    }
-                }
-            }
-        });
-    }
-
-
-    /**
-     * Loads user data from a Firestore document.
-     * @param document Firestore document containing user data
-     * @param listener callback for when data is loaded
-     */
-    // Load user data from Firestore
-    private void loadUserData(DocumentSnapshot document,OnUserDataLoadedListener listener) {
-        name = document.getString("name");
-        email = document.getString("email");
-        phoneNumber = document.getString("phoneNumber");
-        isEntrant = document.getBoolean("isEntrant");
-        isOrganizer = document.getBoolean("isOrganizer");
-        isAdmin = document.getBoolean("isAdmin");
-        isFacility = document.getBoolean("isFacility");
-        requestedEvents = (List<String>) document.get("requestedEvents");
-        selectedEvents = (List<String>) document.get("selectedEvents");
-        cancelledEvents = (List<String>) document.get("cancelledEvents");
-        acceptedEvents = (List<String>) document.get("acceptedEvents");
-        profilePicture = document.getString("profilePicture");
-        if (listener != null) {
-            listener.onUserDataLoaded();
-        }
-    }
-
-    /**
-     * Loads user data from a Firestore document.
-     * @param document
-     * @param listener
-     */
-    private void UserData(DocumentSnapshot document,OnUserLoadedListener listener) {
-        name = document.getString("name");
-        email = document.getString("email");
-        phoneNumber = document.getString("phoneNumber");
-        isEntrant = document.getBoolean("isEntrant");
-        isOrganizer = document.getBoolean("isOrganizer");
-        isAdmin = document.getBoolean("isAdmin");
-        isFacility = document.getBoolean("isFacility");
-        requestedEvents = (List<String>) document.get("requestedEvents");
-        selectedEvents = (List<String>) document.get("selectedEvents");
-        cancelledEvents = (List<String>) document.get("cancelledEvents");
-        acceptedEvents = (List<String>) document.get("acceptedEvents");
-        profilePicture = document.getString("profilePicture");
-        if (listener != null) {
-            listener.onUserLoaded(this);
-        }
-    }
-
-    /**
-     * Loads user data from a Firestore document.
-     * @param document
-     */
-    private void loadUser(DocumentSnapshot document){
-        name = document.getString("name");
-        email = document.getString("email");
-        phoneNumber = document.getString("phoneNumber");
-        isEntrant = document.getBoolean("isEntrant");
-        isOrganizer = document.getBoolean("isOrganizer");
-        isAdmin = document.getBoolean("isAdmin");
-        isFacility = document.getBoolean("isFacility");
-    }
-
-    /**
-     * Create new user with default values
-     */
-    // Create new user with default values
-    private void createNewUser() {
-        HashMap<String, Object> userData = new HashMap<>();
-        userData.put("name", "Default Name");
-        userData.put("email", "default@example.com");
-        userData.put("phoneNumber", "0000000000");
-        userData.put("isEntrant", false);
-        userData.put("isOrganizer", false);
-        userData.put("isAdmin", false);
-        userData.put("isFacility", false);
-        userData.put("profilePicture", "");
-        userData.put("requestedEvents", new ArrayList<>());
-        userData.put("selectedEvents", new ArrayList<>());
-        userData.put("cancelledEvents", new ArrayList<>());
-        userData.put("acceptedEvents", new ArrayList<>());
-
-        users.document(deviceID).set(userData).addOnSuccessListener(aVoid -> {
-            Log.d("User", "DocumentSnapshot successfully written!");
-        }).addOnFailureListener(e -> {
-            Log.w("User", "Error writing document", e);
-        });
-        // Set local attributes to default values
+    public User() {
         this.name = "Default Name";
         this.email = "default@example.com";
         this.phoneNumber = "0000000000";
@@ -221,11 +58,31 @@ public class User implements java.io.Serializable {
         this.isOrganizer = false;
         this.isAdmin = false;
         this.isFacility = false;
+        this.deviceID = "";
         this.profilePicture = "";
         this.requestedEvents = new ArrayList<>();
         this.selectedEvents = new ArrayList<>();
         this.cancelledEvents = new ArrayList<>();
         this.acceptedEvents = new ArrayList<>();
+    }
+    // Parameterized Constructor
+    public User(String name, String email, String phoneNumber, Boolean isEntrant, Boolean isOrganizer,
+                Boolean isAdmin, Boolean isFacility, String deviceID, String profilePicture,
+                List<String> requestedEvents, List<String> selectedEvents,
+                List<String> cancelledEvents, List<String> acceptedEvents) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.isEntrant = isEntrant;
+        this.isOrganizer = isOrganizer;
+        this.isAdmin = isAdmin;
+        this.isFacility = isFacility;
+        this.deviceID = deviceID;
+        this.profilePicture = profilePicture;
+        this.requestedEvents = requestedEvents != null ? requestedEvents : new ArrayList<>();
+        this.selectedEvents = selectedEvents != null ? selectedEvents : new ArrayList<>();
+        this.cancelledEvents = cancelledEvents != null ? cancelledEvents : new ArrayList<>();
+        this.acceptedEvents = acceptedEvents != null ? acceptedEvents : new ArrayList<>();
     }
 
     // Getters that return local values
@@ -318,6 +175,16 @@ public class User implements java.io.Serializable {
         return acceptedEvents;
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+    /**
+     * Get the device ID
+     * @return the device ID
+     */
+    public String getDeviceID() {
+        return deviceID;
+    }
     // Setters with validation
 
     /**
@@ -330,15 +197,6 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
         this.name = name;
-        users.document(deviceID).update("name", name);
-    }
-
-    /**
-     * Get the device ID
-     * @return the device ID
-     */
-    public String getDeviceID() {
-        return deviceID;
     }
 
     /**
@@ -351,7 +209,7 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("Invalid email address.");
         }
         this.email = email;
-        users.document(deviceID).update("email", email);
+//        users.document(deviceID).update("email", email);
     }
 
     /**
@@ -364,7 +222,7 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("Phone number must be a 10-digit number.");
         }
         this.phoneNumber = phoneNumber;
-        users.document(deviceID).update("phoneNumber", phoneNumber);
+//        users.document(deviceID).update("phoneNumber", phoneNumber);
     }
 
     /**
@@ -377,8 +235,9 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("isEntrant cannot be null.");
         }
         this.isEntrant = isEntrant;
-        users.document(deviceID).update("isEntrant", isEntrant);
+//        users.document(deviceID).update("isEntrant", isEntrant);
     }
+
 
     /**
      * Set the isOrganizer
@@ -390,7 +249,7 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("isOrganizer cannot be null.");
         }
         this.isOrganizer = isOrganizer;
-        users.document(deviceID).update("isOrganizer", isOrganizer);
+//        users.document(deviceID).update("isOrganizer", isOrganizer);
     }
 
     /**
@@ -403,7 +262,7 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("isAdmin cannot be null.");
         }
         this.isAdmin = isAdmin;
-        users.document(deviceID).update("isAdmin", isAdmin);
+//        users.document(deviceID).update("isAdmin", isAdmin);
     }
 
     /**
@@ -416,17 +275,29 @@ public class User implements java.io.Serializable {
             throw new IllegalArgumentException("isFacility cannot be null.");
         }
         this.isFacility = isFacility;
-        users.document(deviceID).update("isFacility", isFacility);
+//        users.document(deviceID).update("isFacility", isFacility);
     }
 
+    public void setRequestedEvents(List<String> requestedEvents) {
+        this.requestedEvents = requestedEvents;
+    }
+
+    public void setSelectedEvents(List<String> selectedEvents) {
+        this.selectedEvents = selectedEvents;
+    }
+
+    public void setCancelledEvents(List<String> cancelledEvents) {
+        this.cancelledEvents = cancelledEvents;
+    }
+
+    public void setAcceptedEvents(List<String> acceptedEvents) {
+        this.acceptedEvents = acceptedEvents;
+    }
     /**
-     * Get the profile picture
-     * @return the profile picture
+     * Set the device ID
+     * @param deviceID
      */
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
+    public void setDeviceID(String deviceID) { this.deviceID = deviceID; }
     /**
      * Set the profile picture
      * @param profilePicture
@@ -434,137 +305,313 @@ public class User implements java.io.Serializable {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
-
-    /**
-     * Add method for requestedEvents
-     * @param eventId
-     */
-    public void addRequestedEvent(String eventId) {
-        addEventToFirestoreList(eventId, "requestedEvents", requestedEvents);
-    }
-
-    /**
-     * Remove method for requestedEvents
-     * @param eventId
-     */
-    public void removeRequestedEvent(String eventId) {
-        Log.d("User", "Removing event with ID: " + eventId);
-        Log.d("User", "Current requestedEvents: " + requestedEvents);
-        removeEventFromFirestoreList(eventId, "requestedEvents", requestedEvents);
-    }
-
-    /**
-     * Add method for selectedEvents
-     * @param eventId
-     */
-    public void addSelectedEvent(String eventId) {
-        addEventToFirestoreList(eventId, "selectedEvents", selectedEvents);
-    }
-
-    /**
-     * Remove method for selectedEvents
-     * @param eventId
-     */
-    public void removeSelectedEvent(String eventId) {
-        removeEventFromFirestoreList(eventId, "selectedEvents", selectedEvents);
-    }
-
-    /**
-     * Add method for cancelledEvents
-     * @param eventId
-     */
-    public void addCancelledEvent(String eventId) {
-        addEventToFirestoreList(eventId, "cancelledEvents", cancelledEvents);
-    }
-
-    /**
-     * Remove method for cancelledEvents
-     * @param eventId
-     */
-    public void removeCancelledEvent(String eventId) {
-        removeEventFromFirestoreList(eventId, "cancelledEvents", cancelledEvents);
-    }
-
-    /**
-     * Add method for acceptedEvents
-     * @param eventId
-     */
-    public void addAcceptedEvent(String eventId) {
-        addEventToFirestoreList(eventId, "acceptedEvents", acceptedEvents);
-    }
-
-    /**
-     * Remove method for acceptedEvents
-     * @param eventId
-     */
-    public void removeAcceptedEvent(String eventId) {
-        removeEventFromFirestoreList(eventId, "acceptedEvents", acceptedEvents);
-    }
-
-    /**
-     * Helper method to add an event to a list and update Firestore
-     * @param eventId
-     * @param firestoreField
-     * @param eventList
-     */
-    private void addEventToFirestoreList(String eventId, String firestoreField, List<String> eventList) {
-        if (eventList == null) {
-            eventList = new ArrayList<>();
-        }
-        if (!eventList.contains(eventId)) {
-            eventList.add(eventId);
-            database.collection("users").document(deviceID)
-                    .update(firestoreField, eventList)
-                    .addOnSuccessListener(aVoid -> Log.d("User", "Event added to " + firestoreField))
-                    .addOnFailureListener(e -> Log.e("User", "Error adding event to " + firestoreField, e));
-        }
-    }
-
-    /**
-     * Helper method to remove an event from a list and update Firestore
-     * @param eventId
-     * @param firestoreField
-     * @param eventList
-     */
-    private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String> eventList) {
-        Log.d("User", "Event removed from the list 1" + eventList);
-        if (eventList != null && eventList.contains(eventId)) {
-            eventList.remove(eventId);
-            Log.d("User", "Event removed from the list 2" + eventList);
-            database.collection("users").document(deviceID)
-                    .update(firestoreField, eventList)
-                    .addOnSuccessListener(aVoid -> Log.d("User", "Event removed from " + firestoreField))
-                    .addOnFailureListener(e -> Log.e("User", "Error removing event from " + firestoreField, e));
-        }
-    }
-
-    /**
-     * Update the profile picture in the database
-     */
-    public void updateProfilePictureInDatabase() {
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(deviceID)
-                .update("profilePicture", profilePicture)
-                .addOnSuccessListener(aVoid -> Log.d("User", "Profile picture updated in Firestore"))
-                .addOnFailureListener(e -> Log.e("User", "Error updating profile picture", e));
-    }
-
-    /**
-     * Load the profile picture into an ImageView
-     * @param imageView
-     * @param context
-     */
-    public void loadProfilePictureInto(ImageView imageView,Context context) {
-        if (profilePicture != null && !profilePicture.isEmpty()) {
-            Glide.with(imageView.getContext())
-                    .load(profilePicture)
-                    .placeholder(R.drawable.account_circle) // Placeholder if image is loading
-                    .transform(new CircleCrop())            // Make image circular
-                    .into(imageView);
-        } else {
-            // Set a default placeholder image if no profile picture is available
-            imageView.setImageResource(R.drawable.account_circle);
-        }
-    }
 }
+///**
+// //     * Constructs a User object with a specified deviceID.
+// //     * @param deviceID
+// //     * @param listener
+// //     */
+//    // Constructor for creating a User with a specified deviceID
+//    public User(String deviceID, OnUserLoadedListener listener) {
+//        this.deviceID = deviceID;
+//        database = FirebaseFirestore.getInstance();
+//        users = database.collection("users");
+//
+//        // Check if the user document with deviceID exists
+//        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful() && task.getResult().exists()) {
+//                    // Load user data if document exists
+//                    DocumentSnapshot document = task.getResult();
+//                    UserData(document, listener);
+//                } else {
+//                    listener.onUserLoaded(null);
+//                    Log.d("User", "User document does not exist for deviceID: " + deviceID);
+//                }
+//            }
+//        });
+//    }
+//    /**
+//     * Constructs a User object and initializes data from Firestore if it exists, or creates
+//     * a new user record if none is found.
+//     * @param context the context from which the user is created
+//     * @param listener a callback interface for when user data is loaded
+//     */
+//    public User(Context context, OnUserDataLoadedListener listener) {
+//        // Extract the device ID
+//        this.deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//        Log.d("Device ID", "Android ID: " + deviceID);
+//        database = FirebaseFirestore.getInstance();
+//        users = database.collection("users");
+//    private String userID;
+//
+//    private Long timestamp;
+//    private String msg;
+//    private String title;
+
+//    private FirebaseFirestore database;
+//    private CollectionReference users;
+
+//
+
+//        // Check if user exists
+//        users.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//
+//                    if (document.exists()) {
+//                        // Document exists, pull data
+//                        loadUserData(document,listener);
+//                    } else {
+//                        // Document doesn't exist, create new user
+//                        createNewUser();
+//                    }
+//                }
+//            }
+//        });
+//    }
+//
+//
+//    /**
+//     * Loads user data from a Firestore document.
+//     * @param document Firestore document containing user data
+//     * @param listener callback for when data is loaded
+//     */
+//    // Load user data from Firestore
+//    private void loadUserData(DocumentSnapshot document,OnUserDataLoadedListener listener) {
+//        name = document.getString("name");
+//        email = document.getString("email");
+//        phoneNumber = document.getString("phoneNumber");
+//        isEntrant = document.getBoolean("isEntrant");
+//        isOrganizer = document.getBoolean("isOrganizer");
+//        isAdmin = document.getBoolean("isAdmin");
+//        isFacility = document.getBoolean("isFacility");
+//        requestedEvents = (List<String>) document.get("requestedEvents");
+//        selectedEvents = (List<String>) document.get("selectedEvents");
+//        cancelledEvents = (List<String>) document.get("cancelledEvents");
+//        acceptedEvents = (List<String>) document.get("acceptedEvents");
+//        profilePicture = document.getString("profilePicture");
+//        if (listener != null) {
+//            listener.onUserDataLoaded();
+//        }
+//    }
+//
+//    /**
+//     * Loads user data from a Firestore document.
+//     * @param document
+//     * @param listener
+//     */
+//    private void UserData(DocumentSnapshot document,OnUserLoadedListener listener) {
+//        name = document.getString("name");
+//        email = document.getString("email");
+//        phoneNumber = document.getString("phoneNumber");
+//        isEntrant = document.getBoolean("isEntrant");
+//        isOrganizer = document.getBoolean("isOrganizer");
+//        isAdmin = document.getBoolean("isAdmin");
+//        isFacility = document.getBoolean("isFacility");
+//        requestedEvents = (List<String>) document.get("requestedEvents");
+//        selectedEvents = (List<String>) document.get("selectedEvents");
+//        cancelledEvents = (List<String>) document.get("cancelledEvents");
+//        acceptedEvents = (List<String>) document.get("acceptedEvents");
+//        profilePicture = document.getString("profilePicture");
+//        if (listener != null) {
+//            listener.onUserLoaded(this);
+//        }
+//    }
+//
+//    /**
+//     * Loads user data from a Firestore document.
+//     * @param document
+//     */
+//    private void loadUser(DocumentSnapshot document){
+//        name = document.getString("name");
+//        email = document.getString("email");
+//        phoneNumber = document.getString("phoneNumber");
+//        isEntrant = document.getBoolean("isEntrant");
+//        isOrganizer = document.getBoolean("isOrganizer");
+//        isAdmin = document.getBoolean("isAdmin");
+//        isFacility = document.getBoolean("isFacility");
+//    }
+//
+//    /**
+//     * Create new user with default values
+//     */
+//    // Create new user with default values
+//    private void createNewUser() {
+//        HashMap<String, Object> userData = new HashMap<>();
+//        userData.put("name", "Default Name");
+//        userData.put("email", "default@example.com");
+//        userData.put("phoneNumber", "0000000000");
+//        userData.put("isEntrant", false);
+//        userData.put("isOrganizer", false);
+//        userData.put("isAdmin", false);
+//        userData.put("isFacility", false);
+//        userData.put("profilePicture", "");
+//        userData.put("requestedEvents", new ArrayList<>());
+//        userData.put("selectedEvents", new ArrayList<>());
+//        userData.put("cancelledEvents", new ArrayList<>());
+//        userData.put("acceptedEvents", new ArrayList<>());
+//
+//        users.document(deviceID).set(userData).addOnSuccessListener(aVoid -> {
+//            Log.d("User", "DocumentSnapshot successfully written!");
+//        }).addOnFailureListener(e -> {
+//            Log.w("User", "Error writing document", e);
+//        });
+//        // Set local attributes to default values
+//        this.name = "Default Name";
+//        this.email = "default@example.com";
+//        this.phoneNumber = "0000000000";
+//        this.isEntrant = false;
+//        this.isOrganizer = false;
+//        this.isAdmin = false;
+//        this.isFacility = false;
+//        this.profilePicture = "";
+//        this.requestedEvents = new ArrayList<>();
+//        this.selectedEvents = new ArrayList<>();
+//        this.cancelledEvents = new ArrayList<>();
+//        this.acceptedEvents = new ArrayList<>();
+//    }
+
+//    /**
+//     * Interface for callback when user data is loaded.
+//     */
+//    public interface OnUserDataLoadedListener {
+//        void onUserDataLoaded();
+//    }
+//    /**
+//     * Interface for callback when user data is loaded.
+//     */
+//    public interface OnUserLoadedListener {
+//        void onUserLoaded(User user); // Dedicated listener for User object
+//    }
+//public void addRequestedEvent(String eventId) {
+//        addEventToFirestoreList(eventId, "requestedEvents", requestedEvents);
+//    }
+//
+//    /**
+//     * Remove method for requestedEvents
+//     * @param eventId
+//     */
+//    public void removeRequestedEvent(String eventId) {
+//        Log.d("User", "Removing event with ID: " + eventId);
+//        Log.d("User", "Current requestedEvents: " + requestedEvents);
+//        removeEventFromFirestoreList(eventId, "requestedEvents", requestedEvents);
+//    }
+//
+//    /**
+//     * Add method for selectedEvents
+//     * @param eventId
+//     */
+//    public void addSelectedEvent(String eventId) {
+//        addEventToFirestoreList(eventId, "selectedEvents", selectedEvents);
+//    }
+//
+//    /**
+//     * Remove method for selectedEvents
+//     * @param eventId
+//     */
+//    public void removeSelectedEvent(String eventId) {
+//        removeEventFromFirestoreList(eventId, "selectedEvents", selectedEvents);
+//    }
+//
+//    /**
+//     * Add method for cancelledEvents
+//     * @param eventId
+//     */
+//    public void addCancelledEvent(String eventId) {
+//        addEventToFirestoreList(eventId, "cancelledEvents", cancelledEvents);
+//    }
+//
+//    /**
+//     * Remove method for cancelledEvents
+//     * @param eventId
+//     */
+//    public void removeCancelledEvent(String eventId) {
+//        removeEventFromFirestoreList(eventId, "cancelledEvents", cancelledEvents);
+//    }
+//
+//    /**
+//     * Add method for acceptedEvents
+//     * @param eventId
+//     */
+//    public void addAcceptedEvent(String eventId) {
+//        addEventToFirestoreList(eventId, "acceptedEvents", acceptedEvents);
+//    }
+//
+//    /**
+//     * Remove method for acceptedEvents
+//     * @param eventId
+//     */
+//    public void removeAcceptedEvent(String eventId) {
+//        removeEventFromFirestoreList(eventId, "acceptedEvents", acceptedEvents);
+//    }
+//
+//    /**
+//     * Helper method to add an event to a list and update Firestore
+//     * @param eventId
+//     * @param firestoreField
+//     * @param eventList
+//     */
+//    private void addEventToFirestoreList(String eventId, String firestoreField, List<String> eventList) {
+//        if (eventList == null) {
+//            eventList = new ArrayList<>();
+//        }
+//        if (!eventList.contains(eventId)) {
+//            eventList.add(eventId);
+//            database.collection("users").document(deviceID)
+//                    .update(firestoreField, eventList)
+//                    .addOnSuccessListener(aVoid -> Log.d("User", "Event added to " + firestoreField))
+//                    .addOnFailureListener(e -> Log.e("User", "Error adding event to " + firestoreField, e));
+//        }
+//    }
+//
+//    /**
+//     * Helper method to remove an event from a list and update Firestore
+//     * @param eventId
+//     * @param firestoreField
+//     * @param eventList
+//     */
+//    private void removeEventFromFirestoreList(String eventId, String firestoreField, List<String> eventList) {
+//        Log.d("User", "Event removed from the list 1" + eventList);
+//        if (eventList != null && eventList.contains(eventId)) {
+//            eventList.remove(eventId);
+//            Log.d("User", "Event removed from the list 2" + eventList);
+//            database.collection("users").document(deviceID)
+//                    .update(firestoreField, eventList)
+//                    .addOnSuccessListener(aVoid -> Log.d("User", "Event removed from " + firestoreField))
+//                    .addOnFailureListener(e -> Log.e("User", "Error removing event from " + firestoreField, e));
+//        }
+//    }
+//
+//    /**
+//     * Update the profile picture in the database
+//     */
+//    public void updateProfilePictureInDatabase() {
+//        FirebaseFirestore.getInstance()
+//                .collection("users")
+//                .document(deviceID)
+//                .update("profilePicture", profilePicture)
+//                .addOnSuccessListener(aVoid -> Log.d("User", "Profile picture updated in Firestore"))
+//                .addOnFailureListener(e -> Log.e("User", "Error updating profile picture", e));
+//    }
+//
+//    /**
+//     * Load the profile picture into an ImageView
+//     * @param imageView
+//     * @param context
+//     */
+//    public void loadProfilePictureInto(ImageView imageView,Context context) {
+//        if (profilePicture != null && !profilePicture.isEmpty()) {
+//            Glide.with(imageView.getContext())
+//                    .load(profilePicture)
+//                    .placeholder(R.drawable.account_circle) // Placeholder if image is loading
+//                    .transform(new CircleCrop())            // Make image circular
+//                    .into(imageView);
+//        } else {
+//            // Set a default placeholder image if no profile picture is available
+//            imageView.setImageResource(R.drawable.account_circle);
+//        }
+//    }

@@ -11,6 +11,7 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.User;
 
 import org.junit.Before;
@@ -20,7 +21,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class UserTest {
 
-    private User user;
+    private UserController user;
 
     /**
      * Set up the test environment
@@ -28,7 +29,7 @@ public class UserTest {
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
-        user = new User(context, new User.OnUserDataLoadedListener() {
+        user = new UserController(context, new UserController.OnUserDataLoadedListener() {
             @Override
             public void onUserDataLoaded() {
                 // Notify completion of async operation if needed
@@ -41,8 +42,8 @@ public class UserTest {
      */
     @Test
     public void testSetNameValidInput() {
-        user.setName("John Doe");
-        assertEquals("John Doe", user.getName());
+        user.setUserName("John Doe");
+        assertEquals("John Doe", user.getUserName());
     }
 
     /**
@@ -51,10 +52,10 @@ public class UserTest {
     @Test
     public void testSetNameInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setName("");
+            user.setUserName("");
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setName(null);
+            user.setUserName(null);
         });
     }
 
@@ -63,8 +64,8 @@ public class UserTest {
      */
     @Test
     public void testSetEmailValidInput() {
-        user.setEmail("john@example.com");
-        assertEquals("john@example.com", user.getEmail());
+        user.setUserEmail("john@example.com");
+        assertEquals("john@example.com", user.getUserEmail());
     }
 
     /**
@@ -73,10 +74,10 @@ public class UserTest {
     @Test
     public void testSetEmailInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setEmail("invalidEmail");
+            user.setUserEmail("invalidEmail");
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setEmail(null);
+            user.setUserEmail(null);
         });
     }
 
@@ -85,8 +86,8 @@ public class UserTest {
      */
     @Test
     public void testSetPhoneNumberValidInput() {
-        user.setPhoneNumber("1234567890");
-        assertEquals("1234567890", user.getPhoneNumber());
+        user.setUserPhoneNumber("1234567890");
+        assertEquals("1234567890", user.getUserPhoneNumber());
     }
 
     /**
@@ -95,10 +96,10 @@ public class UserTest {
     @Test
     public void testSetPhoneNumberInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setPhoneNumber("12345"); // Too short
+            user.setUserPhoneNumber("12345"); // Too short
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setPhoneNumber(null);
+            user.setUserPhoneNumber(null);
         });
     }
 
@@ -107,8 +108,8 @@ public class UserTest {
      */
     @Test
     public void testSetIsEntrantValidInput() {
-        user.setIsEntrant(true);
-        assertEquals(true, user.getIsEntrant());
+        user.setUserIsEntrant(true);
+        assertEquals(true, user.getUserIsEntrant());
     }
 
     /**
@@ -117,7 +118,7 @@ public class UserTest {
     @Test
     public void testSetIsEntrantInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setIsEntrant(null);
+            user.setUserIsEntrant(null);
         });
 
     }
@@ -126,8 +127,8 @@ public class UserTest {
      */
     @Test
     public void testSetIsOrganizerValidInput() {
-        user.setIsOrganizer(true);
-        assertEquals(true, user.getIsOrganizer());
+        user.setUserIsOrganizer(true);
+        assertEquals(true, user.getUserIsOrganizer());
     }
     /**
      * Test the setIsOrganizer method with invalid input
@@ -135,7 +136,7 @@ public class UserTest {
     @Test
     public void testSetIsOrganizerInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setIsOrganizer(null);
+            user.setUserIsOrganizer(null);
         });
     }
     /**
@@ -143,8 +144,8 @@ public class UserTest {
      */
     @Test
     public void testSetIsAdminValidInput() {
-        user.setIsAdmin(true);
-        assertEquals(true, user.getIsAdmin());
+        user.setUserIsAdmin(true);
+        assertEquals(true, user.getUserIsAdmin());
     }
     /**
      * Test the setIsAdmin method with invalid input
@@ -152,7 +153,7 @@ public class UserTest {
     @Test
     public void testSetIsAdminInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setIsAdmin(null);
+            user.setUserIsAdmin(null);
         });
     }
     /**
@@ -160,8 +161,8 @@ public class UserTest {
      */
     @Test
     public void testSetIsFacilityValidInput() {
-        user.setIsFacility(true);
-        assertEquals(true, user.getIsFacility());
+        user.setUserIsFacility(true);
+        assertEquals(true, user.getUserIsFacility());
     }
     /**
      * Test the setIsFacility method with invalid input
@@ -169,7 +170,7 @@ public class UserTest {
     @Test
     public void testSetIsFacilityInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> {
-            user.setIsFacility(null);
+            user.setUserIsFacility(null);
         });
     }
 
@@ -180,7 +181,7 @@ public class UserTest {
     public void testAddRequestedEvent() {
         String eventId = "event123";
         user.addRequestedEvent(eventId);
-        assertTrue(user.getRequestedEvents().contains(eventId));
+        assertTrue(user.getUserRequestedEvents().contains(eventId));
     }
 
     /**
@@ -191,7 +192,7 @@ public class UserTest {
         String eventId = "event123";
         user.addRequestedEvent(eventId);
         user.removeRequestedEvent(eventId);
-        assertFalse(user.getRequestedEvents().contains(eventId));
+        assertFalse(user.getUserRequestedEvents().contains(eventId));
     }
 
     /**
@@ -201,7 +202,7 @@ public class UserTest {
     public void testAddSelectedEvent() {
         String eventId = "event456";
         user.addSelectedEvent(eventId);
-        assertTrue(user.getSelectedEvents().contains(eventId));
+        assertTrue(user.getUserSelectedEvents().contains(eventId));
     }
 
     /**
@@ -212,7 +213,7 @@ public class UserTest {
         String eventId = "event456";
         user.addSelectedEvent(eventId);
         user.removeSelectedEvent(eventId);
-        assertFalse(user.getSelectedEvents().contains(eventId));
+        assertFalse(user.getUserSelectedEvents().contains(eventId));
     }
 
     /**
@@ -222,7 +223,7 @@ public class UserTest {
     public void testAddCancelledEvent() {
         String eventId = "event789";
         user.addCancelledEvent(eventId);
-        assertTrue(user.getCancelledEvents().contains(eventId));
+        assertTrue(user.getUserCancelledEvents().contains(eventId));
     }
 
     /**
@@ -233,7 +234,7 @@ public class UserTest {
         String eventId = "event789";
         user.addCancelledEvent(eventId);
         user.removeCancelledEvent(eventId);
-        assertFalse(user.getCancelledEvents().contains(eventId));
+        assertFalse(user.getUserCancelledEvents().contains(eventId));
     }
 
     /**
@@ -243,7 +244,7 @@ public class UserTest {
     public void testAddAcceptedEvent() {
         String eventId = "event101";
         user.addAcceptedEvent(eventId);
-        assertTrue(user.getAcceptedEvents().contains(eventId));
+        assertTrue(user.getUserAcceptedEvents().contains(eventId));
     }
 
     /**
@@ -254,6 +255,6 @@ public class UserTest {
         String eventId = "event101";
         user.addAcceptedEvent(eventId);
         user.removeAcceptedEvent(eventId);
-        assertFalse(user.getAcceptedEvents().contains(eventId));
+        assertFalse(user.getUserAcceptedEvents().contains(eventId));
     }
 }

@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 /**
@@ -28,7 +29,7 @@ import com.example.myapplication.model.User;
 public class EntrantLeavePage extends Fragment {
 
     private Event event; // Store the event object
-    private User user;
+    private UserController user;
     /**
      * Initializes the fragment, retrieves the Event data from arguments if available,
      * and sets up the User object.
@@ -40,7 +41,7 @@ public class EntrantLeavePage extends Fragment {
         if (getArguments() != null) {
             event = (Event) getArguments().getSerializable("event"); // Retrieve the event
         }
-        user = new User(requireContext(), null); // Initialize user and load data
+        user = new UserController(requireContext(), null); // Initialize user and load data
     }
     /**
      * Inflates the view for the fragment, sets up UI elements, populates event details,
@@ -96,9 +97,9 @@ public class EntrantLeavePage extends Fragment {
         if (event != null) {
             // Assuming you have a user instance
             //User user = new User(requireContext(), null); // or retrieve your existing user instance
-            Log.d("EntrantLeavePage", "User: " + user.getRequestedEvents());
+            Log.d("EntrantLeavePage", "User: " + user.getUserRequestedEvents());
             user.removeRequestedEvent(event.getEventId());
-            event.removeFromWaitlist(user.getDeviceID()); // Remove the user from the waitlist// Adjust this method as necessary
+            event.removeFromWaitlist(user.getUserDeviceID()); // Remove the user from the waitlist// Adjust this method as necessary
 
             // Navigate back to the event list
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantLeavePage_to_entrantEventsList);

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.User;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,13 +32,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.myapplication.R;
 
+import java.io.Serializable;
+
 /**
  * A fragment that displays the profile information of an entrant, including name, email,
  * phone number, and profile picture. It allows navigation to an edit profile page and
  * manages updates to the profile data.
  */
 public class EntrantProfile extends Fragment {
-    private User user;
+    private UserController user;
     private TextView personName, emailAddress, contactPhoneNumber;
     private ImageButton edit, notifications;
     private ImageView profilePicture;
@@ -59,14 +62,14 @@ public class EntrantProfile extends Fragment {
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
         getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
-            User updatedUser = (User) bundle.getSerializable("updated_user");
+            UserController updatedUser = (UserController) bundle.getSerializable("updated_user");
             if (updatedUser != null) {
                 user = updatedUser; // Update the local user instance
                 updateUserData(); // Refresh the displayed user data
             }
         });
         if(user == null) {
-            user = new User(requireContext(), () -> updateUserData());
+            user = new UserController(requireContext(), () -> updateUserData());
         }
         // Update UI with new user data
         intializeBottomNavButton(view);
@@ -91,7 +94,7 @@ public class EntrantProfile extends Fragment {
         edit.setOnClickListener(v ->
         {
             Bundle result = new Bundle();
-            result.putSerializable("updated_user", user);
+            result.putSerializable("updated_user", (Serializable) user);
             Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile,result);
         });
 
@@ -109,10 +112,10 @@ public class EntrantProfile extends Fragment {
     private void updateUserData() {
         // Update the TextViews and Switch with User's data
         if (user != null) {
-            personName.setText(user.getName());
-            emailAddress.setText(user.getEmail());
-            contactPhoneNumber.setText(user.getPhoneNumber());
-            user.loadProfilePictureInto(profilePicture,requireContext());
+            personName.setText(user.getUserName());
+            emailAddress.setText(user.getUserEmail());
+            contactPhoneNumber.setText(user.getUserPhoneNumber());
+            user.loadProfilePictureInto(profilePicture,requireContext(),user.getUserProfilePicture());
         }
         // Example of setting an email notification switch (if stored in User class)
         //emailNotificationSwitch.setChecked(user.getIsEntrant());

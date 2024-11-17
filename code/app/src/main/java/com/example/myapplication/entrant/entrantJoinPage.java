@@ -13,13 +13,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.UserController;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 
 public class entrantJoinPage extends Fragment {
 
     private String eventID;
-    private User user;
+    private UserController user;
 
     /**
      * Pulls eventID from bundle and initializes User object from deviceID
@@ -31,7 +32,7 @@ public class entrantJoinPage extends Fragment {
         if (getArguments() != null) {
             eventID = (String) getArguments().getSerializable("eventID");
         }
-        user = new User(requireContext(), null); // Initialize user and load data
+        user = new UserController(requireContext(), null); // Initialize user and load data
     }
 
     /**
@@ -92,9 +93,9 @@ public class entrantJoinPage extends Fragment {
      */
     private void addEvent(Event event) {
         if (event != null) {
-            Log.d("EntrantAddPage", "User: " + user.getRequestedEvents());
+            Log.d("EntrantAddPage", "User: " + user.getUserRequestedEvents());
             user.addRequestedEvent(event.getEventId());
-            event.addToWaitlist(user.getDeviceID());
+            event.addToWaitlist(user.getUserDeviceID());
 
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
         }
