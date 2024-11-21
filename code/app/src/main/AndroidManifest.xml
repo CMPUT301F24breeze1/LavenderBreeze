@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".entrant.Camera"
+            android:name=".view.entrant.Camera"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />
         <service
