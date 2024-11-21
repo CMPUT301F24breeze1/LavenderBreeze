@@ -27,6 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+
 /**
  * Fragment for adding a Facility
  */
