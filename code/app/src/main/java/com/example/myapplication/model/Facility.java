@@ -1,8 +1,6 @@
 package com.example.myapplication.model;
 
 import com.example.myapplication.DeviceUtils;
-
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
