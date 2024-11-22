@@ -1,11 +1,14 @@
 package com.example.myapplication.model;
 
-import com.example.myapplication.DeviceUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import android.content.Context;
 import android.util.Log;
+
+
+import com.example.myapplication.controller.DeviceUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;

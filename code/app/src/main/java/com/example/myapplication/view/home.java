@@ -60,6 +60,11 @@ public class home extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_home_to_entrantProfile3)
         );
 
+        Button admin = view.findViewById(R.id.button_go_to_admin);
+        admin.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_home_to_adminUsersList)
+        );
+
         return view;
     }
 }

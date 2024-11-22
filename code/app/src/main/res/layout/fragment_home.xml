@@ -22,6 +22,15 @@
         android:text="Entrant Profile"
         android:textSize="24dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"/>
 
+    <Button
+        android:id="@+id/button_go_to_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin"
+        android:textSize="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"/>
 </LinearLayout>
