@@ -26,6 +26,7 @@ import com.example.myapplication.controller.DeviceUtils;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.example.myapplication.R;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,11 +50,9 @@ public class OrgAddEvent extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EditText editTextEventName, editTextEventDescription, editTextLocation,
-            editTextCapacity, editTextPrice, editTextPosterUrl,
-            editTextEventStart, editTextEventEnd,
-            editTextRegistrationStart, editTextRegistrationEnd;
-
+    public EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
+    public EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
+    private ImageView posterImageView;
     private FirebaseFirestore database;
     private String eventQRCode;
     private Uri imageUri;
@@ -93,6 +92,14 @@ public class OrgAddEvent extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        // Initialize FirebaseFirestore
+        database = FirebaseFirestore.getInstance();
+        if (database == null) {
+            Log.e("OrgAddEvent", "FirebaseFirestore is null");
+            showToast("Firestore initialization failed.");
+            return;
+        }
+        initializeImagePicker();
     }
 
     /**
@@ -119,61 +126,58 @@ public class OrgAddEvent extends Fragment {
         database = FirebaseFirestore.getInstance();
 
         // Bind views
+        bindUIElements(view);
+
+        fetchFacilityName();
+
+        setupEventHandlers(view);
+
+        return view;
+    }
+    private void bindUIElements(View view) {
         editTextEventName = view.findViewById(R.id.editTextEventName);
         editTextEventDescription = view.findViewById(R.id.editTextEventDescription);
-        editTextEventStart = view.findViewById(R.id.editTextEventStart);
-        editTextEventEnd = view.findViewById(R.id.editTextEventEnd);
         editTextLocation = view.findViewById(R.id.editTextLocation);
         editTextCapacity = view.findViewById(R.id.editTextCapacity);
         editTextPrice = view.findViewById(R.id.editTextPrice);
+        editTextEventStart = view.findViewById(R.id.editTextEventStart);
+        editTextEventEnd = view.findViewById(R.id.editTextEventEnd);
         editTextRegistrationStart = view.findViewById(R.id.editTextRegistrationStart);
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
+        posterImageView = view.findViewById(R.id.imageViewPoster);
+    }
+    private void setupEventHandlers(View view) {
+        Button createEventButton = view.findViewById(R.id.buttonAddEvent);
+        Button cancelButton = view.findViewById(R.id.buttonCancel);
+        FloatingActionButton addPosterButton = view.findViewById(R.id.buttonAddPoster);
 
-        Button buttonCreateEvent = view.findViewById(R.id.buttonAddEvent);  // Create Event button
-        Button buttonCancel = view.findViewById(R.id.buttonCancel);  // Cancel button
-
-        buttonCreateEvent.setOnClickListener(v -> {
-            // Validate input fields first
+        createEventButton.setOnClickListener(v -> {
             if (validateFields()) {
-                // If the form is valid, upload poster (if selected) and create the event
                 uploadPosterImage();
             } else {
-                // Show a toast if validation fails
-                Toast.makeText(requireContext(), "Please complete all fields before submitting.", Toast.LENGTH_SHORT).show();
+                showToast("Please complete all fields correctly.");
             }
         });
 
-        buttonCancel.setOnClickListener(v -> {
-            // Handle cancel action, e.g., navigate back to the event list
-            Navigation.findNavController(v).navigate(R.id.action_org_add_event_to_org_event_lst);
-        });
+        cancelButton.setOnClickListener(this::navigateToEventList);
 
-
-        FloatingActionButton buttonAddPoster = view.findViewById(R.id.buttonAddPoster);
-        buttonAddPoster.setOnClickListener(v -> {
-            Intent intent = new Intent();
+        addPosterButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
             pickImageLauncher.launch(Intent.createChooser(intent, "Select Event Poster"));
         });
-
-        ImageView posterImageView = view.findViewById(R.id.imageViewPoster);
-        // Initialize the image picker launcher
+    }
+    private void initializeImagePicker() {
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         imageUri = result.getData().getData();
                         posterImageView.setVisibility(View.VISIBLE);
-                        posterImageView.setImageURI(imageUri); // Display selected image in ImageView
-
-                        // Call the method to upload the image to Firebase Storage
-                        uploadPosterImage();
+                        posterImageView.setImageURI(imageUri);
                     }
                 }
         );
-
-        return view;
     }
 
     /**
@@ -181,42 +185,13 @@ public class OrgAddEvent extends Fragment {
      * @return true
      */
     public boolean validateFields() {
-        String eventName = editTextEventName.getText().toString();
-        String eventDescription = editTextEventDescription.getText().toString();
-        String eventLocation = editTextLocation.getText().toString();
-        String eventCapacityString = editTextCapacity.getText().toString();
-        String eventPriceString = editTextPrice.getText().toString();
-        String eventStart = editTextEventStart.getText().toString();
-        String eventEnd = editTextEventEnd.getText().toString();
-        String registrationStart = editTextRegistrationStart.getText().toString();
-        String registrationEnd = editTextRegistrationEnd.getText().toString();
-
-        // Check required fields for emptiness
-        if (eventName.isEmpty() || eventDescription.isEmpty() || eventLocation.isEmpty() || eventStart.isEmpty() ||
-                eventEnd.isEmpty() || registrationStart.isEmpty() || registrationEnd.isEmpty()) {
-            return false;  // Return false if any required field is empty
-        }
-
-        // Check if eventCapacity and eventPrice are valid integers
-        if (eventCapacityString.isEmpty() || eventPriceString.isEmpty()) {
-            return false;  // Return false if the capacity or price fields are empty
-        }
-
-        try {
-            int eventCapacity = Integer.parseInt(eventCapacityString);
-            int eventPrice = Integer.parseInt(eventPriceString);
-
-            // Further validation on the parsed values
-            if (eventCapacity <= 0 || eventPrice < 0) {
-                return false;  // Invalid if capacity is less than or equal to 0 or price is negative
-            }
-
-        } catch (NumberFormatException e) {
-            return false;  // Return false if parsing the number fails (invalid input)
-        }
-
-        // If all validations pass
-        return true;
+        return !isEmpty(editTextEventName) && !isEmpty(editTextEventDescription) //!isEmpty(editTextLocation)
+                && parseDate(editTextEventStart.getText().toString()) != null
+                && parseDate(editTextEventEnd.getText().toString()) != null
+                && parseDate(editTextRegistrationStart.getText().toString()) != null
+                && parseDate(editTextRegistrationEnd.getText().toString()) != null
+                && isPositiveInteger(editTextCapacity.getText().toString())
+                && isPositiveInteger(editTextPrice.getText().toString());
     }
 
 
@@ -230,160 +205,125 @@ public class OrgAddEvent extends Fragment {
 
             storageRef.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                String posterUrl = uri.toString();  // Get the image URL
-
-                                // Once the image upload is complete, call createEvent
-                                createEvent(posterUrl); // Pass the poster URL after upload completes
-                            }))
-                    .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to upload poster", Toast.LENGTH_SHORT).show());
+                            .addOnSuccessListener(uri -> createEvent(uri.toString())))
+                    .addOnFailureListener(e -> showToast("Failed to upload poster"));
         } else {
-            Toast.makeText(requireContext(), "No poster selected", Toast.LENGTH_SHORT).show();
+            showToast("No poster selected");
         }
+    }
+    private void fetchFacilityName() {
+        String organizerID = DeviceUtils.getDeviceId(requireContext());
+
+        database.collection("facilities")
+                .whereEqualTo("organizerId", organizerID)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        String facilityName = document.getString("facilityName");
+                        if (facilityName != null) {
+                            editTextLocation.setText(facilityName);
+                            editTextLocation.setEnabled(false); // Make the field non-editable
+                        } else {
+                            Log.e("OrgAddEvent", "facilityName is null in document");
+                            showToast("No facility found for this organizer.");
+                        }
+                    } else {
+                        Log.e("OrgAddEvent", "No documents found for organizerId: " + organizerID);
+                        showToast("No facility found for this organizer.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgAddEvent", "Error fetching facility name", e);
+                    showToast("Error fetching facility name.");
+                });
     }
 
     /**
      * To create the event, generate QR Code, save to Facility if possible, and save to Firestore Firebase
-     * @param eventPosterURL
+     * @param posterUrl
      */
-    public void createEvent(String eventPosterURL) {
-        // Retrieve other event information
+    private void createEvent(String posterUrl) {
+        String organizerID = DeviceUtils.getDeviceId(requireContext());
         String eventName = editTextEventName.getText().toString();
-        String eventDescription = editTextEventDescription.getText().toString();
-        String eventLocation = editTextLocation.getText().toString();
-        int eventCapacity = Integer.parseInt(editTextCapacity.getText().toString());
-        int eventPrice = Integer.parseInt(editTextPrice.getText().toString());
-        Date eventStart = parseDate(editTextEventStart.getText().toString());
-        Date eventEnd = parseDate(editTextEventEnd.getText().toString());
-        Date eventRegistrationStart = parseDate(editTextRegistrationStart.getText().toString());
-        Date eventRegistrationEnd = parseDate(editTextRegistrationEnd.getText().toString());
+        Date eventStartDate = parseDate(editTextEventStart.getText().toString());
+        Date eventEndDate = parseDate(editTextEventEnd.getText().toString());
+        Date registrationStartDate = parseDate(editTextRegistrationStart.getText().toString());
+        Date registrationEndDate = parseDate(editTextRegistrationEnd.getText().toString());
+        String location = editTextLocation.getText().toString();
+        int capacity = Integer.parseInt(editTextCapacity.getText().toString());
+        int price = Integer.parseInt(editTextPrice.getText().toString());
 
-        // Validate event data (including poster URL)
-        if (!validateEventData(eventName, eventDescription, eventLocation, eventPosterURL,
-                eventCapacity, eventPrice, eventStart, eventEnd, eventRegistrationStart, eventRegistrationEnd)) {
-            Toast.makeText(requireContext(), "Invalid input. Please check your data.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        Event event = new Event(eventName, editTextEventDescription.getText().toString(), eventStartDate,
+                eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl, "tempQRCode", organizerID);
 
-        // Generate QR Code
-//        QRCodeGenerator qrCode = new QRCodeGenerator(eventName);
-//        String eventQRCode = qrCode.getQRCodeAsBase64();
-        String eventQRCode = "temp";
-
-        // Create event
-        String organizerID = DeviceUtils.getDeviceId(requireContext());
-        Event event = new Event(eventName, eventDescription, eventStart, eventEnd, eventRegistrationStart,
-                eventRegistrationEnd, eventLocation, eventCapacity, eventPrice, eventPosterURL,
-                eventQRCode, organizerID);
-        event.saveEvent();
-        saveToFacility(eventLocation, event);
-        Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-        Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
-    }
-
-    /**
-     * To save the event to Facility if possible, if the event location of an event matches a Facility name in database
-     * the Event is added to a List in the document for the particular Facility
-     * @param eventLocation
-     * @param event
-     */
-    void saveToFacility(String eventLocation, Event event) {
-        // Check if facility with given location exists
+        // First, get the facility name and its ID
         database.collection("facilities")
-                .whereEqualTo("facilityName", eventLocation)
+                .whereEqualTo("organizerId", organizerID)
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // Facility exists, add the event to its event list
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String facilityId = document.getId();
-                            database.collection("facilities")
-                                    .document(facilityId)
-                                    .update("events", FieldValue.arrayUnion(event))
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(requireContext(), "Event added to facility successfully", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("OrgAddEvent", "Error adding event to facility", e);
-                                    });
-                        }
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot facilityDoc = queryDocumentSnapshots.getDocuments().get(0);
+                        String facilityId = facilityDoc.getId();
+                        String facilityName = facilityDoc.getString("facilityName");
+
+                        // Create event and add it to Firestore
+                        database.collection("events")
+                                .add(event.toMap()) // You should implement toMap() in your Event class
+                                .addOnSuccessListener(documentReference -> {
+                                    String eventId = documentReference.getId();
+
+                                    // Add the event to the facility's event list
+                                    saveEventToFacility(facilityId, eventId);
+
+                                    // Notify success and navigate
+                                    showToast("Event created successfully!");
+                                    navigateToEventList(requireView());
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("OrgAddEvent", "Error creating event", e);
+                                    showToast("Failed to create event");
+                                });
                     } else {
-                        // Facility does not exist, create a default facility
-                        createDefaultFacility(eventLocation, event);
+                        showToast("Facility not found for this organizer.");
                     }
-                });
-    }
-
-    /**
-     * This is if the event has a location that does not match a Facility name in the database
-     * Creates a new Facility and stores the event in a list in the document
-     * @param eventLocation
-     * @param event
-     */
-    private void createDefaultFacility(String eventLocation, Event event) {
-        String organizerID = DeviceUtils.getDeviceId(requireContext());
-
-        // Default facility data
-        Facility defaultFacility = new Facility(requireContext());
-        defaultFacility.setFacilityName(eventLocation);
-        defaultFacility.setOrganizerId(DeviceUtils.getDeviceId(requireContext()));
-
-        // Save the new facility to Firestore
-        database.collection("facilities")
-                .add(defaultFacility)
-                .addOnSuccessListener(documentReference -> {
-                    // Facility created, add the event to this new facility
-                    documentReference.update("events", FieldValue.arrayUnion(event))
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(requireContext(), "Default facility created and event added", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("OrgAddEvent", "Error adding event to new facility", e);
-                            });
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("OrgAddEvent", "Error creating default facility", e);
+                    Log.e("OrgAddEvent", "Error fetching facility", e);
+                    showToast("Failed to fetch facility.");
                 });
-        Toast.makeText(requireContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-        Navigation.findNavController(requireView()).navigate(R.id.action_org_add_event_to_org_event_lst);
     }
 
     /**
-     * to validate data with parameters to ensure the information provide is safe
-     * @param eventName
-     * @param eventDescription
-     * @param eventLocation
-     * @param eventPosterURL
-     * @param eventCapacity
-     * @param eventPrice
-     * @param eventStart
-     * @param eventEnd
-     * @param registrationStart
-     * @param registrationEnd
-     * @return
+     * Save the generated eventId to the events array in the facility document.
+     * This method adds only the eventId (not the full event object) to the facility's events list.
+     *
+     * @param facilityId The ID of the facility.
+     * @param eventId The ID of the newly created event.
      */
-    public boolean validateEventData(String eventName, String eventDescription, String eventLocation, String eventPosterURL,
-                                     int eventCapacity, int eventPrice,
-                                     Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
+    private void saveEventToFacility(String facilityId, String eventId) {
+        // Update the "events" array in the facility document with the eventId
+        database.collection("facilities")
+                .document(facilityId)
+                .update("events", FieldValue.arrayUnion(eventId))  // Save only the eventId
+                .addOnSuccessListener(aVoid -> {
+                    showToast("Event ID added to facility successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgAddEvent", "Error adding event ID to facility", e);
+                });
+    }
 
-        // Check required fields
-        if (eventName == null || eventName.isEmpty()) return false;
-        if (eventDescription == null || eventDescription.isEmpty()) return false;
-        if (eventLocation == null || eventLocation.isEmpty()) return false;
-        if (eventPosterURL == null || eventPosterURL.isEmpty()) return false;
+    private boolean isEmpty(EditText input) {
+        return input.getText().toString().trim().isEmpty();
+    }
 
-        // Validate capacity and price
-        if (eventCapacity <= 0) return false;
-        if (eventPrice < 0) return false;
-
-        // Validate date fields
-        if (eventStart == null || eventEnd == null || registrationStart == null || registrationEnd == null) return false;
-        if (eventStart.after(eventEnd)) return false;
-        if (registrationStart.after(registrationEnd)) return false;
-        if (registrationEnd.after(eventStart)) return false;
-
-        // All validations passed
-        return true;
+    private boolean isPositiveInteger(String value) {
+        try {
+            return Integer.parseInt(value) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
@@ -392,13 +332,19 @@ public class OrgAddEvent extends Fragment {
      * @return
      */
     public Date parseDate(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         try {
-            return dateFormat.parse(dateString);
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(dateString);
         } catch (ParseException e) {
-            //Log.e("org_add_event", "Date parsing error", e);
-            //Toast.makeText(getContext(), "Invalid date format. Please use yyyy-MM-dd HH:mm", Toast.LENGTH_SHORT).show();
+            Log.e("org_add_event", "Date parsing error", e);
+            showToast("Invalid date format. Please use yyyy-MM-dd HH:mm");
             return null; // Return null if parsing fails
         }
+    }
+    private void navigateToEventList(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_org_add_event_to_org_event_lst);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

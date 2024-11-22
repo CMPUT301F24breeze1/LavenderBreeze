@@ -114,6 +114,31 @@ public class Event implements java.io.Serializable {
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
     }
+    /**
+     * Constructors for creating a new Event with no location parameter
+     */
+    public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd, int capacity, int price,
+                 String posterUrl, String qrCodeHash, String organizerId) {
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+        this.posterUrl = posterUrl;
+        this.qrCodeHash = qrCodeHash;
+        this.waitlist = new ArrayList<>();
+        this.selectedEntrants = new ArrayList<>();
+        this.acceptedEntrants = new ArrayList<>();
+        this.declinedEntrants = new ArrayList<>();
+        this.organizerId = organizerId;
+        this.database = FirebaseFirestore.getInstance();
+        this.events = database.collection("events");
+    }
 
     /**
      * This loads event data from Firestore.
@@ -637,5 +662,28 @@ public class Event implements java.io.Serializable {
             declinedEntrants.remove(userId);
             events.document(eventId).update("declinedEntrants", declinedEntrants);
         }
+    }
+
+    /**
+     * Converts the Event object to a Map to be stored in Firestore.
+     * @return A Map representing the Event object.
+     */
+    public Map<String, Object> toMap() {
+        Map<String, Object> eventMap = new HashMap<>();
+
+        eventMap.put("eventName", eventName);
+        eventMap.put("eventDescription", eventDescription);
+        eventMap.put("eventStart", eventStart);
+        eventMap.put("eventEnd", eventEnd);
+        eventMap.put("registrationStart", registrationStart);
+        eventMap.put("registrationEnd", registrationEnd);
+        eventMap.put("location", location);
+        eventMap.put("capacity", capacity);
+        eventMap.put("price", price);
+        eventMap.put("posterUrl", posterUrl);
+        eventMap.put("qrCode", qrCodeHash);
+        eventMap.put("organizerId", organizerId);
+
+        return eventMap;
     }
 }
