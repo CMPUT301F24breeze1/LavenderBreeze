@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
-import com.example.myapplication.DeviceUtils;
 import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 //
