@@ -118,6 +118,9 @@ public class AdminUsersList extends Fragment {
         facilities.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminUsersList_to_adminFacilitiesList));
 
+        Button pictures = view.findViewById(R.id.images);
+        pictures.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminUsersList_to_adminPicturesList));
         return view;
     }
 }

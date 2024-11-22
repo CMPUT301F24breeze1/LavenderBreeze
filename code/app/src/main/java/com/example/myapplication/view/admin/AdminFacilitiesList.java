@@ -3,11 +3,13 @@ package com.example.myapplication.view.admin;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -97,6 +99,21 @@ public class AdminFacilitiesList extends Fragment {
             }
         });
 
+        Button home = view.findViewById(R.id.button_go_to_home_from_admin_facilities_list);
+        home.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_home));
+
+        Button events = view.findViewById(R.id.events);
+        events.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminEventsList));
+
+        Button users = view.findViewById(R.id.users);
+        users.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminUsersList));
+
+        Button pictures = view.findViewById(R.id.images);
+        pictures.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminPicturesList));
         // Inflate the layout for this fragment
         return view;
     }

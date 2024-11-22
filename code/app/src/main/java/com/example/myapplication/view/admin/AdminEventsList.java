@@ -73,7 +73,6 @@ public class AdminEventsList extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_events_list, container, false);
 
-        //initialize database instance
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
 
@@ -110,6 +109,17 @@ public class AdminEventsList extends Fragment {
         home.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_home));
 
+        Button users = view.findViewById(R.id.users);
+        users.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminUsersList));
+
+        Button facilities = view.findViewById(R.id.facilities);
+        facilities.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminFacilitiesList));
+
+        Button pictures = view.findViewById(R.id.images);
+        pictures.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminPicturesList));
 
         return view;
     }
