@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_home_to_orgAddFacility"
             app:destination="@id/orgAddFacility" />
+        <action
+            android:id="@+id/action_home_to_adminUsersList"
+            app:destination="@id/adminUsersList" />
     </fragment>
     <fragment
         android:id="@+id/entrantProfile3"
@@ -311,6 +314,81 @@
         <action
             android:id="@+id/action_entrantJoinPage_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminUsersList"
+        android:name="com.example.myapplication.view.admin.AdminUsersList"
+        android:label="fragment_admin_users_list"
+        tools:layout="@layout/fragment_admin_users_list" >
+        <action
+            android:id="@+id/action_adminUsersList_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_adminUsersList_to_adminPicturesList"
+            app:destination="@id/adminPicturesList" />
+        <action
+            android:id="@+id/action_adminUsersList_to_adminEventsList"
+            app:destination="@id/adminEventsList" />
+        <action
+            android:id="@+id/action_adminUsersList_to_adminFacilitiesList"
+            app:destination="@id/adminFacilitiesList" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminFacilitiesList"
+        android:name="com.example.myapplication.view.admin.AdminFacilitiesList"
+        android:label="fragment_admin_facilities_list"
+        tools:layout="@layout/fragment_admin_facilities_list" >
+        <action
+            android:id="@+id/action_adminFacilitiesList_to_adminUsersList"
+            app:destination="@id/adminUsersList" />
+        <action
+            android:id="@+id/action_adminFacilitiesList_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_adminFacilitiesList_to_home2"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_adminFacilitiesList_to_adminPicturesList"
+            app:destination="@id/adminPicturesList" />
+        <action
+            android:id="@+id/action_adminFacilitiesList_to_adminEventsList"
+            app:destination="@id/adminEventsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminEventsList"
+        android:name="com.example.myapplication.view.admin.AdminEventsList"
+        android:label="fragment_admin_events_list"
+        tools:layout="@layout/fragment_admin_events_list" >
+        <action
+            android:id="@+id/action_adminEventsList_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_adminEventsList_to_adminPicturesList"
+            app:destination="@id/adminPicturesList" />
+        <action
+            android:id="@+id/action_adminEventsList_to_adminFacilitiesList"
+            app:destination="@id/adminFacilitiesList" />
+        <action
+            android:id="@+id/action_adminEventsList_to_adminUsersList"
+            app:destination="@id/adminUsersList" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminPicturesList"
+        android:name="com.example.myapplication.view.admin.AdminPicturesList"
+        android:label="fragment_admin_pictures_list"
+        tools:layout="@layout/fragment_admin_pictures_list" >
+        <action
+            android:id="@+id/action_adminPicturesList_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/action_adminPicturesList_to_adminEventsList"
+            app:destination="@id/adminEventsList" />
+        <action
+            android:id="@+id/action_adminPicturesList_to_adminFacilitiesList"
+            app:destination="@id/adminFacilitiesList" />
+        <action
+            android:id="@+id/action_adminPicturesList_to_adminUsersList"
+            app:destination="@id/adminUsersList" />
     </fragment>
 
 

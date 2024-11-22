@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.User;
 
 import java.util.ArrayList;
 
@@ -22,12 +23,12 @@ import java.util.ArrayList;
  *
  * This Class is not yet implemented, so there is no Javadoc for the methods within
  */
-public class UserListAdapter extends ArrayAdapter<Bundle> {
+public class UserListAdapter extends ArrayAdapter<User> {
 
-    private ArrayList<Bundle> users;
+    private ArrayList<User> users;
     private Context context;
 
-    public UserListAdapter(Context context, ArrayList<Bundle> users){
+    public UserListAdapter(Context context, ArrayList<User> users){
         super(context,0,users);
         this.users = users;
         this.context = context;
@@ -42,15 +43,15 @@ public class UserListAdapter extends ArrayAdapter<Bundle> {
             view = LayoutInflater.from(context).inflate(R.layout.users_list_content, parent, false);
         }
 
-        Bundle user = users.get(position);
+        User user = users.get(position);
 
         TextView name = view.findViewById(R.id.user_name);
 
-        TextView status = view.findViewById(R.id.user_status);
+        TextView phone = view.findViewById(R.id.user_status);
 
-        name.setText(user.getString("name"));
+        name.setText(user.getName());
 
-        status.setText(user.getString("status"));
+        phone.setText(user.getPhoneNumber());
         //Log.d("Kenny", event.getEventName());
         return view;
     }

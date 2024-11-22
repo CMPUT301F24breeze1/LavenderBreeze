@@ -48,6 +48,7 @@ android {
 dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
     implementation(libs.firebase.database)
+    implementation(libs.window)
     debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.3")

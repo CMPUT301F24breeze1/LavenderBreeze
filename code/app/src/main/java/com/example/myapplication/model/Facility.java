@@ -1,12 +1,17 @@
 package com.example.myapplication.model;
 
-import com.example.myapplication.controller.DeviceUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import android.content.Context;
 import android.util.Log;
+
+
+import com.example.myapplication.controller.DeviceUtils;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -15,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * This class manages facility data persistence in Firebase Firestore and provides methods to interact with
  * facility-related data.
  */
-public class Facility {
+public class Facility{
     private String facilityName;
     private String facilityAddress;
     private String facilityEmail;
