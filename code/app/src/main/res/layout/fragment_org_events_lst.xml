@@ -4,7 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#303030"
     android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Events"
+        android:textSize="50dp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"/>
 
     <!-- ListView at the top with weight to take remaining space -->
     <ListView
