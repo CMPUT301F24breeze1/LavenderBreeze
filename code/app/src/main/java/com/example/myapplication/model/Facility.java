@@ -96,6 +96,28 @@ public class Facility{
     }
 
     /**
+     * @param facilityId Facility id to be set
+     * @param facilityName Facility name to be set
+     * @param facilityAddress Facility Address to be set
+     * @param facilityEmail Facility Email to be set
+     * @param facilityPhoneNumber Facility Phone Number to be set
+     * @param organizerId Facility Organizer Id to be set
+     * @param profileImageUrl Facility Profile Picture URL to be set
+     *
+     * Constructs a facility with a specified ID, Name, Address, Email, Phone Number, Organizer ID
+     * and Profile Picture
+     */
+    public Facility(String facilityId,String facilityName, String facilityAddress, String facilityEmail, String facilityPhoneNumber, String organizerId, String profileImageUrl) {
+        this.facilityId = facilityId;
+        this.facilityName = facilityName;
+        this.facilityAddress = facilityAddress;
+        this.facilityEmail = facilityEmail;
+        this.facilityPhoneNumber = facilityPhoneNumber;
+        this.organizerId = organizerId;
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    /**
      * Initializes the firestore database and gets a collection reference for the facilities collection
      */
     private void initializeFirestore() {

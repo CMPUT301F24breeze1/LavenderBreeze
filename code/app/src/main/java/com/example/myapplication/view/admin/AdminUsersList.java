@@ -259,7 +259,7 @@ public class AdminUsersList extends Fragment {
                 Log.d("Firestore", "Documents Retrieved");
                 for(int i = 0; i < facilities.size(); i++){
 
-                    facilityDataList.add(new Facility(facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
+                    facilityDataList.add(new Facility(facilities.get(i).getId(),facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
                             facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
                             facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
                     facilityOrganizerIds.add(facilities.get(i).getString("organizerId"));
