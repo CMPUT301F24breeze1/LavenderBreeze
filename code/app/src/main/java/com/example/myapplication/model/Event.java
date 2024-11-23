@@ -115,7 +115,7 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
     }
     /**
-     * Constructors for creating a new Event with no location parameter
+     * Constructors for creating a new Event, INCLUDING eventID
      */
     public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd,String location, int capacity, int price,

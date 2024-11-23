@@ -102,7 +102,7 @@ public class OrgViewEventQrCode extends Fragment {
         DocumentReference docRef = db.collection("events").document(eventId);
         docRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                String qrCodeHash = documentSnapshot.getString("qrCodeHash");
+                String qrCodeHash = documentSnapshot.getString("qrCode");
                 if (qrCodeHash != null) {
                     Log.d("OrgViewEventQrCode", "QR Code Hash: " + qrCodeHash);
                     displayQrCode(qrCodeHash);

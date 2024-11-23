@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.example.myapplication.controller.DeviceUtils;
+import com.example.myapplication.controller.QRCodeGenerator;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -273,6 +274,9 @@ public class OrgAddEvent extends Fragment {
                                 .addOnSuccessListener(documentReference -> {
                                     String eventId = documentReference.getId();
 
+                                    // Properly encode QR Code
+                                    saveQRCodeToEvent(eventId);
+
                                     // Add the event to the facility's event list
                                     saveEventToFacility(facilityId, eventId);
 
@@ -346,5 +350,19 @@ public class OrgAddEvent extends Fragment {
 
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void saveQRCodeToEvent(String eventId) {
+        QRCodeGenerator qrCode = new QRCodeGenerator(eventId);
+        String eventQRCode = qrCode.getQRCodeAsBase64();
+        database.collection("events")
+                .document(eventId)
+                .update("qrCode", eventQRCode)  // Save only the eventId
+                .addOnSuccessListener(aVoid -> {
+                    showToast("QR Code Generated Successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgAddEvent", "Error adding QR code to event", e);
+                });
     }
 }
