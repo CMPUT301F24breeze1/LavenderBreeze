@@ -270,7 +270,7 @@ public class OrgAddEvent extends Fragment {
 
                         // Create event and add it to Firestore
                         database.collection("events")
-                                .add(event.toMap()) // You should implement toMap() in your Event class
+                                .add(event.toMap())
                                 .addOnSuccessListener(documentReference -> {
                                     String eventId = documentReference.getId();
 

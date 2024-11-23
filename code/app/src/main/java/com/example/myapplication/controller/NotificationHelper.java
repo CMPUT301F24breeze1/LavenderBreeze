@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 // NotificationSender.java
-public class NotificationSender {
+public class NotificationHelper {
     private FirebaseFirestore db;
 
-    public NotificationSender() {
+    public NotificationHelper() {
         db = FirebaseFirestore.getInstance();
     }
 
@@ -31,4 +31,6 @@ public class NotificationSender {
                     .set(notificationData, SetOptions.merge());
         }
     }
+
+
 }

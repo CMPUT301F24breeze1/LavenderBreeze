@@ -17,7 +17,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 import com.example.myapplication.controller.UserAdapter;
-import com.example.myapplication.controller.NotificationSender;
+import com.example.myapplication.controller.NotificationHelper;
 
 
 import java.util.ArrayList;
@@ -178,7 +178,7 @@ public class OrgEventSelectedLst extends Fragment {
      */
     private void sendNotification() {
         if (notifyList != null && !notifyList.isEmpty()) {
-            NotificationSender notificationSender = new NotificationSender();
+            NotificationHelper notificationHelper = new NotificationHelper();
 
             String message;
             if (notifyList == canceledList) {
@@ -190,7 +190,7 @@ public class OrgEventSelectedLst extends Fragment {
                 message = "We're sorry, but your registration has been declined.";
             }
 
-            notificationSender.sendNotification(
+            notificationHelper.sendNotification(
                 notifyList,              // List of device IDs based on current filter
                 "Event Update",          // Notification title
                 message                  // Notification message
