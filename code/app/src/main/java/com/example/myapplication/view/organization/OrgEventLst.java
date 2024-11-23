@@ -70,6 +70,8 @@ public class OrgEventLst extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {}
+
     }
 
     /**
@@ -107,18 +109,19 @@ public class OrgEventLst extends Fragment {
                     ArrayList<String> waitlist = (ArrayList<String>) events.get(i).get("waitlist");
                     ArrayList<String> selected = (ArrayList<String>) events.get(i).get("selectedEntrants");
                     ArrayList<String> declined = (ArrayList<String>) events.get(i).get("declinedEntrants");
-
                     // add waitlist and selected list to respective lists
                     waitlists.add(waitlist);
                     selecteds.add(selected);
                     declineds.add(declined);
 
+                    Event event = new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Long)events.get(i).get("price")).intValue(),
+                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"));
+
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
                     eventIds.add(eventId);
-                    eventDataList.add(new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
-                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Long)events.get(i).get("price")).intValue(),
-                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId")));
+                    eventDataList.add(event);
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }

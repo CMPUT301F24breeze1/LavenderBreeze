@@ -109,6 +109,7 @@ public class OrgEvent extends Fragment {
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_PARAM1);
             waitlist = getArguments().getStringArrayList(ARG_PARAM2);
+            Log.d("OrgEvent", String.valueOf(waitlist));
             selected = getArguments().getStringArrayList(ARG_PARAM3);
             capacity = getArguments().getInt(ARG_PARAM4);
             eventName = getArguments().getString(ARG_PARAM5);
@@ -198,7 +199,7 @@ public class OrgEvent extends Fragment {
         // Button to navigate to the Waiting List fragment
         Button buttonGoToWaitingList = view.findViewById(R.id.button_go_to_waiting_list_from_org_event);
         buttonGoToWaitingList.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_waiting_lst,bundle)
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_event_waiting_lst,getArguments())
         );
 
         // Button to navigate to the Selected List fragment

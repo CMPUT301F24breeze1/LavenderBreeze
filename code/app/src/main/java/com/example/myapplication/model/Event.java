@@ -117,9 +117,10 @@ public class Event implements java.io.Serializable {
     /**
      * Constructors for creating a new Event with no location parameter
      */
-    public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
-                 Date registrationStart, Date registrationEnd, int capacity, int price,
+    public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd,String location, int capacity, int price,
                  String posterUrl, String qrCodeHash, String organizerId) {
+        this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventStart = eventStart;
@@ -521,7 +522,14 @@ public class Event implements java.io.Serializable {
      * @param waitlist
      */
     public void setWaitlist(List<String> waitlist) {
-        this.waitlist = waitlist;
+        if(waitlist == null || waitlist.isEmpty()){
+            waitlist = new ArrayList<String>();
+        } else {
+            this.waitlist = waitlist;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
         events.document(eventId).update("waitlist", waitlist);
     }
 
@@ -530,7 +538,14 @@ public class Event implements java.io.Serializable {
      * @param selectedEntrants
      */
     public void setSelectedEntrants(List<String> selectedEntrants) {
-        this.selectedEntrants = selectedEntrants;
+        if(selectedEntrants == null || selectedEntrants.isEmpty()){
+            selectedEntrants = new ArrayList<String>();
+        } else {
+            this.selectedEntrants = selectedEntrants;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
         events.document(eventId).update("selectedEntrants", selectedEntrants);
     }
 
@@ -539,7 +554,14 @@ public class Event implements java.io.Serializable {
      * @param acceptedEntrants
      */
     public void setAcceptedEntrants(List<String> acceptedEntrants) {
-        this.acceptedEntrants = acceptedEntrants;
+        if(acceptedEntrants == null || acceptedEntrants.isEmpty()){
+            acceptedEntrants = new ArrayList<String>();
+        } else {
+            this.acceptedEntrants = acceptedEntrants;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
         events.document(eventId).update("acceptedEntrants", acceptedEntrants);
     }
 
@@ -548,7 +570,14 @@ public class Event implements java.io.Serializable {
      * @param declinedEntrants
      */
     public void setDeclinedEntrants(List<String> declinedEntrants) {
-        this.declinedEntrants = declinedEntrants;
+        if (declinedEntrants == null || declinedEntrants.isEmpty()){
+            declinedEntrants = new ArrayList<String>();
+        } else {
+            this.declinedEntrants = declinedEntrants;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
         events.document(eventId).update("selectedEntrants", declinedEntrants);
     }
 
@@ -683,6 +712,10 @@ public class Event implements java.io.Serializable {
         eventMap.put("posterUrl", posterUrl);
         eventMap.put("qrCode", qrCodeHash);
         eventMap.put("organizerId", organizerId);
+        eventMap.put("waitlist", waitlist);
+        eventMap.put("selectedEntrants", selectedEntrants);
+        eventMap.put("acceptedEntrants", acceptedEntrants);
+        eventMap.put("declinedEntrants", declinedEntrants);
 
         return eventMap;
     }
