@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.DeviceUtils;
 import com.example.myapplication.model.Facility;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -33,11 +33,12 @@ import java.io.Serializable;
  * Fragment for adding a Facility
  */
 public class OrgAddFacility extends Fragment {
-
+    private static final String TAG = "OrgAddFacility";
     private EditText editFacilityName, editFacilityAddress, editFacilityEmail, editFacilityPhoneNumber;
+    private Button selectImageButton, saveButton;
     private ImageView facilityProfileImage;
     private Uri profileImageUri = null;
-    private String organizerId = "yourOrganizerId"; // Replace with actual organizer ID logic
+    private String organizerId;
     private Facility existingFacility = null;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -68,27 +69,33 @@ public class OrgAddFacility extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_add_facility, container, false);
 
+        organizerId  = DeviceUtils.getDeviceId(requireContext());
+
         // Initialize views
+        initializeViews(view);
+
+        fetchExistingFacility();
+
+        return view;
+    }
+    /**
+     * Initializes the UI components and sets up button listeners.
+     */
+    private void initializeViews(View view) {
         editFacilityName = view.findViewById(R.id.editTextFacilityName);
         editFacilityAddress = view.findViewById(R.id.editTextFacilityAddress);
         editFacilityEmail = view.findViewById(R.id.editTextFacilityEmail);
         editFacilityPhoneNumber = view.findViewById(R.id.editTextFacilityPhone);
         facilityProfileImage = view.findViewById(R.id.facilityProfileImage);
 
-        Button buttonToHome = view.findViewById(R.id.button_go_to_home_from_add_facility);
-        buttonToHome.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_home)
-        );
+        selectImageButton = view.findViewById(R.id.buttonSelectProfileImage);
+        saveButton = view.findViewById(R.id.buttonCreateFacility);
 
-        Button buttonSelectProfileImage = view.findViewById(R.id.buttonSelectProfileImage);
-        Button createFacilityButton = view.findViewById(R.id.buttonCreateFacility);
+        selectImageButton.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        saveButton.setOnClickListener(v -> handleSave());
 
-        buttonSelectProfileImage.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
-        createFacilityButton.setOnClickListener(v -> saveOrUpdateFacility());
-
-        fetchExistingFacility();
-
-        return view;
+        view.findViewById(R.id.button_go_to_home_from_add_facility)
+                .setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_orgAddFacility_to_home));
     }
 
     /**
@@ -101,23 +108,12 @@ public class OrgAddFacility extends Fragment {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                        existingFacility = document.toObject(Facility.class);
+                        DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                        existingFacility = doc.toObject(Facility.class);
 
                         if (existingFacility != null) {
-                            // Set the facility ID for future updates
-                            existingFacility.setFacilityId(document.getId());
-
-                            // Populate fields with the existing facility data
-                            editFacilityName.setText(existingFacility.getFacilityName());
-                            editFacilityAddress.setText(existingFacility.getFacilityAddress());
-                            editFacilityEmail.setText(existingFacility.getFacilityEmail());
-                            editFacilityPhoneNumber.setText(existingFacility.getFacilityPhoneNumber());
-
-                            // Load profile image if available
-                            if (existingFacility.getProfileImageUrl() != null && !existingFacility.getProfileImageUrl().isEmpty()) {
-                                Picasso.get().load(existingFacility.getProfileImageUrl()).into(facilityProfileImage);
-                            }
+                            existingFacility.setFacilityId(doc.getId());
+                            populateFields(existingFacility);
                         }
                     } else {
                         Log.d("OrgAddFacility", "No facility found with organizerId: " + organizerId);
@@ -132,100 +128,102 @@ public class OrgAddFacility extends Fragment {
     /**
      * Sets up any fields for the facility that can be auto-populated
      */
-    private void populateFieldsWithExistingFacility() {
+    private void populateFields(Facility facility) {
         editFacilityName.setText(existingFacility.getFacilityName());
         editFacilityAddress.setText(existingFacility.getFacilityAddress());
         editFacilityEmail.setText(existingFacility.getFacilityEmail());
         editFacilityPhoneNumber.setText(existingFacility.getFacilityPhoneNumber());
 
-        if (existingFacility.getProfileImageUrl() != null) {
-            Picasso.get().load(existingFacility.getProfileImageUrl()).into(facilityProfileImage);
+        if (facility.getProfileImageUrl() != null && !facility.getProfileImageUrl().isEmpty()) {
+            Picasso.get().load(facility.getProfileImageUrl()).into(facilityProfileImage);
         }
     }
-
     /**
-     * Called when organizer attempts to save their facility.
-     * Ensures information is of proper type.
+     * Handles the save button click to validate and save the facility.
      */
-    private void saveOrUpdateFacility() {
-        String facilityName = editFacilityName.getText().toString().trim();
-        String facilityAddress = editFacilityAddress.getText().toString().trim();
-        String facilityEmail = editFacilityEmail.getText().toString().trim();
-        String facilityPhoneNumber = editFacilityPhoneNumber.getText().toString().trim();
+    private void handleSave() {
+        String name = editFacilityName.getText().toString().trim();
+        String address = editFacilityAddress.getText().toString().trim();
+        String email = editFacilityEmail.getText().toString().trim();
+        String phone = editFacilityPhoneNumber.getText().toString().trim();
 
-        if (facilityName.isEmpty() || facilityAddress.isEmpty() || facilityEmail.isEmpty() || facilityPhoneNumber.isEmpty()) {
-            Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || address.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            showError("Please fill in all fields");
             return;
         }
 
         if (profileImageUri != null) {
-            uploadImageAndSaveOrUpdate(facilityName, facilityAddress, facilityEmail, facilityPhoneNumber);
+            uploadImageAndSave(name, address, email, phone);
         } else {
-            saveOrUpdateFacilityDetails(facilityName, facilityAddress, facilityEmail, facilityPhoneNumber, existingFacility != null ? existingFacility.getProfileImageUrl() : null);
+            saveFacility(name, address, email, phone, existingFacility != null ? existingFacility.getProfileImageUrl() : null);
         }
     }
 
     /**
-     * Method to be called when there is an attempt to upload a poster
-     * @param name facility name
-     * @param address poster url
-     * @param email organizer's email
-     * @param phone organizer's phone number
+     * Uploads the selected image to Firebase Storage and saves the facility.
      */
-    private void uploadImageAndSaveOrUpdate(String name, String address, String email, String phone) {
-        StorageReference profileImageRef = storage.getReference().child("facilities/" + organizerId + "/profile.jpg");
-        profileImageRef.putFile(profileImageUri)
-                .addOnSuccessListener(taskSnapshot -> profileImageRef.getDownloadUrl()
-                        .addOnSuccessListener(uri -> saveOrUpdateFacilityDetails(name, address, email, phone, uri.toString()))
-                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to get image URL", Toast.LENGTH_SHORT).show()))
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Image upload failed", Toast.LENGTH_SHORT).show());
+    private void uploadImageAndSave(String name, String address, String email, String phone) {
+        StorageReference imageRef = storage.getReference().child("facilities/" + organizerId + "/profile.jpg");
+
+        imageRef.putFile(profileImageUri)
+                .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> saveFacility(name, address, email, phone, uri.toString()))
+                        .addOnFailureListener(e -> showError("Failed to retrieve image URL")))
+                .addOnFailureListener(e -> showError("Image upload failed"));
     }
 
     /**
-     * Method to be called when there is an attempt to edit information about facility
-     * @param name facility name
-     * @param address poster url
-     * @param email organizer's email
-     * @param phone organizer's phone number
+     * Saves or updates the facility details in Firestore.
      */
-    private void saveOrUpdateFacilityDetails(String name, String address, String email, String phone, String imageUrl) {
+    private void saveFacility(String name, String address, String email, String phone, String imageUrl) {
         if (existingFacility != null) {
-            // Update existing facility
-            existingFacility.setFacilityName(name);
-            existingFacility.setFacilityAddress(address);
-            existingFacility.setFacilityEmail(email);
-            existingFacility.setFacilityPhoneNumber(phone);
-            existingFacility.setProfileImageUrl(imageUrl);
-
-            // Check that the facility has a valid ID before updating
-            if (existingFacility.getFacilityId() != null && !existingFacility.getFacilityId().isEmpty()) {
-                db.collection("facilities").document(existingFacility.getFacilityId())
-                        .set(existingFacility)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), "Facility updated successfully", Toast.LENGTH_SHORT).show();
-                            Navigation.findNavController(requireView()).navigate(R.id.action_orgAddFacility_to_OrgEventLst);
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.e("OrgAddFacility", "Failed to update facility", e);
-                            Toast.makeText(getContext(), "Failed to update facility", Toast.LENGTH_SHORT).show();
-                        });
-            } else {
-                Log.e("OrgAddFacility", "No facility ID found for existing facility");
-                Toast.makeText(getContext(), "Facility ID is missing; cannot update.", Toast.LENGTH_SHORT).show();
-            }
+            updateFacility(name, address, email, phone, imageUrl);
         } else {
-            // Create a new facility
-            Facility newFacility = new Facility(name, address, email, phone, organizerId, imageUrl);
-            db.collection("facilities").add(newFacility)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(getContext(), "Facility saved successfully", Toast.LENGTH_SHORT).show();
-                        Navigation.findNavController(requireView()).navigate(R.id.action_orgAddFacility_to_OrgEventLst);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("OrgAddFacility", "Failed to save new facility", e);
-                        Toast.makeText(getContext(), "Failed to save facility", Toast.LENGTH_SHORT).show();
-                    });
+            createFacility(name, address, email, phone, imageUrl);
         }
+    }
+    /**
+     * Updates an existing facility in Firestore.
+     */
+    private void updateFacility(String name, String address, String email, String phone, String imageUrl) {
+        existingFacility.setFacilityName(name);
+        existingFacility.setFacilityAddress(address);
+        existingFacility.setFacilityEmail(email);
+        existingFacility.setFacilityPhoneNumber(phone);
+        existingFacility.setProfileImageUrl(imageUrl);
+
+        db.collection("facilities")
+                .document(existingFacility.getFacilityId())
+                .set(existingFacility)
+                .addOnSuccessListener(aVoid -> navigateToEventList("Facility updated successfully"))
+                .addOnFailureListener(e -> showError("Failed to update facility"));
+    }
+    /**
+     * Creates a new facility in Firestore.
+     */
+    private void createFacility(String name, String address, String email, String phone, String imageUrl) {
+        Facility newFacility = new Facility(name, address, email, phone, organizerId, imageUrl);
+
+        db.collection("facilities")
+                .add(newFacility)
+                .addOnSuccessListener(docRef -> navigateToEventList("Facility saved successfully"))
+                .addOnFailureListener(e -> showError("Failed to save facility"));
+    }
+
+    /**
+     * Navigates to the event list with a success message.
+     */
+    private void navigateToEventList(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(requireView()).navigate(R.id.action_orgAddFacility_to_OrgEventLst);
+    }
+
+    /**
+     * Displays a toast for errors.
+     */
+    private void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, message);
     }
 
 }
