@@ -26,7 +26,7 @@ public class Facility{
     private String facilityEmail;
     private String facilityPhoneNumber;
     private String organizerId;
-    private List<Event> events;
+    private List<String> events;
     private String facilityId;
     private FirebaseFirestore db;
     private CollectionReference facilities;
@@ -237,7 +237,7 @@ public class Facility{
      * Returns the List of Events at the Facility
      * @return events
      */
-    public List<Event> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
@@ -246,7 +246,7 @@ public class Facility{
      *
      * Sets the list of events at the Facility
      */
-    public void setEvents(List<Event> events) {
+    public void setEvents(List<String> events) {
         this.events = events;
     }
 
