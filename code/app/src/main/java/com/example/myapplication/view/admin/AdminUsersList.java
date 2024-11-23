@@ -131,7 +131,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(accepted.get(j)));
                         event.removeFromAcceptedlist(clicked.getDeviceID());
-                        event.setAcceptedEntrants(accepted);
+                        event.setAcceptedEntrants(event.getAcceptedEntrants());
                     }
                 }
 
@@ -140,7 +140,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(selected.get(j)));
                         event.removeFromSelectedlist(clicked.getDeviceID());
-                        event.setSelectedEntrants(selected);
+                        event.setSelectedEntrants(event.getSelectedEntrants());
                     }
                 }
 
@@ -149,7 +149,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(cancelled.get(j)));
                         event.removeFromDeclinedlist(clicked.getDeviceID());
-                        event.setDeclinedEntrants(cancelled);
+                        event.setDeclinedEntrants(event.getDeclinedEntrants());
                     }
                 }
 
@@ -158,7 +158,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(requested.get(j)));
                         event.removeFromWaitlist(clicked.getDeviceID());
-                        event.setWaitlist(requested);
+                        event.setWaitlist(event.getWaitlist());
                     }
                 }
 
@@ -180,11 +180,13 @@ public class AdminUsersList extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("AdminFacilitiesList", "User successfully Deleted");
+                                userDataList.remove(clicked);
+                                entrantAdapter.notifyDataSetChanged();
                             }
                         });
-                entrantAdapter.notifyDataSetChanged();
             }
         });
+
 
         Button home = view.findViewById(R.id.button_go_to_home_from_admin_users_list);
         home.setOnClickListener(v ->
@@ -257,11 +259,13 @@ public class AdminUsersList extends Fragment {
                 Log.d("Firestore", "Documents Retrieved");
                 for(int i = 0; i < facilities.size(); i++){
 
-                    facilityDataList.add(new Facility(facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
+                    facilityDataList.add(new Facility(facilities.get(i).getId(),facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
                             facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
                             facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
                     facilityOrganizerIds.add(facilities.get(i).getString("organizerId"));
                 }
+                Log.d("AdminUsersList", String.valueOf(facilityDataList));
+                Log.d("AdminUsersList", String.valueOf(facilityOrganizerIds));
             }
         });
     }
