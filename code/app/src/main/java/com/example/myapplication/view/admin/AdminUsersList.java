@@ -217,7 +217,7 @@ public class AdminUsersList extends Fragment {
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
-                    eventDataList.add(new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
                             ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Long)events.get(i).get("price")).intValue(),
                             events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId")));
                     eventIds.add(events.get(i).getId());

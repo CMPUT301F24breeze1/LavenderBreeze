@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -256,7 +257,6 @@ public class OrgAddEvent extends Fragment {
 
         Event event = new Event(eventName, editTextEventDescription.getText().toString(), eventStartDate,
                 eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl, "tempQRCode", organizerID);
-
         // First, get the facility name and its ID
         database.collection("facilities")
                 .whereEqualTo("organizerId", organizerID)
