@@ -172,6 +172,7 @@ public class OrgEventWaitingLst extends Fragment {
      * This fetches the waitlist from Firestore based on the event ID
      */
     private void fetchEntrants() {
+        Log.d("Kenny", "fetchEntrants: called");
         // Fetch the waitlist from Firestore based on the event ID
         eventsRef.document(eventId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

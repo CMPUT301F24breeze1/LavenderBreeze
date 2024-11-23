@@ -496,7 +496,11 @@ public class Event implements java.io.Serializable {
      * @param waitlist
      */
     public void setWaitlist(List<String> waitlist) {
-        this.waitlist = waitlist;
+        if(waitlist == null || waitlist.isEmpty()){
+            waitlist = new ArrayList<String>();
+        } else {
+            this.waitlist = waitlist;
+        }
         events.document(eventId).update("waitlist", waitlist);
     }
 
@@ -505,7 +509,11 @@ public class Event implements java.io.Serializable {
      * @param selectedEntrants
      */
     public void setSelectedEntrants(List<String> selectedEntrants) {
-        this.selectedEntrants = selectedEntrants;
+        if(selectedEntrants == null || selectedEntrants.isEmpty()){
+            selectedEntrants = new ArrayList<String>();
+        } else {
+            this.selectedEntrants = selectedEntrants;
+        }
         events.document(eventId).update("selectedEntrants", selectedEntrants);
     }
 
@@ -514,7 +522,11 @@ public class Event implements java.io.Serializable {
      * @param acceptedEntrants
      */
     public void setAcceptedEntrants(List<String> acceptedEntrants) {
-        this.acceptedEntrants = acceptedEntrants;
+        if(acceptedEntrants == null || acceptedEntrants.isEmpty()){
+            acceptedEntrants = new ArrayList<String>();
+        } else {
+            this.acceptedEntrants = acceptedEntrants;
+        }
         events.document(eventId).update("acceptedEntrants", acceptedEntrants);
     }
 
@@ -523,7 +535,11 @@ public class Event implements java.io.Serializable {
      * @param declinedEntrants
      */
     public void setDeclinedEntrants(List<String> declinedEntrants) {
-        this.declinedEntrants = declinedEntrants;
+        if (declinedEntrants == null || declinedEntrants.isEmpty()){
+            declinedEntrants = new ArrayList<String>();
+        } else {
+            this.declinedEntrants = declinedEntrants;
+        }
         events.document(eventId).update("selectedEntrants", declinedEntrants);
     }
 

@@ -41,6 +41,8 @@ public class AdminFacilitiesList extends Fragment {
     private ArrayList<Facility> facilityDataList = new ArrayList<>();
     private FacilityAdapter facilityArrayAdapter;
     private FirebaseFirestore db;
+    private CollectionReference usersRef;
+    private CollectionReference eventsRef;
     private CollectionReference facilitiesRef;
     private List<DocumentSnapshot> facilities;
 
@@ -76,7 +78,10 @@ public class AdminFacilitiesList extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_facilities_list, container, false);
 
         db = FirebaseFirestore.getInstance();
+        usersRef = db.collection("users");
+        eventsRef  = db.collection("events");
         facilitiesRef = db.collection("facilities");
+
 
         facilityList = view.findViewById(R.id.list_view_admin_facilities_list);
         facilityDataList = new ArrayList<>();
