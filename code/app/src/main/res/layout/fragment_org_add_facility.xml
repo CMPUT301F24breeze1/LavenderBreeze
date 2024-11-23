@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#303030"
     tools:context=".view.organization.OrgAddFacility">
 
     <ImageView
@@ -14,7 +15,9 @@
         android:layout_marginTop="16dp"
         android:contentDescription="Facility Profile Picture"
         android:scaleType="centerCrop"
-        android:src="@drawable/account_circle" />
+        android:src="@drawable/account_circle"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
     <Button
         android:id="@+id/buttonSelectProfileImage"
         android:layout_width="wrap_content"
@@ -34,28 +37,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Facility Name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:background="@drawable/edit_text_border"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
         <EditText
             android:id="@+id/editTextFacilityAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Facility Address"
-            android:inputType="textPostalAddress" />
+            android:inputType="textPostalAddress"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:background="@drawable/edit_text_border"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
         <EditText
             android:id="@+id/editTextFacilityEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Facility Email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:background="@drawable/edit_text_border"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
         <EditText
             android:id="@+id/editTextFacilityPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Facility Phone Number"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:background="@drawable/edit_text_border"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
 
         <LinearLayout
