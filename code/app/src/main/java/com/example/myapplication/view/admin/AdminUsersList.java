@@ -131,7 +131,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(accepted.get(j)));
                         event.removeFromAcceptedlist(clicked.getDeviceID());
-                        event.setAcceptedEntrants(accepted);
+                        event.setAcceptedEntrants(event.getAcceptedEntrants());
                     }
                 }
 
@@ -140,7 +140,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(selected.get(j)));
                         event.removeFromSelectedlist(clicked.getDeviceID());
-                        event.setSelectedEntrants(selected);
+                        event.setSelectedEntrants(event.getSelectedEntrants());
                     }
                 }
 
@@ -149,7 +149,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(cancelled.get(j)));
                         event.removeFromDeclinedlist(clicked.getDeviceID());
-                        event.setDeclinedEntrants(cancelled);
+                        event.setDeclinedEntrants(event.getDeclinedEntrants());
                     }
                 }
 
@@ -158,7 +158,7 @@ public class AdminUsersList extends Fragment {
                         //finds events to which user was accepted, and removes them from the lists
                         Event event = eventDataList.get(eventIds.indexOf(requested.get(j)));
                         event.removeFromWaitlist(clicked.getDeviceID());
-                        event.setWaitlist(requested);
+                        event.setWaitlist(event.getWaitlist());
                     }
                 }
 
