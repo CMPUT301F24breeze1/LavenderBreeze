@@ -180,12 +180,13 @@ public class AdminUsersList extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("AdminFacilitiesList", "User successfully Deleted");
+                                userDataList.remove(clicked);
                                 entrantAdapter.notifyDataSetChanged();
                             }
                         });
-
             }
         });
+
 
         Button home = view.findViewById(R.id.button_go_to_home_from_admin_users_list);
         home.setOnClickListener(v ->
@@ -263,6 +264,8 @@ public class AdminUsersList extends Fragment {
                             facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
                     facilityOrganizerIds.add(facilities.get(i).getString("organizerId"));
                 }
+                Log.d("AdminUsersList", String.valueOf(facilityDataList));
+                Log.d("AdminUsersList", String.valueOf(facilityOrganizerIds));
             }
         });
     }

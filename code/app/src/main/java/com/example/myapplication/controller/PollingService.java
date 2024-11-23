@@ -58,7 +58,6 @@ public class PollingService extends Service {
     }
 
     private void createNotificationChannel(Context context) {
-        Log.d("PollingService", "createNotificationChannel: Creating notification channel");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -80,33 +79,25 @@ public class PollingService extends Service {
     }
 
     private void checkForNewNotifications() {
-        Log.d("PollingService", "checkForNewNotifications: Polling Firestore for updates");
         db.collection("users")
                 .document(deviceId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    Log.d("PollingService", "checkForNewNotifications: Successfully fetched document");
                     if (documentSnapshot.exists()) {
                         Long timestamp = documentSnapshot.getLong("timestamp");
-                        Log.d("PollingService", "checkForNewNotifications: Document timestamp = " + timestamp);
 
                         if (timestamp != null && timestamp > lastTimestamp) {
                             String title = documentSnapshot.getString("title");
                             String message = documentSnapshot.getString("msg");
                             lastTimestamp = timestamp;
                             showLocalNotification(title, message);
-                        } else {
-                            Log.d("PollingService", "checkForNewNotifications: No new notifications");
                         }
-                    } else {
-                        Log.d("PollingService", "checkForNewNotifications: Document does not exist");
                     }
                 })
                 .addOnFailureListener(e -> Log.e("PollingService", "checkForNewNotifications: Error checking notifications", e));
     }
 
     private void showLocalNotification(String title, String message) {
-        Log.d("PollingService", "showLocalNotification: Preparing to show notification");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notif)
@@ -121,7 +112,6 @@ public class PollingService extends Service {
             return;
         }
         notificationManagerCompat.notify(10, builder.build());
-        Log.d("PollingService", "showLocalNotification: Notification displayed");
     }
 
     @Nullable
@@ -133,7 +123,6 @@ public class PollingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("PollingService", "onDestroy: Service is being destroyed");
         handler.removeCallbacks(pollingRunnable); // Stop the polling runnable when service stops
     }
 }
