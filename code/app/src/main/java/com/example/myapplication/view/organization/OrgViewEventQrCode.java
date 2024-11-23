@@ -82,7 +82,7 @@ public class OrgViewEventQrCode extends Fragment {
         db = FirebaseFirestore.getInstance();
         Button buttonGoToQRCode = view.findViewById(R.id.button_go_to_org_event_from_org_view_qrcode);
         buttonGoToQRCode.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_OrgViewEventQrCode_to_OrgEvent)
+                Navigation.findNavController(v).navigate(R.id.action_OrgViewEventQrCode_to_OrgEvent,getArguments())
         );
 
         qrCodeIV = view.findViewById(R.id.qr_code_image_view);

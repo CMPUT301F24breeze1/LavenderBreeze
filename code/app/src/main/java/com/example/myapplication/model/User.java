@@ -66,8 +66,8 @@ public class User implements java.io.Serializable {
     private String msg;
     private String title;
 
-    private FirebaseFirestore database;
-    private CollectionReference users;
+    private transient FirebaseFirestore database;
+    private transient CollectionReference users;
 
     /**
      * Constructs a User object with a specified deviceID.

@@ -16,6 +16,8 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -208,7 +210,7 @@ public class EntrantEditProfile extends Fragment {
 
         deleteButton.setOnClickListener(v -> {
             dialog.dismiss();
-            //deletePicture();
+            deletePicture();
         });
 
         dialog.show();
@@ -255,5 +257,23 @@ public class EntrantEditProfile extends Fragment {
                     });
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to upload picture.", Toast.LENGTH_SHORT).show());
+    }
+    /**
+     * Deletes the user's profile picture from Firebase Storage.
+     */
+    private void deletePicture() {
+        StorageReference profileImageRef = storageRef.child("images/" + user.getDeviceID() + ".jpg");
+        profileImageRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    // On successful deletion, update the database and UI
+                    user.setProfilePicture(""); // Set to empty string
+                    user.updateProfilePictureInDatabase();
+                    user.loadProfilePictureInto(profilePicture, requireContext());
+                    Toast.makeText(getContext(), "Profile picture deleted!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle errors
+                    Toast.makeText(getContext(), "Failed to delete profile picture.", Toast.LENGTH_SHORT).show();
+                });
     }
 }
