@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -42,7 +43,7 @@ public class EntrantEditProfile extends Fragment {
     private ImageButton editPhotoButton, editNameButton, editEmailButton, editPhoneButton;
     private ImageView profilePicture;
     private TextView personName, emailAddress, contactPhoneNumber;
-    private SwitchCompat emailNotificationSwitch;
+    private SwitchCompat notifSwitch;
     private User user;
     private static final int PICK_IMAGE_REQUEST = 1;
     private StorageReference storageRef;
@@ -94,7 +95,7 @@ public class EntrantEditProfile extends Fragment {
         personName = view.findViewById(R.id.personName);
         emailAddress = view.findViewById(R.id.emailAddress);
         contactPhoneNumber = view.findViewById(R.id.contactPhoneNumber);
-        emailNotificationSwitch = view.findViewById(R.id.emailNotificationSwitch);
+        notifSwitch = view.findViewById(R.id.emailNotificationSwitch);
 
         updateUserData();
         editPhotoButton.setOnClickListener(v -> showEditPhotoDialog());
@@ -126,15 +127,16 @@ public class EntrantEditProfile extends Fragment {
         }));
 
         // Set up the email notification switch
-        emailNotificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                Toast.makeText(requireContext(), "Email Notifications Enabled", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Email Notifications Disabled", Toast.LENGTH_SHORT).show();
-            }
+        notifSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Log.d("Peter", "onCreateView: "+ isChecked);
+            user.setToggleNotif(isChecked);
+            user.updateToggleNotifInDatabase(isChecked, user.getDeviceID()); // Call method to update the database
         });
+
         return view;
     }
+
+
     /**
      * Initializes the bottom navigation buttons and their respective actions.
      * @param view the root view of the fragment
@@ -172,7 +174,7 @@ public class EntrantEditProfile extends Fragment {
         contactPhoneNumber.setText(user.getPhoneNumber());
         user.loadProfilePictureInto(profilePicture,requireContext());
         // Example of setting an email notification switch (if stored in User class)
-        //emailNotificationSwitch.setChecked(user.getIsEntrant());
+        notifSwitch.setChecked(user.isToggleNotif());
     }
     /**
      * Shows a dialog for editing a specified field.
@@ -276,4 +278,6 @@ public class EntrantEditProfile extends Fragment {
                     Toast.makeText(getContext(), "Failed to delete profile picture.", Toast.LENGTH_SHORT).show();
                 });
     }
+
+
 }

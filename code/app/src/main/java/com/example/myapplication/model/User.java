@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import com.example.myapplication.R;
+import com.example.myapplication.controller.DeviceUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -55,6 +56,7 @@ public class User implements java.io.Serializable {
     private Boolean isFacility;
     private String deviceID;
     private String profilePicture;
+    private boolean toggleNotif;
     private List<String> requestedEvents=new ArrayList<>();
     private List<String> selectedEvents=new ArrayList<>();
     private List<String> cancelledEvents=new ArrayList<>();
@@ -146,6 +148,7 @@ public class User implements java.io.Serializable {
         selectedEvents = (List<String>) document.get("selectedEvents");
         cancelledEvents = (List<String>) document.get("cancelledEvents");
         acceptedEvents = (List<String>) document.get("acceptedEvents");
+        toggleNotif = document.getBoolean("toggleNotif");
         profilePicture = document.getString("profilePicture");
         if (listener != null) {
             listener.onUserDataLoaded();
@@ -170,6 +173,8 @@ public class User implements java.io.Serializable {
         cancelledEvents = (List<String>) document.get("cancelledEvents");
         acceptedEvents = (List<String>) document.get("acceptedEvents");
         profilePicture = document.getString("profilePicture");
+        toggleNotif = document.getBoolean("toggleNotif");
+
         if (listener != null) {
             listener.onUserLoaded(this);
         }
@@ -187,6 +192,15 @@ public class User implements java.io.Serializable {
         isOrganizer = document.getBoolean("isOrganizer");
         isAdmin = document.getBoolean("isAdmin");
         isFacility = document.getBoolean("isFacility");
+    }
+
+    public void updateToggleNotifInDatabase(boolean isEnabled, String deviceID) {
+        toggleNotif = isEnabled;
+
+        database.collection("users").document(deviceID)
+                .update("toggleNotif", isEnabled)
+                .addOnSuccessListener(aVoid -> Log.d("User", "Notification toggle updated successfully."))
+                .addOnFailureListener(e -> Log.e("User", "Failed to update notification toggle.", e));
     }
 
     /**
@@ -207,6 +221,7 @@ public class User implements java.io.Serializable {
         userData.put("selectedEvents", new ArrayList<>());
         userData.put("cancelledEvents", new ArrayList<>());
         userData.put("acceptedEvents", new ArrayList<>());
+        userData.put("toggleNotif", true);
 
         users.document(deviceID).set(userData).addOnSuccessListener(aVoid -> {
             Log.d("User", "DocumentSnapshot successfully written!");
@@ -226,6 +241,7 @@ public class User implements java.io.Serializable {
         this.selectedEvents = new ArrayList<>();
         this.cancelledEvents = new ArrayList<>();
         this.acceptedEvents = new ArrayList<>();
+        this.toggleNotif = true;
     }
 
     // Getters that return local values
@@ -566,5 +582,13 @@ public class User implements java.io.Serializable {
             // Set a default placeholder image if no profile picture is available
             imageView.setImageResource(R.drawable.account_circle);
         }
+    }
+
+    public boolean isToggleNotif() {
+        return toggleNotif;
+    }
+
+    public void setToggleNotif(boolean toggleNotif) {
+        this.toggleNotif = toggleNotif;
     }
 }

@@ -85,8 +85,9 @@ public class PollingService extends Service {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         Long timestamp = documentSnapshot.getLong("timestamp");
+                        Boolean toggleNotif = documentSnapshot.getBoolean("toggleNotif");
 
-                        if (timestamp != null && timestamp > lastTimestamp) {
+                        if (timestamp != null && timestamp > lastTimestamp && toggleNotif != null && toggleNotif) {
                             String title = documentSnapshot.getString("title");
                             String message = documentSnapshot.getString("msg");
                             lastTimestamp = timestamp;

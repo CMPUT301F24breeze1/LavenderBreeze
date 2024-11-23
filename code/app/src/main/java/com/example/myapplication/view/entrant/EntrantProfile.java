@@ -3,22 +3,15 @@
 //given here is the xml code for it", 2024-11-02
 package com.example.myapplication.view.entrant;
 
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.example.myapplication.model.User;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +19,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.myapplication.R;
 
@@ -41,7 +32,7 @@ public class EntrantProfile extends Fragment {
     private TextView personName, emailAddress, contactPhoneNumber;
     private ImageButton edit, notifications;
     private ImageView profilePicture;
-    private SwitchCompat emailNotificationSwitch;
+    private SwitchCompat notifSwitch;
     Button homeButton, profileButton, eventsButton;
     /**
      * Default constructor required for instantiating the fragment.
@@ -99,7 +90,7 @@ public class EntrantProfile extends Fragment {
         personName = view.findViewById(R.id.personName);
         emailAddress = view.findViewById(R.id.emailAddress);
         contactPhoneNumber = view.findViewById(R.id.contactPhoneNumber);
-        emailNotificationSwitch = view.findViewById(R.id.emailNotificationSwitch);
+        notifSwitch = view.findViewById(R.id.emailNotificationSwitch);
         profilePicture = view.findViewById(R.id.profilePicture);
         return view;
     }
@@ -113,9 +104,8 @@ public class EntrantProfile extends Fragment {
             emailAddress.setText(user.getEmail());
             contactPhoneNumber.setText(user.getPhoneNumber());
             user.loadProfilePictureInto(profilePicture,requireContext());
+            notifSwitch.setChecked(user.isToggleNotif());
         }
-        // Example of setting an email notification switch (if stored in User class)
-        //emailNotificationSwitch.setChecked(user.getIsEntrant());
     }
     /**
      * Initializes the bottom navigation buttons.
