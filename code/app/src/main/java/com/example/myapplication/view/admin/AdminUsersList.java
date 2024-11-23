@@ -180,9 +180,10 @@ public class AdminUsersList extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("AdminFacilitiesList", "User successfully Deleted");
+                                entrantAdapter.notifyDataSetChanged();
                             }
                         });
-                entrantAdapter.notifyDataSetChanged();
+
             }
         });
 
