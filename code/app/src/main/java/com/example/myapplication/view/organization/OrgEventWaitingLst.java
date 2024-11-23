@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
-import com.example.myapplication.controller.NotificationSender;
+import com.example.myapplication.controller.NotificationHelper;
 import com.example.myapplication.controller.EntrantAdapter;
 import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -136,8 +136,8 @@ public class OrgEventWaitingLst extends Fragment {
         goToNotifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NotificationSender notificationSender = new NotificationSender();
-                notificationSender.sendNotification(
+                NotificationHelper notificationHelper = new NotificationHelper();
+                notificationHelper.sendNotification(
                         waitlist,               // List of device IDs (from waitlist)
                         "Event Update",         // Notification title
                         "Please check for updates on your event waitlist" // Notification message
