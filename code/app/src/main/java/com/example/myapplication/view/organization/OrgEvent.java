@@ -193,7 +193,7 @@ public class OrgEvent extends Fragment {
         // Button to navigate to the Edit Event fragment
         Button buttonGoToEditEvent = view.findViewById(R.id.button_go_to_edit_event_from_org_event);
         buttonGoToEditEvent.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_edit_event2)
+                Navigation.findNavController(v).navigate(R.id.action_org_event_to_org_edit_event2, bundle)
         );
 
         // Button to navigate to the Waiting List fragment
