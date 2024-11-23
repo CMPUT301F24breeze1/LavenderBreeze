@@ -164,6 +164,7 @@ public class Event implements java.io.Serializable {
         if (listener != null) {
             listener.onEventDataLoaded(this);
         }
+
     }
 
     /**
