@@ -109,54 +109,8 @@ public class AdminEventsList extends Fragment {
 
                 Event clicked = eventDataList.get(i);
 
-                List<String> accepted = eventDataList.get(i).getAcceptedEntrants();
-                List<String> cancelled = eventDataList.get(i).getDeclinedEntrants();
-                List<String> selected = eventDataList.get(i).getSelectedEntrants();
-                List<String> waitlist = eventDataList.get(i).getWaitlist();
+                deleteEvent(clicked);
 
-                if(!accepted.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(clicked.getEventId());
-                    }
-                }
-                if(!cancelled.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(clicked.getEventId());
-                    }
-                }
-                if(!selected.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(clicked.getEventId());
-                    }
-                }
-                if(!waitlist.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(clicked.getEventId());
-                    }
-                }
-
-
-                Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(clicked.getOrganizerId()));
-                List<String> eventsAtLocation = eventLocation.getEvents();
-                eventsAtLocation.remove(clicked.getEventId());
-                eventLocation.setEvents(eventsAtLocation);
-                eventLocation.saveToFirestore();
-
-
-
-                eventsRef.document(eventDataList.get(i).getEventId())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("AdminEventsList", "Event successfully Deleted");
-                                eventDataList.remove(clicked);
-                            }
-                        });
                 eventArrayAdapter.notifyDataSetChanged();
             }
         });
@@ -248,4 +202,56 @@ public class AdminEventsList extends Fragment {
             }
         });
     }
+
+    private void deleteEvent(Event event){
+        List<String> accepted = event.getAcceptedEntrants();
+        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> selected = event.getSelectedEntrants();
+        List<String> waitlist = event.getWaitlist();
+
+        if(!accepted.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(event.getEventId());
+            }
+        }
+        if(!cancelled.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(event.getEventId());
+            }
+        }
+        if(!selected.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(event.getEventId());
+            }
+        }
+        if(!waitlist.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(event.getEventId());
+            }
+        }
+
+
+        Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
+        List<String> eventsAtLocation = eventLocation.getEvents();
+        eventsAtLocation.remove(event.getEventId());
+        eventLocation.setEvents(eventsAtLocation);
+        eventLocation.saveToFirestore();
+
+
+
+        eventsRef.document(event.getEventId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        eventDataList.remove(event);
+                        Log.d("AdminUsersList", "Event successfully Deleted");
+                    }
+                });
+    }
+
 }
