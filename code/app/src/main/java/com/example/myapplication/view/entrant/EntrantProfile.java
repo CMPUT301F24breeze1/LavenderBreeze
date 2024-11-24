@@ -75,7 +75,7 @@ public class EntrantProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
-
+        updateUserData();
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
         edit = view.findViewById(R.id.editButton);
 
@@ -103,7 +103,8 @@ public class EntrantProfile extends Fragment {
             personName.setText(user.getName());
             emailAddress.setText(user.getEmail());
             contactPhoneNumber.setText(user.getPhoneNumber());
-            user.loadProfilePictureInto(profilePicture,requireContext());
+            if (!user.getDeterministicPicture()) user.loadProfilePictureInto(profilePicture,requireContext());
+            else user.loadDeterministicProfilePictureInto(profilePicture,requireContext());
             notifSwitch.setChecked(user.isToggleNotif());
         }
     }

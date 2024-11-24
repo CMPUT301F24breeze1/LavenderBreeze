@@ -13,6 +13,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import com.example.myapplication.R;
@@ -47,6 +48,9 @@ public class User implements java.io.Serializable {
     public interface OnUserLoadedListener {
         void onUserLoaded(User user); // Dedicated listener for User object
     }
+    public interface OnFetchCompleteListener {
+        void onFetchComplete(String url);
+    }
     private String name;
     private String email;
     private String phoneNumber;
@@ -62,6 +66,7 @@ public class User implements java.io.Serializable {
     private List<String> cancelledEvents=new ArrayList<>();
     private List<String> acceptedEvents=new ArrayList<>();
     private static final long serialVersionUID = 1L;
+    private Boolean deterministicPicture= true;
     private String userID;
 
     private Long timestamp;
@@ -150,6 +155,8 @@ public class User implements java.io.Serializable {
         acceptedEvents = (List<String>) document.get("acceptedEvents");
         toggleNotif = document.getBoolean("toggleNotif");
         profilePicture = document.getString("profilePicture");
+        deterministicPicture = document.getBoolean("deterministicPicture");
+
         if (listener != null) {
             listener.onUserDataLoaded();
         }
@@ -174,6 +181,7 @@ public class User implements java.io.Serializable {
         acceptedEvents = (List<String>) document.get("acceptedEvents");
         profilePicture = document.getString("profilePicture");
         toggleNotif = document.getBoolean("toggleNotif");
+        deterministicPicture = document.getBoolean("deterministicPicture");
 
         if (listener != null) {
             listener.onUserLoaded(this);
@@ -222,6 +230,7 @@ public class User implements java.io.Serializable {
         userData.put("cancelledEvents", new ArrayList<>());
         userData.put("acceptedEvents", new ArrayList<>());
         userData.put("toggleNotif", true);
+        userData.put("deterministicPicture", true);
 
         users.document(deviceID).set(userData).addOnSuccessListener(aVoid -> {
             Log.d("User", "DocumentSnapshot successfully written!");
@@ -242,6 +251,7 @@ public class User implements java.io.Serializable {
         this.cancelledEvents = new ArrayList<>();
         this.acceptedEvents = new ArrayList<>();
         this.toggleNotif = true;
+        this.deterministicPicture = false;
     }
 
     // Getters that return local values
@@ -356,7 +366,13 @@ public class User implements java.io.Serializable {
     public String getDeviceID() {
         return deviceID;
     }
+    public Boolean getDeterministicPicture() {
+        return deterministicPicture;
+    }
 
+    public void setDeterministicPicture(Boolean deterministicPicture) {
+        this.deterministicPicture = deterministicPicture;
+    }
     /**
      * Set the email
      * @param email
@@ -582,6 +598,44 @@ public class User implements java.io.Serializable {
             // Set a default placeholder image if no profile picture is available
             imageView.setImageResource(R.drawable.account_circle);
         }
+    }
+    public void loadDeterministicProfilePictureInto(ImageView imageView,Context context){
+        char firstLetter = this.name.toUpperCase().charAt(0);
+        fetchDefaultProfilePictureUrl(firstLetter, url -> {
+            if (url != null) {
+                int startIndex = url.indexOf("/file/d/") + "/file/d/".length();
+                int endIndex = url.indexOf("/view");
+                if (endIndex != -1) {
+                    String fileId = url.substring(startIndex, endIndex);
+                    String directUrl = "https://drive.google.com/uc?export=view&id="+fileId;
+
+                    Glide.with(context)
+                            .load(directUrl)
+                            .transform(new CircleCrop())            // Make image circular
+                            .into(imageView);
+                }
+            } else {
+                Toast.makeText(context, "Failed to generate profile picture.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchDefaultProfilePictureUrl(char firstLetter, OnFetchCompleteListener callback) {
+        String letter = String.valueOf(firstLetter).toUpperCase();
+
+        database.collection("defaultProfilePictures").document("letters")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String url = documentSnapshot.getString(letter);
+                        callback.onFetchComplete(url);
+                    } else {
+                        callback.onFetchComplete(null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onFetchComplete(null);
+                });
     }
 
     public boolean isToggleNotif() {
