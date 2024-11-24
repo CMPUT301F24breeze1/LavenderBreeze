@@ -115,11 +115,12 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
     }
     /**
-     * Constructors for creating a new Event with no location parameter
+     * Constructors for creating a new Event, INCLUDING eventID
      */
-    public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
-                 Date registrationStart, Date registrationEnd, int capacity, int price,
+    public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd,String location, int capacity, int price,
                  String posterUrl, String qrCodeHash, String organizerId) {
+        this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventStart = eventStart;
@@ -527,6 +528,9 @@ public class Event implements java.io.Serializable {
         } else {
             this.waitlist = waitlist;
         }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
         events.document(eventId).update("waitlist", waitlist);
     }
 
@@ -539,6 +543,9 @@ public class Event implements java.io.Serializable {
             selectedEntrants = new ArrayList<String>();
         } else {
             this.selectedEntrants = selectedEntrants;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
         }
         events.document(eventId).update("selectedEntrants", selectedEntrants);
     }
@@ -553,6 +560,9 @@ public class Event implements java.io.Serializable {
         } else {
             this.acceptedEntrants = acceptedEntrants;
         }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
         events.document(eventId).update("acceptedEntrants", acceptedEntrants);
     }
 
@@ -565,6 +575,9 @@ public class Event implements java.io.Serializable {
             declinedEntrants = new ArrayList<String>();
         } else {
             this.declinedEntrants = declinedEntrants;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
         }
         events.document(eventId).update("selectedEntrants", declinedEntrants);
     }
@@ -700,6 +713,10 @@ public class Event implements java.io.Serializable {
         eventMap.put("posterUrl", posterUrl);
         eventMap.put("qrCode", qrCodeHash);
         eventMap.put("organizerId", organizerId);
+        eventMap.put("waitlist", waitlist);
+        eventMap.put("selectedEntrants", selectedEntrants);
+        eventMap.put("acceptedEntrants", acceptedEntrants);
+        eventMap.put("declinedEntrants", declinedEntrants);
 
         return eventMap;
     }

@@ -53,6 +53,7 @@ public class AdminUsersList extends Fragment {
     private ArrayList<Event> eventDataList;
     private ArrayList<User> userDataList;
     private ArrayList<String> eventIds;
+    private ArrayList<String> userIds;
     private ArrayList<Facility> facilityDataList;
     private ArrayList<String> facilityOrganizerIds;
     private UserListAdapter entrantAdapter;
@@ -67,7 +68,6 @@ public class AdminUsersList extends Fragment {
      *
      * @return A new instance of fragment AdminUsersList.
      */
-    // TODO: Rename and change types and number of parameters
     public static AdminUsersList newInstance() {
         AdminUsersList fragment = new AdminUsersList();
         Bundle args = new Bundle();
@@ -96,6 +96,7 @@ public class AdminUsersList extends Fragment {
         userDataList = new ArrayList<User>();
         facilityDataList = new ArrayList<Facility>();
         eventIds = new ArrayList<String>();
+        userIds = new ArrayList<String>();
         facilityOrganizerIds = new ArrayList<String>();
 
         entrantAdapter = new UserListAdapter(this.getContext(), userDataList);
@@ -114,56 +115,31 @@ public class AdminUsersList extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 User clicked = userDataList.get(i);
 
-                if (Objects.equals(clicked.getDeviceID(), Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID))){
-                    Toast.makeText(getActivity(), "You cannot delete yourself", Toast.LENGTH_LONG).show();
-                    return;
-                }
+//                if (Objects.equals(clicked.getDeviceID(), Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID))){
+//                    Toast.makeText(getActivity(), "You cannot delete yourself", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
 
-                List<String> accepted = clicked.getAcceptedEvents();
-                List<String> selected = clicked.getSelectedEvents();
-                List<String> cancelled = clicked.getCancelledEvents();
-                List<String> requested = clicked.getRequestedEvents();
-
-
-
-                if(!accepted.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        //finds events to which user was accepted, and removes them from the lists
-                        Event event = eventDataList.get(eventIds.indexOf(accepted.get(j)));
-                        event.removeFromAcceptedlist(clicked.getDeviceID());
-                        event.setAcceptedEntrants(event.getAcceptedEntrants());
-                    }
-                }
-
-                if(!selected.isEmpty()){
-                    for (int j = 0; j < selected.size(); j++) {
-                        //finds events to which user was accepted, and removes them from the lists
-                        Event event = eventDataList.get(eventIds.indexOf(selected.get(j)));
-                        event.removeFromSelectedlist(clicked.getDeviceID());
-                        event.setSelectedEntrants(event.getSelectedEntrants());
-                    }
-                }
-
-                if(!cancelled.isEmpty()){
-                    for (int j = 0; j < cancelled.size(); j++) {
-                        //finds events to which user was accepted, and removes them from the lists
-                        Event event = eventDataList.get(eventIds.indexOf(cancelled.get(j)));
-                        event.removeFromDeclinedlist(clicked.getDeviceID());
-                        event.setDeclinedEntrants(event.getDeclinedEntrants());
-                    }
-                }
-
-                if(!requested.isEmpty()){
-                    for (int j = 0; j < requested.size(); j++) {
-                        //finds events to which user was accepted, and removes them from the lists
-                        Event event = eventDataList.get(eventIds.indexOf(requested.get(j)));
-                        event.removeFromWaitlist(clicked.getDeviceID());
-                        event.setWaitlist(event.getWaitlist());
-                    }
-                }
+                deleteEventFromUsers(clicked);
 
                 Log.d("Kenny", String.valueOf(facilityOrganizerIds.contains(clicked.getDeviceID())));
                 if(facilityOrganizerIds.contains(clicked.getDeviceID())){
+
+                    Facility facility = facilityDataList.get(facilityOrganizerIds.indexOf(clicked.getDeviceID()));
+                    List<String> facilityEvents = facility.getEvents();
+
+                    Log.d("Kenny", "Deleting events from facility"+facility.getFacilityName());
+
+                    if(facilityEvents != null && !facilityEvents.isEmpty()) {
+                        for (int j = 0; j < facilityEvents.size(); j++) {
+                            Event event = eventDataList.get(eventIds.indexOf(facilityEvents.get(j)));
+                            Log.d("Kenny", "deleting event"+event.getEventName());
+
+
+                            deleteEvent(event);
+                        }
+                    }
+
                     facilitiesRef.document(facilityDataList.get(facilityOrganizerIds.indexOf(clicked.getDeviceID())).getFacilityId())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -180,11 +156,13 @@ public class AdminUsersList extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("AdminFacilitiesList", "User successfully Deleted");
+                                userDataList.remove(clicked);
+                                entrantAdapter.notifyDataSetChanged();
                             }
                         });
-                entrantAdapter.notifyDataSetChanged();
             }
         });
+
 
         Button home = view.findViewById(R.id.button_go_to_home_from_admin_users_list);
         home.setOnClickListener(v ->
@@ -217,8 +195,8 @@ public class AdminUsersList extends Fragment {
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
-                    eventDataList.add(new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
-                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Long)events.get(i).get("price")).intValue(),
+                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
                             events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId")));
                     eventIds.add(events.get(i).getId());
                 }
@@ -239,6 +217,7 @@ public class AdminUsersList extends Fragment {
                     User user = new User(current.getId(), loadedUser -> {
                         if (loadedUser != null) {
                             userDataList.add(loadedUser);
+                            userIds.add(loadedUser.getDeviceID());
                             Log.d("OrgEventSelectedLst", "Loaded User: " + loadedUser.getName());
                             entrantAdapter.notifyDataSetChanged();
                         }
@@ -256,14 +235,118 @@ public class AdminUsersList extends Fragment {
                 List<DocumentSnapshot> facilities = task.getResult().getDocuments();
                 Log.d("Firestore", "Documents Retrieved");
                 for(int i = 0; i < facilities.size(); i++){
-
-                    facilityDataList.add(new Facility(facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
+                    Facility facility = new Facility(facilities.get(i).getId(),facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
                             facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
-                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
-                    facilityOrganizerIds.add(facilities.get(i).getString("organizerId"));
+                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl"));
+                    if(facilities.get(i).get("events") == null){
+                        facility.setEvents(new ArrayList<String>());
+                    } else {
+                        facility.setEvents((List<String>) facilities.get(i).get("events"));
+                    }
+
+
+                    facilityDataList.add(facility);
+                    facilityOrganizerIds.add(facility.getOrganizerId());
                 }
+                Log.d("AdminUsersList", String.valueOf(facilityDataList));
+                Log.d("AdminUsersList", String.valueOf(facilityOrganizerIds));
             }
         });
+    }
+
+    private void deleteEventFromUsers(User clicked){
+        List<String> accepted = clicked.getAcceptedEvents();
+        List<String> selected = clicked.getSelectedEvents();
+        List<String> cancelled = clicked.getCancelledEvents();
+        List<String> requested = clicked.getRequestedEvents();
+
+
+        if(!accepted.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                //finds events to which user was accepted, and removes them from the lists
+                Event event = eventDataList.get(eventIds.indexOf(accepted.get(j)));
+                event.removeFromAcceptedlist(clicked.getDeviceID());
+                event.setAcceptedEntrants(event.getAcceptedEntrants());
+            }
+        }
+
+        if(!selected.isEmpty()){
+            for (int j = 0; j < selected.size(); j++) {
+                //finds events to which user was accepted, and removes them from the lists
+                Event event = eventDataList.get(eventIds.indexOf(selected.get(j)));
+                event.removeFromSelectedlist(clicked.getDeviceID());
+                event.setSelectedEntrants(event.getSelectedEntrants());
+            }
+        }
+
+        if(!cancelled.isEmpty()){
+            for (int j = 0; j < cancelled.size(); j++) {
+                //finds events to which user was accepted, and removes them from the lists
+                Event event = eventDataList.get(eventIds.indexOf(cancelled.get(j)));
+                event.removeFromDeclinedlist(clicked.getDeviceID());
+                event.setDeclinedEntrants(event.getDeclinedEntrants());
+            }
+        }
+
+        if(!requested.isEmpty()){
+            for (int j = 0; j < requested.size(); j++) {
+                //finds events to which user was accepted, and removes them from the lists
+                Event event = eventDataList.get(eventIds.indexOf(requested.get(j)));
+                event.removeFromWaitlist(clicked.getDeviceID());
+                event.setWaitlist(event.getWaitlist());
+            }
+        }
+    }
+
+    private void deleteEvent(Event event){
+        List<String> accepted = event.getAcceptedEntrants();
+        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> selected = event.getSelectedEntrants();
+        List<String> waitlist = event.getWaitlist();
+
+        if(!accepted.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(event.getEventId());
+            }
+        }
+        if(!cancelled.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(event.getEventId());
+            }
+        }
+        if(!selected.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(event.getEventId());
+            }
+        }
+        if(!waitlist.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(event.getEventId());
+            }
+        }
+
+
+        Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
+        List<String> eventsAtLocation = eventLocation.getEvents();
+        eventsAtLocation.remove(event.getEventId());
+        eventLocation.setEvents(eventsAtLocation);
+        eventLocation.saveToFirestore();
+
+
+
+        eventsRef.document(event.getEventId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        eventDataList.remove(event);
+                        Log.d("AdminUsersList", "Event successfully Deleted");
+                    }
+                });
     }
 
 }
