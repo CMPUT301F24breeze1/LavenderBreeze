@@ -115,10 +115,10 @@ public class AdminUsersList extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 User clicked = userDataList.get(i);
 
-//                if (Objects.equals(clicked.getDeviceID(), Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID))){
-//                    Toast.makeText(getActivity(), "You cannot delete yourself", Toast.LENGTH_LONG).show();
-//                    return;
-//                }
+                if (Objects.equals(clicked.getDeviceID(), Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID))){
+                    Toast.makeText(getActivity(), "You cannot delete yourself", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 deleteEventFromUsers(clicked);
 
