@@ -312,7 +312,17 @@ public class OrgEventWaitingLst extends Fragment {
                     Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
                 });
 
-
+        NotificationHelper notificationHelper = new NotificationHelper();
+        notificationHelper.sendNotification(
+                selected,               // List of device IDs (from waitlist)
+                "Congratulations!",     // Notification title
+                "You won the lottery! Claim your prize now." // Notification message
+        );
+        notificationHelper.sendNotification(
+                waitlist,               // List of device IDs (from waitlist)
+                "Better Luck Next Time", // Notification title
+                "Unfortunately, you did not win the lottery this time." // Notification message
+        );
 
     }
 

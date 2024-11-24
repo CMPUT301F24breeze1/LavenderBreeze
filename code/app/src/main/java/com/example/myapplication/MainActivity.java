@@ -16,7 +16,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
+import com.example.myapplication.controller.DeviceUtils;
 import com.example.myapplication.controller.PollingService;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private static final int NOTIF_CODE = 99;
@@ -27,6 +29,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+
+        String userId = DeviceUtils.getDeviceId(this); // Replace with logic to get the current user ID
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users")
+                .document(userId)
+                .update("msg", null, "title", null, "timestamp", null)
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "User notification fields cleared successfully."))
+                .addOnFailureListener(e -> Log.e("Firebase", "Failed to clear user notification fields.", e));
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
