@@ -17,7 +17,10 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Fragment for viewing information about a particular event
@@ -193,6 +196,43 @@ public class OrgEvent extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> Log.e("OrgEvent", "Error fetching event data", e));
+
+        // Update event details in with dynamic updates
+        db.collection("events").document(eventId)
+                .addSnapshotListener((snapshot, error) -> {
+                    if (error != null) {
+                        Log.e("OrgEvent", "Error listening for changes", error);
+                        return;
+                    }
+                    if (snapshot != null && snapshot.exists()) {
+                        // Retrieve and update the fields
+                        String updatedEventName = snapshot.getString("eventName");
+                        String updatedEventDescription = snapshot.getString("eventDescription");
+                        Date updatedEventStart = snapshot.getTimestamp("eventStart").toDate(); // Convert to Date
+                        Date updatedEventEnd = snapshot.getTimestamp("eventEnd").toDate();
+                        int updatedCapacity = snapshot.getLong("capacity").intValue();
+                        Long updatedPrice = snapshot.getLong("price");
+                        Date updatedRegistrationStart = snapshot.getTimestamp("registrationStart").toDate();
+                        Date updatedRegistrationEnd = snapshot.getTimestamp("registrationEnd").toDate();
+
+                        // Format the timestamps for display
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+                        String formattedEventStart = dateFormat.format(updatedEventStart);
+                        String formattedEventEnd = dateFormat.format(updatedEventEnd);
+                        String formattedRegistrationStart = dateFormat.format(updatedRegistrationStart);
+                        String formattedRegistrationEnd = dateFormat.format(updatedRegistrationEnd);
+
+                        // Update the UI
+                        eventNameTextView.setText(updatedEventName);
+                        eventDescriptionTextView.setText(updatedEventDescription);
+                        eventStartTextView.setText(formattedEventStart);
+                        eventEndTextView.setText(formattedEventEnd);
+                        eventCapacityTextView.setText(String.valueOf(updatedCapacity));
+                        eventPriceTextView.setText(String.valueOf(updatedPrice));
+                        eventRegistrationStartTextView.setText(formattedRegistrationStart);
+                        eventRegistrationEndTextView.setText(formattedRegistrationEnd);
+                    }
+                });
 
         //Create bundle containing EventId to be passed to next fragment if necessary
         Bundle bundle = new Bundle();

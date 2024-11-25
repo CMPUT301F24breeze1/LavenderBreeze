@@ -1,5 +1,7 @@
 package com.example.myapplication.view.organization;
 
+import static android.text.TextUtils.isEmpty;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -103,7 +106,6 @@ public class OrgEditEvent extends Fragment {
             if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                 imageUri = result.getData().getData();
                 posterEditView.setImageURI(imageUri);
-                uploadPosterToStorage();
             }
         });
     }
@@ -149,6 +151,11 @@ public class OrgEditEvent extends Fragment {
 
     private void saveChanges(View view) {
         if (validateInputs()) {
+            Log.d("OrgEditEvent", "Inputs validated successfully.");
+            // If a new poster is selected, upload it and update Firestore
+            if (imageUri != null) {
+                uploadPosterToStorage(true);
+            }
             Map<String, Object> updates = collectEventData();
             db.collection("events").document(eventId).update(updates)
                     .addOnSuccessListener(aVoid -> {
@@ -166,32 +173,72 @@ public class OrgEditEvent extends Fragment {
         if (tempPosterURL != null && !tempPosterURL.isEmpty()) {
             Glide.with(this).load(tempPosterURL).into(posterEditView);
         }
+        imageUri = null; // Discard the new poster
         Toast.makeText(getContext(), "Changes canceled.", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(view).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
     }
 
-    private void uploadPosterToStorage() {
+    private void uploadPosterToStorage(boolean updateFirestore) {
         if (imageUri == null) return;
 
         String storagePath = "event_posters/" + eventId + ".jpg";
         FirebaseStorage.getInstance().getReference(storagePath).putFile(imageUri)
                 .addOnSuccessListener(task -> task.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
                     posterURL = uri.toString();
-                    tempPosterURL = posterURL;
-                    Glide.with(this).load(posterURL).into(posterEditView);
+                    if (updateFirestore) {
+                        updatePosterInFirestore();
+                    }
+
                 }))
                 .addOnFailureListener(e -> {
                     Log.e("OrgEditEvent", "Failed to upload poster: " + e.getMessage());
                     Toast.makeText(getContext(), "Failed to upload poster.", Toast.LENGTH_SHORT).show();
                 });
     }
+    private void updatePosterInFirestore() {
+        db.collection("events").document(eventId)
+                .update("posterUrl", posterURL)
+                .addOnSuccessListener(aVoid -> Log.d("OrgEditEvent", "Poster URL updated in Firestore"))
+                .addOnFailureListener(e -> Log.e("OrgEditEvent", "Failed to update poster URL: " + e.getMessage()));
+    }
 
     private boolean validateInputs() {
-        if (editEventName.getText().toString().isEmpty()) {
-            Toast.makeText(getContext(), "Event name is required.", Toast.LENGTH_SHORT).show();
-            return false;
+        boolean valid = true;
+        // Check each field and log if any validation fails
+        if (isEmpty(editEventName)) {
+            Log.e("OrgEditEvent", "Event Name is empty.");
+            valid = false;
         }
-        return true;
+        if (isEmpty(editEventDescription)) {
+            Log.e("OrgEditEvent", "Event Description is empty.");
+            valid = false;
+        }
+        if (parseDate(editEventStart.getText().toString()) == null) {
+            Log.e("OrgEditEvent", "Invalid Event Start date.");
+            valid = false;
+        }
+        if (parseDate(editEventEnd.getText().toString()) == null) {
+            Log.e("OrgEditEvent", "Invalid Event End date.");
+            valid = false;
+        }
+        if (parseDate(editRegistrationStart.getText().toString()) == null) {
+            Log.e("OrgEditEvent", "Invalid Registration Start date.");
+            valid = false;
+        }
+        if (parseDate(editRegistrationEnd.getText().toString()) == null) {
+            Log.e("OrgEditEvent", "Invalid Registration End date.");
+            valid = false;
+        }
+        if (!isPositiveInteger(editCapacity.getText().toString())) {
+            Log.e("OrgEditEvent", "Invalid capacity value.");
+            valid = false;
+        }
+        if (!isPositiveDouble(editPrice.getText().toString())) {
+            Log.e("OrgEditEvent", "Invalid price value.");
+            valid = false;
+        }
+
+        return valid;
     }
 
     private Map<String, Object> collectEventData() {
@@ -226,5 +273,45 @@ public class OrgEditEvent extends Fragment {
             return format.format(((com.google.firebase.Timestamp) timestamp).toDate());
         }
         return "";
+    }
+    private boolean isEmpty(EditText input) {
+        return input.getText().toString().trim().isEmpty();
+    }
+
+    private boolean isPositiveInteger(String value) {
+        try {
+            return Integer.parseInt(value) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isPositiveDouble(String value) {
+        try {
+            double parsedValue = Double.parseDouble(value);
+            if (parsedValue <= 0) {
+                Log.e("OrgEditEvent", "Price is not a positive double: " + value);
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            Log.e("OrgEditEvent", "Invalid number format for price: " + value);
+            return false;
+        }
+    }
+
+    /**
+     * To turn a String into a Date data type
+     * @param dateString
+     * @return
+     */
+    public Date parseDate(String dateString) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(dateString);
+        } catch (ParseException e) {
+            Log.e("org_add_event", "Date parsing error", e);
+            Toast.makeText(requireContext(), "Invalid date format. Please use yyyy-MM-dd HH:mm", Toast.LENGTH_SHORT).show();
+            return null; // Return null if parsing fails
+        }
     }
 }
