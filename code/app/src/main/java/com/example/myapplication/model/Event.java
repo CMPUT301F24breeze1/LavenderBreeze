@@ -119,7 +119,8 @@ public class Event implements java.io.Serializable {
      */
     public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd,String location, int capacity, int price,
-                 String posterUrl, String qrCodeHash, String organizerId) {
+                 String posterUrl, String qrCodeHash, String organizerId, List<String> acceptedEntrants,
+                 List<String> selectedEntrants, List<String> declinedEntrants, List<String> waitlist) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -132,10 +133,10 @@ public class Event implements java.io.Serializable {
         this.price = price;
         this.posterUrl = posterUrl;
         this.qrCodeHash = qrCodeHash;
-        this.waitlist = new ArrayList<>();
-        this.selectedEntrants = new ArrayList<>();
-        this.acceptedEntrants = new ArrayList<>();
-        this.declinedEntrants = new ArrayList<>();
+        this.waitlist = waitlist;
+        this.selectedEntrants = selectedEntrants;
+        this.acceptedEntrants = acceptedEntrants;
+        this.declinedEntrants = declinedEntrants;
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
@@ -165,6 +166,7 @@ public class Event implements java.io.Serializable {
         if (listener != null) {
             listener.onEventDataLoaded(this);
         }
+
     }
 
     /**

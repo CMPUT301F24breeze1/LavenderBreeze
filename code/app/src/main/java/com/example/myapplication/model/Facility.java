@@ -115,6 +115,7 @@ public class Facility{
         this.facilityPhoneNumber = facilityPhoneNumber;
         this.organizerId = organizerId;
         this.profileImageUrl = profileImageUrl;
+        this.facilities = FirebaseFirestore.getInstance().collection("facilities");
     }
 
     /**
@@ -168,6 +169,28 @@ public class Facility{
         }
     }
 
+    public void updateFirestore() {
+        if (facilities != null) {
+            Map<String, Object> facilityData = new HashMap<>();
+            facilityData.put("facilityName", facilityName);
+            facilityData.put("facilityAddress", facilityAddress);
+            facilityData.put("facilityEmail", facilityEmail); // Consistent key
+            facilityData.put("facilityPhoneNumber", facilityPhoneNumber);
+            facilityData.put("organizerId", organizerId);
+            facilityData.put("events", events);
+            facilityData.put("profileImageUrl",profileImageUrl);
+
+            facilities.document(facilityId).update(facilityData)
+                    .addOnSuccessListener(documentReference -> {
+                        Log.d("Firestore", "Updated facility " + facilityId);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Database Error", "Failed to store to database", e);
+                    });
+        } else {
+            Log.e("Firestore Error", "Firestore database is not initialized.");
+        }
+    }
     // Getter and Setter methods
     /**
      * Returns the Facility Name
