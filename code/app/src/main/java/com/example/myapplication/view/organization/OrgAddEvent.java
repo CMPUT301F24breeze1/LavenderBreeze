@@ -213,6 +213,8 @@ public class OrgAddEvent extends Fragment {
             showToast("No poster selected");
         }
     }
+
+
     private void fetchFacilityName() {
         String organizerID = DeviceUtils.getDeviceId(requireContext());
 

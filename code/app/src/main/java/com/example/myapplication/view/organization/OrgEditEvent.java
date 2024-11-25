@@ -1,7 +1,13 @@
 package com.example.myapplication.view.organization;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -12,11 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,6 +49,12 @@ public class OrgEditEvent extends Fragment {
     private EditText editEventName, editEventDescription, editEventStart, editEventEnd,
             editRegistrationStart, editRegistrationEnd, editLocation, editCapacity, editPrice;
     private Button buttonSaveEvent;
+    private Button buttonCancelSave;
+    ImageView posterEditView;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private Uri imageUri;
+    String posterURL;
+    String tempPosterURl;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,6 +100,8 @@ public class OrgEditEvent extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_edit_event, container, false);
 
+        initializeImagePicker();
+
         // Initialize UI elements
         editEventName = view.findViewById(R.id.editEventName);
         editEventDescription = view.findViewById(R.id.editEventDescription);
@@ -93,13 +113,108 @@ public class OrgEditEvent extends Fragment {
         editCapacity = view.findViewById(R.id.editCapacity);
         editPrice = view.findViewById(R.id.editPrice);
         buttonSaveEvent = view.findViewById(R.id.buttonSaveEvent);
+        posterEditView = view.findViewById(R.id.imageViewEditPoster);
 
         // Fetch event data and populate fields
         fetchEventInformation();
 
-        buttonSaveEvent.setOnClickListener(v -> saveEventChanges());
+        // Save the event
+        buttonSaveEvent.setOnClickListener(v -> {
+            // If a new poster is selected, upload it to Firebase Storage and update Firestore
+            if (imageUri != null) {
+                uploadImageToFirebase();
+            } else {
+                // If no new image is selected, proceed with the other event changes
+                saveEventChanges()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // If the update was successful, navigate back to the event page
+                                Log.d("OrgEvent", "Event updated successfully.");
+                                Navigation.findNavController(v).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
+                            } else {
+                                // Handle failure if needed
+                                Log.e("OrgEvent", "Error updating event", task.getException());
+                                Toast.makeText(getContext(), "Failed to update event.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+
+        // Cancel the edit and go back to Event View
+        buttonCancelSave = view.findViewById(R.id.buttonCancel);
+        buttonCancelSave.setOnClickListener(v -> {
+            // Revert the poster to the old one
+            if (tempPosterURl != null && !tempPosterURl.isEmpty()) {
+                Glide.with(this).load(tempPosterURl).into(posterEditView); // Revert to the old poster
+                Toast.makeText(getContext(), "Changes reverted.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e("OrgEditEvent", "No previous poster found.");
+                Toast.makeText(getContext(), "No previous poster to revert to.", Toast.LENGTH_SHORT).show();
+            }
+            // Navigate back without updating Firestore
+            Navigation.findNavController(view).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
+        });
+        // Edit poster
+        FloatingActionButton addPosterButton = view.findViewById(R.id.buttonEditPoster);
+        addPosterButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            pickImageLauncher.launch(Intent.createChooser(intent, "Select Event Poster"));
+        });
+
 
         return view;
+    }
+    private void initializeImagePicker() {
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        imageUri = result.getData().getData();
+                        posterEditView.setVisibility(View.VISIBLE);
+                        posterEditView.setImageURI(imageUri);
+                        uploadImageToFirebase();
+                    }
+                }
+        );
+    }
+    private void uploadImageToFirebase() {
+        if (imageUri == null) {
+            Toast.makeText(getContext(), "No image selected!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String storagePath = "event_posters/" + eventId + ".jpg";
+        FirebaseStorage.getInstance().getReference(storagePath).putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Get the download URL
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+                        posterURL = uri.toString(); // Update the poster URL
+                        tempPosterURl = posterURL; // Save the updated URL for cancel
+                        Glide.with(this).load(posterURL).into(posterEditView); // Display the new image
+                        updatePosterUrlInFirestore(posterURL)
+                                .addOnCompleteListener(updateTask -> {
+                                    if (updateTask.isSuccessful()) {
+                                        // After Firestore update, navigate back to the event page
+                                        Log.d("OrgEvent", "Poster uploaded and Firestore updated successfully.");
+                                        Navigation.findNavController(v).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
+                                    } else {
+                                        // Handle Firestore update failure
+                                        Log.e("OrgEvent", "Error updating poster URL in Firestore", updateTask.getException());
+                                        Toast.makeText(getContext(), "Failed to update poster URL in Firestore.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgEditEvent", "Error uploading poster: " + e.getMessage(), e);
+                    Toast.makeText(getContext(), "Failed to upload poster.", Toast.LENGTH_SHORT).show();
+                });
+    }
+    private Task<Void> updatePosterUrlInFirestore(String newPosterUrl) {
+        // Assuming you're updating a document in Firestore
+        DocumentReference eventRef = FirebaseFirestore.getInstance().collection("events").document(eventId);
+        return eventRef.update("posterURL", newPosterUrl);
     }
 
     private void fetchEventInformation(){
@@ -111,7 +226,7 @@ public class OrgEditEvent extends Fragment {
         db.collection("events").document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        populateFields(documentSnapshot);
+                        populateFields(documentSnapshot); // Where the fields are populated
                     } else {
                         Toast.makeText(getContext(), "Event not found!", Toast.LENGTH_SHORT).show();
                     }
@@ -139,6 +254,16 @@ public class OrgEditEvent extends Fragment {
 
         Double price = documentSnapshot.getDouble("price");
         editPrice.setText(price != null ? String.valueOf(price) : "");
+
+        // Fetch and display the poster URL
+        posterURL = documentSnapshot.getString("posterUrl");
+        tempPosterURl = posterURL;
+        Log.d("OrgEditEvent", "Poster URL: " + posterURL);
+        if (posterURL != null && !posterURL.isEmpty()) {
+            Glide.with(this)
+                    .load(posterURL)
+                    .into(posterEditView);
+        }
     }
 
     // Helper method to extract date as a formatted string
@@ -155,7 +280,9 @@ public class OrgEditEvent extends Fragment {
         return ""; // Return an empty string if the field is null or not a recognized type
     }
 
-    private void saveEventChanges() {
+    private Task<Void> saveEventChanges() {
+        DocumentReference eventRef = FirebaseFirestore.getInstance().collection("events").document(eventId);
+
         Map<String, Object> updatedEvent = new HashMap<>();
         updatedEvent.put("eventName", editEventName.getText().toString());
         updatedEvent.put("eventDescription", editEventDescription.getText().toString());
@@ -165,22 +292,14 @@ public class OrgEditEvent extends Fragment {
         updatedEvent.put("eventEnd", parseDateToTimestamp(editEventEnd.getText().toString()));
         updatedEvent.put("registrationStart", parseDateToTimestamp(editRegistrationStart.getText().toString()));
         updatedEvent.put("registrationEnd", parseDateToTimestamp(editRegistrationEnd.getText().toString()));
-
+        //updatedEvent.put("posterUrl", posterURL);
         updatedEvent.put("location", editLocation.getText().toString());
         updatedEvent.put("capacity", Integer.parseInt(editCapacity.getText().toString()));
         updatedEvent.put("price", Double.parseDouble(editPrice.getText().toString()));
 
-        db.collection("events").document(eventId).update(updatedEvent)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Event updated successfully!", Toast.LENGTH_SHORT).show();
-                    NavController navController = Navigation.findNavController(requireView());
-                    navController.navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("OrgEditEvent", "Error updating event: " + e.getMessage(), e);
-                    Toast.makeText(getContext(), "Failed to update event.", Toast.LENGTH_SHORT).show();
-                });
+        return eventRef.update(updatedEvent);
     }
+
 
     // Helper method to parse user input into Firestore Timestamps
     private com.google.firebase.Timestamp parseDateToTimestamp(String dateString) {

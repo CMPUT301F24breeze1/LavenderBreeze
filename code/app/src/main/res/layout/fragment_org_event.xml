@@ -60,7 +60,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description: "
+        android:textColor="#ffffff"/>
     <TextView
         android:id="@+id/text_view_org_event_event_description"
         android:layout_width="wrap_content"

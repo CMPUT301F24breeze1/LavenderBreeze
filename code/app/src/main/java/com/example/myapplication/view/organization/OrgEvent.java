@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -36,6 +39,7 @@ public class OrgEvent extends Fragment {
     private static final String ARG_PARAM11 = "registrationEnd";
     private static final String ARG_PARAM12 = "qrCodeHash";
     private static final String ARG_PARAM13 = "declined";
+    private static final String ARG_POSTER_URL = "posterURL";
 
 
     // TODO: Rename and change types of parameters
@@ -52,6 +56,8 @@ public class OrgEvent extends Fragment {
     private String registrationEnd;
     private String qrCodeHash;
     private ArrayList<String> declined;
+    private String posterURL;
+    private ImageView posterView;
 
     public OrgEvent() {
         // Required empty public constructor
@@ -76,7 +82,7 @@ public class OrgEvent extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static OrgEvent newInstance(String param1,ArrayList<String> param2,ArrayList<String> param3, int param4, String param5,
                                        String param6, String param7, String param8, int param9, String param10, String param11, String param12,
-                                        ArrayList<String> param13) {
+                                        ArrayList<String> param13, String posterUrl) {
         OrgEvent fragment = new OrgEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -92,7 +98,7 @@ public class OrgEvent extends Fragment {
         args.putString(ARG_PARAM11, param11);
         args.putString(ARG_PARAM12, param12);
         args.putStringArrayList(ARG_PARAM13, param13);
-
+        args.putString(ARG_POSTER_URL, posterUrl);
         fragment.setArguments(args);
         return fragment;
     }
@@ -121,6 +127,7 @@ public class OrgEvent extends Fragment {
             registrationEnd = getArguments().getString(ARG_PARAM11);
             qrCodeHash = getArguments().getString(ARG_PARAM12);
             declined = getArguments().getStringArrayList(ARG_PARAM13);
+            posterURL = getArguments().getString(ARG_POSTER_URL);
         }
     }
 
@@ -161,6 +168,28 @@ public class OrgEvent extends Fragment {
         eventRegistrationStartTextView.setText(registrationStart);
         eventRegistrationEndTextView.setText(registrationEnd);
 
+        posterView = view.findViewById(R.id.image_view_org_event_poster);
+
+        // Fetching poster URL from Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events")
+                .document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String posterURL = documentSnapshot.getString("posterUrl");
+                        if (posterURL != null && !posterURL.isEmpty()) {
+                            Glide.with(this)
+                                    .load(posterURL)
+                                    .into(posterView);
+                        } else {
+                            Log.d("OrgEvent", "Poster URL not available");
+                        }
+                    } else {
+                        Log.d("OrgEvent", "Event not found in Firestore");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("OrgEvent", "Error fetching poster URL", e));
 
         //Create bundle containing EventId to be passed to next fragment if necessary
         Bundle bundle = new Bundle();
