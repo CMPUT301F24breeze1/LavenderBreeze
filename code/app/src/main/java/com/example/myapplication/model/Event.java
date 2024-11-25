@@ -93,7 +93,7 @@ public class Event implements java.io.Serializable {
      * Constructors for creating a new Event
      */
     public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
-                 Date registrationStart, Date registrationEnd, String location, int capacity, int price,
+                 Date registrationStart, Date registrationEnd, String location, int capacity, double price,
                  String posterUrl, String qrCodeHash, String organizerId) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -120,6 +120,30 @@ public class Event implements java.io.Serializable {
     public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd,String location, int capacity, double price,
                  String posterUrl, String qrCodeHash, String organizerId) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+        this.posterUrl = posterUrl;
+        this.qrCodeHash = qrCodeHash;
+        this.waitlist = waitlist;
+        this.selectedEntrants = selectedEntrants;
+        this.acceptedEntrants = acceptedEntrants;
+        this.declinedEntrants = declinedEntrants;
+        this.organizerId = organizerId;
+        this.database = FirebaseFirestore.getInstance();
+        this.events = database.collection("events");
+    }
+    public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd,String location, int capacity, int price,
+                 String posterUrl, String qrCodeHash, String organizerId, List<String> acceptedEntrants,
+                 List<String> selectedEntrants, List<String> declinedEntrants, List<String> waitlist) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
