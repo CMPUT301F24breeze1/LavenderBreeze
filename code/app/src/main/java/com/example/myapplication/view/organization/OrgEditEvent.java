@@ -186,7 +186,10 @@ public class OrgEditEvent extends Fragment {
                 .addOnSuccessListener(task -> task.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
                     posterURL = uri.toString();
                     if (updateFirestore) {
-                        updatePosterInFirestore();
+                        db.collection("events").document(eventId)
+                                .update("posterUrl", posterURL)
+                                .addOnSuccessListener(aVoid -> Log.d("OrgEditEvent", "Poster URL updated in Firestore"))
+                                .addOnFailureListener(e -> Log.e("OrgEditEvent", "Failed to update poster URL: " + e.getMessage()));
                     }
 
                 }))
@@ -194,12 +197,6 @@ public class OrgEditEvent extends Fragment {
                     Log.e("OrgEditEvent", "Failed to upload poster: " + e.getMessage());
                     Toast.makeText(getContext(), "Failed to upload poster.", Toast.LENGTH_SHORT).show();
                 });
-    }
-    private void updatePosterInFirestore() {
-        db.collection("events").document(eventId)
-                .update("posterUrl", posterURL)
-                .addOnSuccessListener(aVoid -> Log.d("OrgEditEvent", "Poster URL updated in Firestore"))
-                .addOnFailureListener(e -> Log.e("OrgEditEvent", "Failed to update poster URL: " + e.getMessage()));
     }
 
     private boolean validateInputs() {
@@ -274,6 +271,7 @@ public class OrgEditEvent extends Fragment {
         }
         return "";
     }
+
     private boolean isEmpty(EditText input) {
         return input.getText().toString().trim().isEmpty();
     }
@@ -301,7 +299,7 @@ public class OrgEditEvent extends Fragment {
     }
 
     /**
-     * To turn a String into a Date data type
+     * Helper method to turn a String into a Date data type
      * @param dateString
      * @return
      */

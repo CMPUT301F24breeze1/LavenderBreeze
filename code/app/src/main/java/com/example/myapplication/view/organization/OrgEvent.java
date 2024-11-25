@@ -211,7 +211,7 @@ public class OrgEvent extends Fragment {
                         Date updatedEventStart = snapshot.getTimestamp("eventStart").toDate(); // Convert to Date
                         Date updatedEventEnd = snapshot.getTimestamp("eventEnd").toDate();
                         int updatedCapacity = snapshot.getLong("capacity").intValue();
-                        Long updatedPrice = snapshot.getLong("price");
+                        Double updatedPrice = snapshot.getDouble("price");
                         Date updatedRegistrationStart = snapshot.getTimestamp("registrationStart").toDate();
                         Date updatedRegistrationEnd = snapshot.getTimestamp("registrationEnd").toDate();
 
