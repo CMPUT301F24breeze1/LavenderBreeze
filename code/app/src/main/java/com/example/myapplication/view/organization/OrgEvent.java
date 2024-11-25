@@ -58,6 +58,7 @@ public class OrgEvent extends Fragment {
     private ArrayList<String> declined;
     private String posterURL;
     private ImageView posterView;
+    private FirebaseFirestore db;
 
     public OrgEvent() {
         // Required empty public constructor
@@ -129,6 +130,7 @@ public class OrgEvent extends Fragment {
             declined = getArguments().getStringArrayList(ARG_PARAM13);
             posterURL = getArguments().getString(ARG_POSTER_URL);
         }
+        db = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -170,26 +172,27 @@ public class OrgEvent extends Fragment {
 
         posterView = view.findViewById(R.id.image_view_org_event_poster);
 
-        // Fetching poster URL from Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Fetching poster URL from Firestore and displaying
         db.collection("events")
                 .document(eventId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String posterURL = documentSnapshot.getString("posterUrl");
-                        if (posterURL != null && !posterURL.isEmpty()) {
-                            Glide.with(this)
-                                    .load(posterURL)
-                                    .into(posterView);
+                    if (isAdded() && getView() != null) { // Ensure the fragment is attached
+                        if (documentSnapshot.exists()) {
+                            String fetchedPosterURL = documentSnapshot.getString("posterUrl");
+                            if (fetchedPosterURL != null && !fetchedPosterURL.isEmpty()) {
+                                Glide.with(requireContext())
+                                        .load(fetchedPosterURL)
+                                        .into(posterView);
+                            } else {
+                                Log.d("OrgEvent", "Poster URL not available");
+                            }
                         } else {
-                            Log.d("OrgEvent", "Poster URL not available");
+                            Log.d("OrgEvent", "Event not found in Firestore");
                         }
-                    } else {
-                        Log.d("OrgEvent", "Event not found in Firestore");
                     }
                 })
-                .addOnFailureListener(e -> Log.e("OrgEvent", "Error fetching poster URL", e));
+                .addOnFailureListener(e -> Log.e("OrgEvent", "Error fetching event data", e));
 
         //Create bundle containing EventId to be passed to next fragment if necessary
         Bundle bundle = new Bundle();
