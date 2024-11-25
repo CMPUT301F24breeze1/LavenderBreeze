@@ -106,6 +106,9 @@ public class AdminEventsList extends Fragment {
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Event clicked = eventDataList.get(i);
+
                 List<String> accepted = eventDataList.get(i).getAcceptedEntrants();
                 List<String> cancelled = eventDataList.get(i).getDeclinedEntrants();
                 List<String> selected = eventDataList.get(i).getSelectedEntrants();
@@ -114,33 +117,36 @@ public class AdminEventsList extends Fragment {
                 if(!accepted.isEmpty()){
                     for (int j = 0; j < accepted.size(); j++) {
                         // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(eventDataList.get(i).getEventId());
+                        userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(clicked.getEventId());
                     }
                 }
                 if(!cancelled.isEmpty()){
                     for (int j = 0; j < accepted.size(); j++) {
                         // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(eventDataList.get(i).getEventId());
+                        userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(clicked.getEventId());
                     }
                 }
                 if(!selected.isEmpty()){
                     for (int j = 0; j < accepted.size(); j++) {
                         // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(eventDataList.get(i).getEventId());
+                        userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(clicked.getEventId());
                     }
                 }
                 if(!waitlist.isEmpty()){
                     for (int j = 0; j < accepted.size(); j++) {
                         // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(eventDataList.get(i).getEventId());
+                        userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(clicked.getEventId());
                     }
                 }
 
-                /**
-                Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(eventDataList.get(i).getOrganizerId()));
-                eventLocation.getEvents().remove(eventDataList.get(i));
+
+                Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(clicked.getOrganizerId()));
+                List<String> eventsAtLocation = eventLocation.getEvents();
+                eventsAtLocation.remove(clicked.getEventId());
+                eventLocation.setEvents(eventsAtLocation);
                 eventLocation.saveToFirestore();
-                 **/
+
+
 
                 eventsRef.document(eventDataList.get(i).getEventId())
                         .delete()
@@ -148,8 +154,10 @@ public class AdminEventsList extends Fragment {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.d("AdminEventsList", "Event successfully Deleted");
+                                eventDataList.remove(clicked);
                             }
                         });
+                eventArrayAdapter.notifyDataSetChanged();
             }
         });
 
@@ -185,8 +193,8 @@ public class AdminEventsList extends Fragment {
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
-                    eventDataList.add(new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
-                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Long)events.get(i).get("price")).intValue(),
+                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
                             events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId")));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
@@ -223,10 +231,18 @@ public class AdminEventsList extends Fragment {
                 List<DocumentSnapshot> facilities = task.getResult().getDocuments();
                 Log.d("Firestore", "Documents Retrieved");
                 for(int i = 0; i < facilities.size(); i++){
-
-                    facilityDataList.add(new Facility(facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
+                    Facility facility = new Facility(facilities.get(i).getId(),facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
                             facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
-                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
+                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl"));
+                    if(facilities.get(i).get("events") == null){
+                        facility.setEvents(new ArrayList<String>());
+                    } else {
+                        facility.setEvents((List<String>) facilities.get(i).get("events"));
+                    }
+
+
+                    facilityDataList.add(facility);
+
                     facilityOrganizerIds.add(facilities.get(i).getString("organizerId"));
                 }
             }
