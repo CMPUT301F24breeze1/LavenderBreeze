@@ -195,9 +195,13 @@ public class AdminUsersList extends Fragment {
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
-                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
-                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
-                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId")));
+                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp)
+                            events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(),
+                            events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
+                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"),
+                            (List<String>) events.get(i).get("acceptedEntrants"), (List<String>) events.get(i).get("selectedntrants"),
+                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist")));
                     eventIds.add(events.get(i).getId());
                 }
             }
@@ -307,34 +311,38 @@ public class AdminUsersList extends Fragment {
         if(!accepted.isEmpty()){
             for (int j = 0; j < accepted.size(); j++) {
                 // finds the user by searching the userIds list, then removes the event from their accepted list
-                userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(event.getEventId());
-            }
+                User user = userDataList.get(userIds.indexOf(accepted.get(j)));
+                user.removeAcceptedEvent(event.getEventId());            }
         }
         if(!cancelled.isEmpty()){
-            for (int j = 0; j < accepted.size(); j++) {
+            for (int j = 0; j < cancelled.size(); j++) {
                 // finds the user by searching the userIds list, then removes the event from their accepted list
-                userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(event.getEventId());
+                User user = userDataList.get(userIds.indexOf(cancelled.get(j)));
+                user.removeCancelledEvent(event.getEventId());
             }
         }
         if(!selected.isEmpty()){
-            for (int j = 0; j < accepted.size(); j++) {
+            for (int j = 0; j < selected.size(); j++) {
+                Log.d("Kenny", "requested users detected");
                 // finds the user by searching the userIds list, then removes the event from their accepted list
-                userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(event.getEventId());
-            }
+                User user = userDataList.get(userIds.indexOf(selected.get(j)));
+                user.removeSelectedEvent(event.getEventId());            }
         }
         if(!waitlist.isEmpty()){
-            for (int j = 0; j < accepted.size(); j++) {
+            for (int j = 0; j < waitlist.size(); j++) {
                 // finds the user by searching the userIds list, then removes the event from their accepted list
-                userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(event.getEventId());
-            }
+                User user = userDataList.get(userIds.indexOf(waitlist.get(j)));
+                user.removeRequestedEvent(event.getEventId());            }
         }
 
 
         Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
         List<String> eventsAtLocation = eventLocation.getEvents();
+        Log.d("Kenny", eventsAtLocation.toString());
         eventsAtLocation.remove(event.getEventId());
         eventLocation.setEvents(eventsAtLocation);
-        eventLocation.saveToFirestore();
+        Log.d("Kenny", eventLocation.getEvents().toString());
+        eventLocation.updateFirestore();
 
 
 
@@ -344,7 +352,7 @@ public class AdminUsersList extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         eventDataList.remove(event);
-                        Log.d("AdminUsersList", "Event successfully Deleted");
+                        Log.d("AdminEventsList", "Event successfully Deleted");
                     }
                 });
     }
