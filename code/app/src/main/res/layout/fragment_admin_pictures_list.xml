@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.admin.AdminPicturesList">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- Buttons Section -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp">
 
-</FrameLayout>
+        <Button
+            android:id="@+id/button_event_posters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Posters"
+            android:padding="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/buttonborder"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/button_user_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Photos"
+            android:padding="16dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/buttonborder"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- ListView Section -->
+    <ListView
+        android:id="@+id/photo_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:padding="8dp"
+        android:background="@android:color/white" />
+
+</LinearLayout>
