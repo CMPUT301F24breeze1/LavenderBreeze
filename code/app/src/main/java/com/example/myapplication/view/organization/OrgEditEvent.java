@@ -150,23 +150,34 @@ public class OrgEditEvent extends Fragment {
     }
 
     private void saveChanges(View view) {
-        if (validateInputs()) {
-            Log.d("OrgEditEvent", "Inputs validated successfully.");
-            // If a new poster is selected, upload it and update Firestore
-            if (imageUri != null) {
-                uploadPosterToStorage(true);
-            }
-            Map<String, Object> updates = collectEventData();
-            db.collection("events").document(eventId).update(updates)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Event updated successfully.", Toast.LENGTH_SHORT).show();
-                        Navigation.findNavController(view).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("OrgEditEvent", "Failed to update event: " + e.getMessage());
-                        Toast.makeText(getContext(), "Failed to update event.", Toast.LENGTH_SHORT).show();
-                    });
+        if (!validateInputs()) {
+            Toast.makeText(getContext(), "Please fill in all fields correctly.", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        if (imageUri != null) {
+            // Upload the new poster first, then update Firestore and navigate back
+            uploadPosterToStorage(newPosterUrl -> {
+                posterURL = newPosterUrl;
+                updateEventInFirestore(view);
+            }, view);
+        } else {
+            // If no new poster, directly update Firestore
+            updateEventInFirestore(view);
+        }
+    }
+    private void updateEventInFirestore(View view) {
+        Map<String, Object> updates = collectEventData();
+        db.collection("events").document(eventId).update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("OrgEditEvent", "Event updated successfully.");
+                    Toast.makeText(getContext(), "Event updated successfully.", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(view).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("OrgEditEvent", "Failed to update event: " + e.getMessage());
+                    Toast.makeText(getContext(), "Failed to update event.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void cancelChanges(View view) {
@@ -178,26 +189,24 @@ public class OrgEditEvent extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
     }
 
-    private void uploadPosterToStorage(boolean updateFirestore) {
-        if (imageUri == null) return;
-
+    private void uploadPosterToStorage(OnPosterUploadCallback callback, View view) {
         String storagePath = "event_posters/" + eventId + ".jpg";
         FirebaseStorage.getInstance().getReference(storagePath).putFile(imageUri)
-                .addOnSuccessListener(task -> task.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
-                    posterURL = uri.toString();
-                    if (updateFirestore) {
-                        db.collection("events").document(eventId)
-                                .update("posterUrl", posterURL)
-                                .addOnSuccessListener(aVoid -> Log.d("OrgEditEvent", "Poster URL updated in Firestore"))
-                                .addOnFailureListener(e -> Log.e("OrgEditEvent", "Failed to update poster URL: " + e.getMessage()));
-                    }
-
-                }))
+                .addOnSuccessListener(taskSnapshot -> taskSnapshot.getStorage().getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            Log.d("OrgEditEvent", "Poster uploaded successfully: " + uri.toString());
+                            callback.onUploadSuccess(uri.toString());
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("OrgEditEvent", "Failed to get download URL: " + e.getMessage());
+                            Toast.makeText(getContext(), "Failed to upload poster.", Toast.LENGTH_SHORT).show();
+                        }))
                 .addOnFailureListener(e -> {
-                    Log.e("OrgEditEvent", "Failed to upload poster: " + e.getMessage());
+                    Log.e("OrgEditEvent", "Poster upload failed: " + e.getMessage());
                     Toast.makeText(getContext(), "Failed to upload poster.", Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private boolean validateInputs() {
         boolean valid = true;
@@ -311,5 +320,9 @@ public class OrgEditEvent extends Fragment {
             Toast.makeText(requireContext(), "Invalid date format. Please use yyyy-MM-dd HH:mm", Toast.LENGTH_SHORT).show();
             return null; // Return null if parsing fails
         }
+    }
+
+    interface OnPosterUploadCallback {
+        void onUploadSuccess(String posterUrl);
     }
 }
