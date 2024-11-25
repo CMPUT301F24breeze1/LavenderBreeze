@@ -176,7 +176,11 @@
         android:id="@+id/OrgEditEvent"
         android:name="com.example.myapplication.view.organization.OrgEditEvent"
         android:label="fragment_org_edit_event"
-        tools:layout="@layout/fragment_org_edit_event" />
+        tools:layout="@layout/fragment_org_edit_event" >
+        <action
+            android:id="@+id/action_OrgEditEvent_to_OrgEvent"
+            app:destination="@id/OrgEvent" />
+    </fragment>
     <fragment
         android:id="@+id/OrgViewEventQrCode"
         android:name="com.example.myapplication.view.organization.OrgViewEventQrCode"
