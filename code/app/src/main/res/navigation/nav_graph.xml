@@ -393,7 +393,25 @@
         <action
             android:id="@+id/action_adminPicturesList_to_adminUsersList"
             app:destination="@id/adminUsersList" />
+        <action
+            android:id="@+id/action_to_imageDetails"
+            app:destination="@id/adminImageDetailsFragment" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/adminImageDetailsFragment"
+        android:name="com.example.myapplication.view.admin.AdminImageDetailsFragment"
+        android:label="Image Details"
+        tools:layout="@layout/fragment_admin_image_details">
+        <argument
+            android:name="documentId"
+            app:argType="string" />
+        <argument
+            android:name="currentType"
+            app:argType="string" />
+    </fragment>
+
 
 
 </navigation>
