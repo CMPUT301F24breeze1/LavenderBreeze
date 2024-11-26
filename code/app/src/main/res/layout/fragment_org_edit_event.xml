@@ -24,10 +24,10 @@
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/imageViewPoster"/>
+        android:layout_above="@id/imageViewEditPoster"/>
 
     <ImageView
-        android:id="@+id/imageViewPoster"
+        android:id="@+id/imageViewEditPoster"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_below="@id/buttonCancel"
@@ -39,13 +39,13 @@
         android:scaleType="centerCrop" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/buttonAddPoster"
+        android:id="@+id/buttonEditPoster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/imageViewPoster"
-        android:layout_alignBottom="@id/imageViewPoster"
+        android:layout_alignEnd="@id/imageViewEditPoster"
+        android:layout_alignBottom="@id/imageViewEditPoster"
         android:layout_margin="8dp"
-        android:contentDescription="Add Poster"
+        android:contentDescription="Edit Poster"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/white" />
 
@@ -53,7 +53,7 @@
         android:id="@+id/editEventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageViewPoster"
+        android:layout_below="@id/imageViewEditPoster"
         android:layout_marginTop="16dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"

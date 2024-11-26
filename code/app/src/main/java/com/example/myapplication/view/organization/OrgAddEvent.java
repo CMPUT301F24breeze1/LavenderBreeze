@@ -187,13 +187,13 @@ public class OrgAddEvent extends Fragment {
      * @return true
      */
     public boolean validateFields() {
-        return !isEmpty(editTextEventName) && !isEmpty(editTextEventDescription) //!isEmpty(editTextLocation)
+        return !isEmpty(editTextEventName) && !isEmpty(editTextEventDescription)
                 && parseDate(editTextEventStart.getText().toString()) != null
                 && parseDate(editTextEventEnd.getText().toString()) != null
                 && parseDate(editTextRegistrationStart.getText().toString()) != null
                 && parseDate(editTextRegistrationEnd.getText().toString()) != null
                 && isPositiveInteger(editTextCapacity.getText().toString())
-                && isPositiveInteger(editTextPrice.getText().toString());
+                && isPositiveDouble(editTextPrice.getText().toString());
     }
 
 
@@ -213,6 +213,8 @@ public class OrgAddEvent extends Fragment {
             showToast("No poster selected");
         }
     }
+
+
     private void fetchFacilityName() {
         String organizerID = DeviceUtils.getDeviceId(requireContext());
 
@@ -254,7 +256,7 @@ public class OrgAddEvent extends Fragment {
         Date registrationEndDate = parseDate(editTextRegistrationEnd.getText().toString());
         String location = editTextLocation.getText().toString();
         int capacity = Integer.parseInt(editTextCapacity.getText().toString());
-        int price = Integer.parseInt(editTextPrice.getText().toString());
+        double price = Double.parseDouble(editTextPrice.getText().toString());
 
         Event event = new Event(eventName, editTextEventDescription.getText().toString(), eventStartDate,
                 eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl, "tempQRCode", organizerID);
@@ -325,6 +327,15 @@ public class OrgAddEvent extends Fragment {
     private boolean isPositiveInteger(String value) {
         try {
             return Integer.parseInt(value) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // New helper method to validate positive double values
+    private boolean isPositiveDouble(String value) {
+        try {
+            return Double.parseDouble(value) > 0;
         } catch (NumberFormatException e) {
             return false;
         }

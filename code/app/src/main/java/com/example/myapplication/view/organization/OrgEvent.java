@@ -10,11 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Fragment for viewing information about a particular event
@@ -36,6 +42,7 @@ public class OrgEvent extends Fragment {
     private static final String ARG_PARAM11 = "registrationEnd";
     private static final String ARG_PARAM12 = "qrCodeHash";
     private static final String ARG_PARAM13 = "declined";
+    private static final String ARG_POSTER_URL = "posterURL";
 
 
     // TODO: Rename and change types of parameters
@@ -52,6 +59,9 @@ public class OrgEvent extends Fragment {
     private String registrationEnd;
     private String qrCodeHash;
     private ArrayList<String> declined;
+    private String posterURL;
+    private ImageView posterView;
+    private FirebaseFirestore db;
 
     public OrgEvent() {
         // Required empty public constructor
@@ -76,7 +86,7 @@ public class OrgEvent extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static OrgEvent newInstance(String param1,ArrayList<String> param2,ArrayList<String> param3, int param4, String param5,
                                        String param6, String param7, String param8, int param9, String param10, String param11, String param12,
-                                        ArrayList<String> param13) {
+                                        ArrayList<String> param13, String posterUrl) {
         OrgEvent fragment = new OrgEvent();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -92,7 +102,7 @@ public class OrgEvent extends Fragment {
         args.putString(ARG_PARAM11, param11);
         args.putString(ARG_PARAM12, param12);
         args.putStringArrayList(ARG_PARAM13, param13);
-
+        args.putString(ARG_POSTER_URL, posterUrl);
         fragment.setArguments(args);
         return fragment;
     }
@@ -121,7 +131,9 @@ public class OrgEvent extends Fragment {
             registrationEnd = getArguments().getString(ARG_PARAM11);
             qrCodeHash = getArguments().getString(ARG_PARAM12);
             declined = getArguments().getStringArrayList(ARG_PARAM13);
+            posterURL = getArguments().getString(ARG_POSTER_URL);
         }
+        db = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -161,6 +173,66 @@ public class OrgEvent extends Fragment {
         eventRegistrationStartTextView.setText(registrationStart);
         eventRegistrationEndTextView.setText(registrationEnd);
 
+        posterView = view.findViewById(R.id.image_view_org_event_poster);
+
+        // Fetching poster URL from Firestore and displaying
+        db.collection("events")
+                .document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (isAdded() && getView() != null) { // Ensure the fragment is attached
+                        if (documentSnapshot.exists()) {
+                            String fetchedPosterURL = documentSnapshot.getString("posterUrl");
+                            if (fetchedPosterURL != null && !fetchedPosterURL.isEmpty()) {
+                                Glide.with(requireContext())
+                                        .load(fetchedPosterURL)
+                                        .into(posterView);
+                            } else {
+                                Log.d("OrgEvent", "Poster URL not available");
+                            }
+                        } else {
+                            Log.d("OrgEvent", "Event not found in Firestore");
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("OrgEvent", "Error fetching event data", e));
+
+        // Update event details in with dynamic updates
+        db.collection("events").document(eventId)
+                .addSnapshotListener((snapshot, error) -> {
+                    if (error != null) {
+                        Log.e("OrgEvent", "Error listening for changes", error);
+                        return;
+                    }
+                    if (snapshot != null && snapshot.exists()) {
+                        // Retrieve and update the fields
+                        String updatedEventName = snapshot.getString("eventName");
+                        String updatedEventDescription = snapshot.getString("eventDescription");
+                        Date updatedEventStart = snapshot.getTimestamp("eventStart").toDate(); // Convert to Date
+                        Date updatedEventEnd = snapshot.getTimestamp("eventEnd").toDate();
+                        int updatedCapacity = snapshot.getLong("capacity").intValue();
+                        Double updatedPrice = snapshot.getDouble("price");
+                        Date updatedRegistrationStart = snapshot.getTimestamp("registrationStart").toDate();
+                        Date updatedRegistrationEnd = snapshot.getTimestamp("registrationEnd").toDate();
+
+                        // Format the timestamps for display
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+                        String formattedEventStart = dateFormat.format(updatedEventStart);
+                        String formattedEventEnd = dateFormat.format(updatedEventEnd);
+                        String formattedRegistrationStart = dateFormat.format(updatedRegistrationStart);
+                        String formattedRegistrationEnd = dateFormat.format(updatedRegistrationEnd);
+
+                        // Update the UI
+                        eventNameTextView.setText(updatedEventName);
+                        eventDescriptionTextView.setText(updatedEventDescription);
+                        eventStartTextView.setText(formattedEventStart);
+                        eventEndTextView.setText(formattedEventEnd);
+                        eventCapacityTextView.setText(String.valueOf(updatedCapacity));
+                        eventPriceTextView.setText(String.valueOf(updatedPrice));
+                        eventRegistrationStartTextView.setText(formattedRegistrationStart);
+                        eventRegistrationEndTextView.setText(formattedRegistrationEnd);
+                    }
+                });
 
         //Create bundle containing EventId to be passed to next fragment if necessary
         Bundle bundle = new Bundle();

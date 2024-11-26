@@ -160,7 +160,7 @@ public class OrgEventLst extends Fragment {
                 bundle.putString("eventEnd",simpleDateFormat.format(eventDataList.get(i).getEventEnd()));
                 bundle.putString("registrationStart",simpleDateFormat.format(eventDataList.get(i).getRegistrationStart()));
                 bundle.putString("registrationEnd",simpleDateFormat.format(eventDataList.get(i).getRegistrationEnd()));
-                bundle.putInt("price",eventDataList.get(i).getPrice());
+                bundle.putDouble("price",eventDataList.get(i).getPrice());
                 bundle.putString("location",eventDataList.get(i).getLocation());
                 bundle.putString("posterURL",eventDataList.get(i).getPosterUrl());
                 bundle.putString("qrCodeHash",eventDataList.get(i).getQrCodeHash());
