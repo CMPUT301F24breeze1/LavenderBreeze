@@ -49,6 +49,7 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
     implementation(libs.firebase.database)
     implementation(libs.window)
+    implementation(libs.play.services.location)
     debugImplementation("androidx.fragment:fragment-testing:1.3.6")
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.1.3")
@@ -76,4 +77,5 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:23.1.1")
     implementation("androidx.work:work-runtime:2.7.1")
     implementation("com.google.guava:guava:29.0-android")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 }
