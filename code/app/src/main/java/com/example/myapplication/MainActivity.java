@@ -54,13 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Check and request permissions
         List<String> ungrantedPermissions = permissionHelper.getUngrantedPermissions();
-        Log.d("test", "onCreate: " + ungrantedPermissions);
+
         if (!ungrantedPermissions.isEmpty()) {
-            permissionHelper.requestPermissions(ungrantedPermissions);
-            permissionHelper.fetchAndStoreLocation(db, "ClJvtRS4z8Vs3lBBYei3","5a4cdacb246e03f9");
+            permissionHelper.requestPermissions(ungrantedPermissions, "ClJvtRS4z8Vs3lBBYei3", db);
         } else {
             // All permissions granted, proceed with location
-            permissionHelper.fetchAndStoreLocation(db, "ClJvtRS4z8Vs3lBBYei3","5a4cdacb246e03f9");
+            permissionHelper.fetchAndStoreLocation(db, "ClJvtRS4z8Vs3lBBYei3");
         }
 
         // Start Polling Service

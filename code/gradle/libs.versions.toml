@@ -11,6 +11,8 @@ navigationFragment = "2.8.3"
 navigationUi = "2.8.3"
 firebaseCommon = "21.0.0"
 junitJupiter = "5.8.1"
+playServicesGcm = "17.0.0"
+playServicesMaps = "19.0.0"
 qrGenerator = "4.3.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseStorage = "21.0.1"
@@ -30,6 +32,8 @@ navigation-fragment = { group = "androidx.navigation", name = "navigation-fragme
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 firebase-common = { group = "com.google.firebase", name = "firebase-common", version.ref = "firebaseCommon" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+play-services-gcm = { module = "com.google.android.gms:play-services-gcm", version.ref = "playServicesGcm" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 qr-generator = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "qrGenerator" }
 
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
