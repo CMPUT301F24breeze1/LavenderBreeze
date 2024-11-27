@@ -41,9 +41,13 @@ public class Event implements java.io.Serializable {
     private List<String> declinedEntrants;
     private String organizerId;
     private static final long serialVersionUID = 1L;
+    private boolean waitingListLimited;
+    private int waitingListCap;
+    private int waitingListCount;
 
     private FirebaseFirestore database;
     private CollectionReference events;
+
 
     /**
      * Interface for callback when event data is loaded.
@@ -111,6 +115,33 @@ public class Event implements java.io.Serializable {
         this.acceptedEntrants = new ArrayList<>();
         this.declinedEntrants = new ArrayList<>();
         this.organizerId = organizerId;
+        this.database = FirebaseFirestore.getInstance();
+        this.events = database.collection("events");
+    }
+    /**
+            * Constructors for creating a new Event
+     */
+    public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd, String location, int capacity, double price,
+                 String posterUrl, String qrCodeHash, String organizerId, boolean waitingListLimited, int waitingListCap) {
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+        this.posterUrl = posterUrl;
+        this.qrCodeHash = qrCodeHash;
+        this.waitlist = new ArrayList<>();
+        this.selectedEntrants = new ArrayList<>();
+        this.acceptedEntrants = new ArrayList<>();
+        this.declinedEntrants = new ArrayList<>();
+        this.organizerId = organizerId;
+        this.waitingListLimited = waitingListLimited;
+        this.waitingListCap = waitingListCap;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
     }
@@ -718,6 +749,30 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    public boolean isWaitingListLimited() {
+        return waitingListLimited;
+    }
+
+    public void setWaitingListLimited(boolean waitingListLimited) {
+        this.waitingListLimited = waitingListLimited;
+    }
+
+    public int getWaitingListCap() {
+        return waitingListCap;
+    }
+
+    public void setWaitingListCap(int waitingListCap) {
+        this.waitingListCap = waitingListCap;
+    }
+
+    public int getWaitingListCount() {
+        return waitingListCount;
+    }
+
+    public void setWaitingListCount(int waitingListCount) {
+        this.waitingListCount = waitingListCount;
+    }
+
     /**
      * Converts the Event object to a Map to be stored in Firestore.
      * @return A Map representing the Event object.
@@ -741,6 +796,8 @@ public class Event implements java.io.Serializable {
         eventMap.put("selectedEntrants", selectedEntrants);
         eventMap.put("acceptedEntrants", acceptedEntrants);
         eventMap.put("declinedEntrants", declinedEntrants);
+        eventMap.put("waitingListLimited", waitingListLimited);
+        eventMap.put("waitingListCap", waitingListCap);
 
         return eventMap;
     }
