@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/rounded_box">
 
 
     <TextView
@@ -15,8 +16,7 @@
         android:textColor="@color/white"
         android:background="@drawable/edit_text_border"
         android:drawableRight="@drawable/delete_icon"
-        android:drawableTint="@color/white"
-        android:layout_marginBottom="16dp">
+        android:drawableTint="@color/white">
     </TextView>
 
 </LinearLayout>

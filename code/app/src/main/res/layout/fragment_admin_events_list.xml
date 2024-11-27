@@ -48,7 +48,8 @@
         android:id="@+id/list_view_admin_events_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:dividerHeight="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
