@@ -46,6 +46,7 @@ public class OrgEditEvent extends Fragment {
 
     private EditText editEventName, editEventDescription, editEventStart, editEventEnd,
             editRegistrationStart, editRegistrationEnd, editLocation, editCapacity, editPrice;
+    private EditText editWaitingListCap;
     private ImageView posterEditView;
     private Button buttonSaveEvent, buttonCancelSave;
 
@@ -93,6 +94,7 @@ public class OrgEditEvent extends Fragment {
         editCapacity = view.findViewById(R.id.editCapacity);
         editPrice = view.findViewById(R.id.editPrice);
         posterEditView = view.findViewById(R.id.imageViewEditPoster);
+        editWaitingListCap = view.findViewById(R.id.editWaitingList);
         buttonSaveEvent = view.findViewById(R.id.buttonSaveEvent);
         buttonCancelSave = view.findViewById(R.id.buttonCancel);
 
@@ -147,6 +149,8 @@ public class OrgEditEvent extends Fragment {
         if (posterURL != null && !posterURL.isEmpty()) {
             Glide.with(this).load(posterURL).into(posterEditView);
         }
+        long waitingListCap = snapshot.getLong("waitingListCap") != null ? snapshot.getLong("waitingListCap") : 0;
+        editWaitingListCap.setText(String.valueOf(waitingListCap));
     }
 
     private void saveChanges(View view) {
@@ -243,6 +247,11 @@ public class OrgEditEvent extends Fragment {
             Log.e("OrgEditEvent", "Invalid price value.");
             valid = false;
         }
+        // Validate waiting list capacity (can be 0 or positive)
+        if (!isNonNegativeInteger(editWaitingListCap.getText().toString())) {
+            Log.e("OrgEditEvent", "Invalid waiting list capacity value.");
+            valid = false;
+        }
 
         return valid;
     }
@@ -259,6 +268,11 @@ public class OrgEditEvent extends Fragment {
         data.put("location", editLocation.getText().toString());
         data.put("capacity", Integer.parseInt(editCapacity.getText().toString()));
         data.put("price", Double.parseDouble(editPrice.getText().toString()));
+
+        int waitingListCap = Integer.parseInt(editWaitingListCap.getText().toString());
+        data.put("waitingListCap", waitingListCap);
+        data.put("waitingListLimited", waitingListCap > 0);
+
         return data;
     }
 
@@ -307,6 +321,13 @@ public class OrgEditEvent extends Fragment {
         }
     }
 
+    private boolean isNonNegativeInteger(String value) {
+        try {
+            return Integer.parseInt(value) >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     /**
      * Helper method to turn a String into a Date data type
      * @param dateString
