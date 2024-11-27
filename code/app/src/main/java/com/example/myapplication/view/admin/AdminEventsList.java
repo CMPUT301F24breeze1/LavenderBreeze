@@ -2,6 +2,7 @@ package com.example.myapplication.view.admin;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -23,9 +24,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,9 +113,14 @@ public class AdminEventsList extends Fragment {
 
                 Event clicked = eventDataList.get(i);
 
-                deleteEvent(clicked);
-
-                eventArrayAdapter.notifyDataSetChanged();
+                // Show a dialog to choose what to delete
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Options")
+                        .setMessage("What would you like to delete?")
+                        .setPositiveButton("Delete Entire Event", (dialog, which) -> deleteEvent(clicked))
+                        .setNeutralButton("Delete Image Only", (dialog, which) -> deleteEventImage(clicked))
+                        .setNegativeButton("Delete QR Code Only", (dialog, which) -> deleteEventQRCode(clicked))
+                        .show();
             }
         });
 
@@ -259,6 +268,30 @@ public class AdminEventsList extends Fragment {
                         eventArrayAdapter.notifyDataSetChanged();
                         Log.d("AdminEventsList", "Event successfully Deleted");
                     }
+                });
+    }
+
+    private void deleteEventQRCode(Event event) {
+        // Remove the QR code hash from Firestore
+        eventsRef.document(event.getEventId())
+                .update("qrCode", null)
+                .addOnSuccessListener(unused -> {
+                    Log.d("AdminEventsList", "QR Code successfully deleted.");
+                    // Update local data and refresh UI if needed
+                    event.setQrCodeHash(null);
+                    eventArrayAdapter.notifyDataSetChanged();
+                });
+    }
+
+    private void deleteEventImage(Event event) {
+        // Remove the image URL from Firestore
+        eventsRef.document(event.getEventId())
+                .update("posterUrl", null)
+                .addOnSuccessListener(unused -> {
+                    Log.d("AdminEventsList", "Image successfully deleted.");
+                    // Update local data and refresh UI if needed
+                    event.setPosterUrl(null);
+                    eventArrayAdapter.notifyDataSetChanged();
                 });
     }
 
