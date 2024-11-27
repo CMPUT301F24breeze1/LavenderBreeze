@@ -1,67 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#361B1B">
 
-    <Button
-        android:id="@+id/button_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/left_arrow"
-        android:backgroundTint="@color/white"
-        android:textSize="40sp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Button to go back to home -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <Button
+                android:id="@+id/button_go_to_home_from_admin_pictures_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:drawableLeft="@drawable/left_arrow"
+                android:backgroundTint="#361B1B"
+                android:textSize="18sp"
+                android:drawableTint="@color/white" />
+        </RelativeLayout>
+
+
+        <!-- Spacer -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Images"
+                android:textSize="30sp"
+                android:textColor="#FFFFFF" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <!-- Buttons Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp">
+        android:gravity="center"
+        android:padding="8dp">
 
         <Button
             android:id="@+id/button_event_posters"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Event Posters"
-            android:padding="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/buttonborder"
-            android:textColor="@android:color/white" />
+            android:layout_weight="1"
+            android:text="Event Posters" />
 
         <Button
             android:id="@+id/button_user_photos"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="User Photos"
-            android:padding="16dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/buttonborder"
-            android:textColor="@android:color/white" />
+            android:layout_weight="1"
+            android:text="User Photos" />
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/empty_state_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="No images to display."
         android:layout_centerInParent="true"
         android:visibility="gone"
         android:textSize="18sp"
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
 
     <!-- ListView Section -->
     <ListView
         android:id="@+id/photo_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:padding="8dp"
-        android:background="@android:color/white" />
+        android:layout_weight="1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:background="#000000">
+
+        <ImageButton
+            android:id="@+id/users"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            android:background="@color/black"
+            app:tint="@color/white"
+            android:src="@drawable/users_icon"
+            android:text="Users" />
+
+        <ImageButton
+            android:id="@+id/events"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            android:background="@color/black"
+            app:tint="@color/white"
+            android:src="@drawable/events_icon"
+            android:text="Events" />
+
+        <ImageButton
+            android:id="@+id/facilities"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            android:background="@color/black"
+            app:tint="@color/white"
+            android:src="@drawable/facilities_icon"
+            android:text="Facilities" />
+
+        <ImageButton
+            android:id="@+id/images"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            android:background="@color/black"
+            app:tint="@color/white"
+            android:src="@drawable/images_icon"
+            android:text="Images" />
+
+    </LinearLayout>
 
 </LinearLayout>

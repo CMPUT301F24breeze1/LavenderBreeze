@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/edit_text_border"
+    >
 
 
     <TextView
@@ -11,8 +13,9 @@
         android:text="Facility Name"
         android:padding="20dp"
         android:textSize="30sp"
-        android:background="@drawable/edit_text_border"
-        android:drawableRight="@drawable/right_arrow"
+        android:drawableRight="@drawable/delete_icon"
+        android:textColor="@color/white"
+        android:drawableTint="@color/white"
         android:layout_marginBottom="16dp">
     </TextView>
 

@@ -20,7 +20,7 @@
         android:text="Choose your Profile:"
         android:textColor="#FFFFFF"
         android:textSize="36dp"
-        android:layout_marginBottom="36dp"/>
+        android:layout_marginBottom="36dp" />
 
     <Button
         android:id="@+id/button_go_to_add_facility"
@@ -52,5 +52,6 @@
         android:layout_marginTop="32dp"
         android:text="Admin"
         android:textSize="24dp"
-        android:backgroundTint="#ff0000"/>
+        android:backgroundTint="#ff0000"
+        android:visibility="invisible"/>
 </LinearLayout>

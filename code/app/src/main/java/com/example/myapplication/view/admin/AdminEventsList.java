@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.myapplication.R;
@@ -128,15 +129,15 @@ public class AdminEventsList extends Fragment {
         home.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_home));
 
-        Button users = view.findViewById(R.id.users);
+        ImageButton users = view.findViewById(R.id.users);
         users.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminUsersList));
 
-        Button facilities = view.findViewById(R.id.facilities);
+        ImageButton facilities = view.findViewById(R.id.facilities);
         facilities.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminFacilitiesList));
 
-        Button pictures = view.findViewById(R.id.images);
+        ImageButton pictures = view.findViewById(R.id.images);
         pictures.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminPicturesList));
 
