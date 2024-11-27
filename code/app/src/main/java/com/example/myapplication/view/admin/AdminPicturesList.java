@@ -1,5 +1,6 @@
 package com.example.myapplication.view.admin;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +40,9 @@ public class AdminPicturesList extends Fragment {
     private String currentType = "users"; // Default case
     private ListView imageList;
     private Button buttonBack;
+    private ImageButton buttonUsers;
+    private ImageButton buttonEvents;
+    private ImageButton buttonFacilities;
     private AdminImageAdapter imageAdapter;
     private Button userButton, eventButton;
 
@@ -57,9 +62,25 @@ public class AdminPicturesList extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_pictures_list, container, false);
 
         imageList = view.findViewById(R.id.photo_list_view);
-        buttonBack = view.findViewById(R.id.button_back);
+
+        buttonBack = view.findViewById(R.id.button_go_to_home_from_admin_pictures_list);
         buttonBack.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigateUp();
+            Navigation.findNavController(v).navigate(R.id.action_adminPicturesList_to_home);
+        });
+
+        buttonEvents = view.findViewById(R.id.events);
+        buttonEvents.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_adminPicturesList_to_adminEventsList);
+        });
+
+        buttonFacilities = view.findViewById(R.id.facilities);
+        buttonFacilities.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_adminPicturesList_to_adminFacilitiesList);
+        });
+
+        buttonUsers = view.findViewById(R.id.users);
+        buttonUsers.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_adminPicturesList_to_adminUsersList);
         });
 
         // Load data based on the default type

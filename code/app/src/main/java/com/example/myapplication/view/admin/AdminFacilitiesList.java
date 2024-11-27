@@ -1,5 +1,6 @@
 package com.example.myapplication.view.admin;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -142,15 +144,15 @@ public class AdminFacilitiesList extends Fragment {
         home.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_home));
 
-        Button events = view.findViewById(R.id.events);
+        ImageButton events = view.findViewById(R.id.events);
         events.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminEventsList));
 
-        Button users = view.findViewById(R.id.users);
+        ImageButton users = view.findViewById(R.id.users);
         users.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminUsersList));
 
-        Button pictures = view.findViewById(R.id.images);
+        ImageButton pictures = view.findViewById(R.id.images);
         pictures.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminPicturesList));
         // Inflate the layout for this fragment
