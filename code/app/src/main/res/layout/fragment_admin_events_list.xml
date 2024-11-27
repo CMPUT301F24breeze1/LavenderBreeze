@@ -14,6 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingVertical="20dp"
             android:layout_alignParentLeft="true">
             <Button
                 android:id="@+id/button_go_to_home_from_admin_events_list"
@@ -49,7 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:dividerHeight="10dp"/>
+        android:dividerHeight="10dp"
+        android:paddingHorizontal="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

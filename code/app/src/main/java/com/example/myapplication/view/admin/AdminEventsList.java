@@ -105,7 +105,7 @@ public class AdminEventsList extends Fragment {
         userIds = new ArrayList<String>();
         facilityOrganizerIds = new ArrayList<String>();
 
-        eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList);
+        eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList,true);
         eventList.setAdapter(eventArrayAdapter);
 
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
