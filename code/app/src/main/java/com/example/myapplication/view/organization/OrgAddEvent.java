@@ -54,6 +54,7 @@ public class OrgAddEvent extends Fragment {
 
     public EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
     public EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
+    public EditText editWaitingListCap;
     private ImageView posterImageView;
     private FirebaseFirestore database;
     private String eventQRCode;
@@ -147,6 +148,7 @@ public class OrgAddEvent extends Fragment {
         editTextRegistrationStart = view.findViewById(R.id.editTextRegistrationStart);
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
         posterImageView = view.findViewById(R.id.imageViewPoster);
+        editWaitingListCap = view.findViewById(R.id.editTextWaitingList);
     }
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
@@ -187,13 +189,17 @@ public class OrgAddEvent extends Fragment {
      * @return true
      */
     public boolean validateFields() {
-        return !isEmpty(editTextEventName) && !isEmpty(editTextEventDescription) //!isEmpty(editTextLocation)
+        // added validation if waiting list is set
+        if (!isEmpty(editWaitingListCap) && !isPositiveInteger(editWaitingListCap.getText().toString())) {
+            return false;
+        }
+        return !isEmpty(editTextEventName) && !isEmpty(editTextEventDescription)
                 && parseDate(editTextEventStart.getText().toString()) != null
                 && parseDate(editTextEventEnd.getText().toString()) != null
                 && parseDate(editTextRegistrationStart.getText().toString()) != null
                 && parseDate(editTextRegistrationEnd.getText().toString()) != null
                 && isPositiveInteger(editTextCapacity.getText().toString())
-                && isPositiveInteger(editTextPrice.getText().toString());
+                && isPositiveDouble(editTextPrice.getText().toString());
     }
 
 
@@ -213,6 +219,8 @@ public class OrgAddEvent extends Fragment {
             showToast("No poster selected");
         }
     }
+
+
     private void fetchFacilityName() {
         String organizerID = DeviceUtils.getDeviceId(requireContext());
 
@@ -254,10 +262,21 @@ public class OrgAddEvent extends Fragment {
         Date registrationEndDate = parseDate(editTextRegistrationEnd.getText().toString());
         String location = editTextLocation.getText().toString();
         int capacity = Integer.parseInt(editTextCapacity.getText().toString());
-        int price = Integer.parseInt(editTextPrice.getText().toString());
+        double price = Double.parseDouble(editTextPrice.getText().toString());
+
+        // Determine waiting list settings
+        boolean waitingListLimited = false;
+        int waitingListCap = 0;
+        if (!isEmpty(editWaitingListCap)) {
+            waitingListCap = Integer.parseInt(editWaitingListCap.getText().toString());
+            waitingListLimited = true;
+        }
+
 
         Event event = new Event(eventName, editTextEventDescription.getText().toString(), eventStartDate,
-                eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl, "tempQRCode", organizerID);
+                eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl,
+                "tempQRCode", organizerID, waitingListLimited, waitingListCap);
+
         // First, get the facility name and its ID
         database.collection("facilities")
                 .whereEqualTo("organizerId", organizerID)
@@ -325,6 +344,15 @@ public class OrgAddEvent extends Fragment {
     private boolean isPositiveInteger(String value) {
         try {
             return Integer.parseInt(value) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // New helper method to validate positive double values
+    private boolean isPositiveDouble(String value) {
+        try {
+            return Double.parseDouble(value) > 0;
         } catch (NumberFormatException e) {
             return false;
         }

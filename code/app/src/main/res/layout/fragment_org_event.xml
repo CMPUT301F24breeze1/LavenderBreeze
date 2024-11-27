@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#303030">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +19,8 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/left_arrow"
             android:backgroundTint="@color/white"
-            android:textSize="40sp"/>
+            android:textSize="40sp"
+            />
 
         <!-- Spacer -->
 
@@ -52,44 +54,55 @@
         android:layout_height="wrap_content"
         android:text="Event Name"
         android:layout_gravity="center"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:textColor="#ffffff"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description: "
+        android:textColor="#ffffff"/>
+    <TextView
+        android:id="@+id/text_view_org_event_event_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Information"
+        android:textSize="15sp"
+        android:textColor="#ffffff"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
 
     <TextView
-        android:id="@+id/text_view_org_event_event_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Information"
-        android:textSize="15sp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-
+        android:text="Schedule: "
+        android:textColor="#ffffff"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Schedule: " />
+
         <TextView
             android:id="@+id/text_view_org_event_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Date"/>
+            android:text="Start Date"
+            android:textColor="#ffffff"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" to "/>
+            android:text=" to "
+            android:textColor="#ffffff"/>
         <TextView
             android:id="@+id/text_view_org_event_end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End date"/>
+            android:text="End date"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
     <LinearLayout
@@ -98,12 +111,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Capacity: " />
+            android:text="Capacity: "
+            android:textColor="#ffffff"/>
         <TextView
             android:id="@+id/text_view_org_event_capacity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="capacity"/>
+            android:text="capacity"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
 
@@ -113,36 +128,42 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price: " />
+            android:text="Price: "
+            android:textColor="#ffffff"/>
         <TextView
             android:id="@+id/text_view_org_event_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price"/>
+            android:text="Price"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registration Period: "
+        android:textColor="#ffffff"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registration Period: " />
-        <TextView
             android:id="@+id/text_view_org_event_registration_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Date"/>
+            android:text="Start Date"
+            android:textColor="#ffffff"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" to "/>
+            android:text=" to "
+            android:textColor="#ffffff"/>
         <TextView
             android:id="@+id/text_view_org_event_registration_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End date"/>
+            android:text="End date"
+            android:textColor="#ffffff"/>
 
     </LinearLayout>
 

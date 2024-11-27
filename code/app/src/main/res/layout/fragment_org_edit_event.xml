@@ -1,14 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.organization.OrgEditEvent">
+    android:background="#303030"
+    android:padding="16dp"
+    tools:context=".view.organization.OrgAddEvent">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Cancel Button at the Top Left Corner -->
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Cancel" />
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload a Poster"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/imageViewEditPoster"/>
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/imageViewEditPoster"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/buttonCancel"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="Event Poster"
+        android:scaleType="centerCrop" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonEditPoster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/imageViewEditPoster"
+        android:layout_alignBottom="@id/imageViewEditPoster"
+        android:layout_margin="8dp"
+        android:contentDescription="Edit Poster"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white" />
+
+    <EditText
+        android:id="@+id/editEventName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewEditPoster"
+        android:layout_marginTop="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Event Description -->
+    <EditText
+        android:id="@+id/editEventDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editEventName"
+        android:layout_marginTop="8dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Event Start Date -->
+    <EditText
+        android:id="@+id/editEventStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editEventDescription"
+        android:layout_marginTop="8dp"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Event End Date -->
+    <EditText
+        android:id="@+id/editEventEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editEventStart"
+        android:layout_marginTop="8dp"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Registration Start Date -->
+    <EditText
+        android:id="@+id/editRegistrationStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editEventEnd"
+        android:layout_marginTop="8dp"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Registration End Date -->
+    <EditText
+        android:id="@+id/editRegistrationEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editRegistrationStart"
+        android:layout_marginTop="8dp"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Location -->
+    <EditText
+        android:id="@+id/editLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editRegistrationEnd"
+        android:layout_marginTop="8dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Capacity -->
+    <EditText
+        android:id="@+id/editCapacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editLocation"
+        android:layout_marginTop="8dp"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Price -->
+    <EditText
+        android:id="@+id/editPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editCapacity"
+        android:layout_marginTop="8dp"
+        android:inputType="numberDecimal"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+    <EditText
+        android:id="@+id/editWaitingList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editPrice"
+        android:layout_marginTop="8dp"
+        android:inputType="numberDecimal"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Create Event Button at the Bottom Center -->
+    <Button
+        android:id="@+id/buttonSaveEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editWaitingList"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Save Changes" />
+
+</RelativeLayout>

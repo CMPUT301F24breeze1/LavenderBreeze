@@ -7,11 +7,17 @@ import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -27,11 +33,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A fragment that provides the interface for editing a user's profile, including
@@ -172,8 +191,8 @@ public class EntrantEditProfile extends Fragment {
         personName.setText(user.getName());
         emailAddress.setText(user.getEmail());
         contactPhoneNumber.setText(user.getPhoneNumber());
-        user.loadProfilePictureInto(profilePicture,requireContext());
-        // Example of setting an email notification switch (if stored in User class)
+        if (!user.getDeterministicPicture()) user.loadProfilePictureInto(profilePicture,requireContext());
+        else user.loadDeterministicProfilePictureInto(profilePicture,requireContext());
         notifSwitch.setChecked(user.isToggleNotif());
     }
     /**
@@ -202,16 +221,19 @@ public class EntrantEditProfile extends Fragment {
 
         uploadButton.setOnClickListener(v -> {
             dialog.dismiss();
+            user.setDeterministicPicture(false);
             openImagePicker();
         });
 
         aiButton.setOnClickListener(v -> {
             dialog.dismiss();
-            //generateAIPicture();
+            user.setDeterministicPicture(true);
+            user.loadDeterministicProfilePictureInto(profilePicture,requireContext());
         });
 
         deleteButton.setOnClickListener(v -> {
             dialog.dismiss();
+            user.setDeterministicPicture(true);
             deletePicture();
         });
 
@@ -277,7 +299,7 @@ public class EntrantEditProfile extends Fragment {
                     // Handle errors
                     Toast.makeText(getContext(), "Failed to delete profile picture.", Toast.LENGTH_SHORT).show();
                 });
+        profilePicture.setImageResource(R.drawable.account_circle);
     }
-
 
 }

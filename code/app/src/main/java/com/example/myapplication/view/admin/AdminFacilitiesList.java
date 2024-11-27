@@ -1,5 +1,6 @@
 package com.example.myapplication.view.admin;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,14 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.controller.FacilityAdapter;
+import com.example.myapplication.controller.UserListAdapter;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
+import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -37,14 +42,20 @@ import java.util.List;
  */
 public class AdminFacilitiesList extends Fragment {
 
-    private ListView facilityList;
-    private ArrayList<Facility> facilityDataList = new ArrayList<>();
-    private FacilityAdapter facilityArrayAdapter;
     private FirebaseFirestore db;
-    private CollectionReference usersRef;
     private CollectionReference eventsRef;
+    private CollectionReference usersRef;
     private CollectionReference facilitiesRef;
-    private List<DocumentSnapshot> facilities;
+    private List<DocumentSnapshot> users;
+    // Display lists
+    private ListView facilityList;
+    private ArrayList<Event> eventDataList;
+    private ArrayList<User> userDataList;
+    private ArrayList<String> eventIds;
+    private ArrayList<String> userIds;
+    private ArrayList<Facility> facilityDataList;
+    private ArrayList<String> facilityOrganizerIds;
+    private FacilityAdapter facilityArrayAdapter;
 
 
 
@@ -82,25 +93,50 @@ public class AdminFacilitiesList extends Fragment {
         eventsRef  = db.collection("events");
         facilitiesRef = db.collection("facilities");
 
+        eventDataList = new ArrayList<Event>();
+        userDataList = new ArrayList<User>();
+        facilityDataList = new ArrayList<Facility>();
+        eventIds = new ArrayList<String>();
+        userIds = new ArrayList<String>();
+        facilityOrganizerIds = new ArrayList<String>();
 
         facilityList = view.findViewById(R.id.list_view_admin_facilities_list);
         facilityDataList = new ArrayList<>();
         facilityArrayAdapter = new FacilityAdapter(getContext(), facilityDataList);
         facilityList.setAdapter(facilityArrayAdapter);
 
-        Task<QuerySnapshot> task = facilitiesRef.get();
-        task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                facilities = task.getResult().getDocuments();
-                Log.d("Firestore", "Documents Retrieved");
-                for(int i = 0; i < facilities.size(); i++){
+        fetchFacilities();
+        fetchEvents();
+        fetchUsers();
 
-                    facilityDataList.add(new Facility(facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
-                            facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
-                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
+        facilityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Facility facility = facilityDataList.get(i);
+
+                List<String> facilityEvents = facility.getEvents();
+
+                Log.d("Kenny", "Deleting events from facility"+facility.getFacilityName());
+
+                if(facilityEvents != null && !facilityEvents.isEmpty()) {
+                    for (int j = 0; j < facilityEvents.size(); j++) {
+                        Event event = eventDataList.get(eventIds.indexOf(facilityEvents.get(j)));
+                        Log.d("Kenny", "deleting event"+event.getEventName());
+
+                        deleteEvent(event);
+                    }
                 }
-                facilityArrayAdapter.notifyDataSetChanged();
+
+                facilitiesRef.document(facility.getFacilityId())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d("AdminFacilitiesList", "Facility successfully Deleted");
+                                facilityDataList.remove(facility);
+                                facilityArrayAdapter.notifyDataSetChanged();
+                            }
+                        });
             }
         });
 
@@ -108,18 +144,148 @@ public class AdminFacilitiesList extends Fragment {
         home.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_home));
 
-        Button events = view.findViewById(R.id.events);
+        ImageButton events = view.findViewById(R.id.events);
         events.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminEventsList));
 
-        Button users = view.findViewById(R.id.users);
+        ImageButton users = view.findViewById(R.id.users);
         users.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminUsersList));
 
-        Button pictures = view.findViewById(R.id.images);
+        ImageButton pictures = view.findViewById(R.id.images);
         pictures.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminFacilitiesList_to_adminPicturesList));
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void fetchEvents(){
+        Task<QuerySnapshot> task = eventsRef.get();
+        task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> events = task.getResult().getDocuments();
+                Log.d("Firestore", "Documents Retrieved");
+                for(int i = 0; i < events.size(); i++){
+                    String eventName = events.get(i).getString("eventName");
+                    int capacity = events.get(i).getDouble("capacity").intValue();
+
+
+                    // I set the event description as the doc ID to make it easier to pass when clicked
+                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp)
+                            events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(),
+                            events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
+                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"),
+                            (List<String>) events.get(i).get("acceptedEntrants"), (List<String>) events.get(i).get("selectedEntrants"),
+                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist")));
+                    eventIds.add(events.get(i).getId());
+                }
+            }
+        });
+    }
+
+    private void fetchUsers(){
+        Task<QuerySnapshot> task = usersRef.get();
+        task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                users = task.getResult().getDocuments();
+                Log.d("Firestore", "Documents Retrieved");
+                for (int i = 0; i < users.size(); i++) {
+                    DocumentSnapshot current = users.get(i);
+
+                    User user = new User(current.getId(), loadedUser -> {
+                        if (loadedUser != null) {
+                            userDataList.add(loadedUser);
+                            userIds.add(loadedUser.getDeviceID());
+                            Log.d("OrgEventSelectedLst", "Loaded User: " + loadedUser.getName());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void fetchFacilities(){
+        Task<QuerySnapshot> task = facilitiesRef.get();
+        task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> facilities = task.getResult().getDocuments();
+                Log.d("Firestore", "Documents Retrieved");
+                for(int i = 0; i < facilities.size(); i++){
+                    Facility facility = new Facility(facilities.get(i).getId(),facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
+                            facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
+                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl"));
+                    if(facilities.get(i).get("events") == null){
+                        facility.setEvents(new ArrayList<String>());
+                    } else {
+                        facility.setEvents((List<String>) facilities.get(i).get("events"));
+                    }
+
+                    facilityDataList.add(facility);
+                    facilityOrganizerIds.add(facility.getOrganizerId());
+                }
+                facilityArrayAdapter.notifyDataSetChanged();
+                Log.d("AdminUsersList", String.valueOf(facilityDataList));
+                Log.d("AdminUsersList", String.valueOf(facilityOrganizerIds));
+            }
+        });
+    }
+
+    private void deleteEvent(Event event){
+        List<String> accepted = event.getAcceptedEntrants();
+        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> selected = event.getSelectedEntrants();
+        List<String> waitlist = event.getWaitlist();
+
+        if(!accepted.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(accepted.get(j)));
+                user.removeAcceptedEvent(event.getEventId());            }
+        }
+        if(!cancelled.isEmpty()){
+            for (int j = 0; j < cancelled.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(cancelled.get(j)));
+                user.removeCancelledEvent(event.getEventId());
+            }
+        }
+        if(!selected.isEmpty()){
+            for (int j = 0; j < selected.size(); j++) {
+                Log.d("Kenny", "requested users detected");
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(selected.get(j)));
+                user.removeSelectedEvent(event.getEventId());            }
+        }
+        if(!waitlist.isEmpty()){
+            for (int j = 0; j < waitlist.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(waitlist.get(j)));
+                user.removeRequestedEvent(event.getEventId());            }
+        }
+
+
+        Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
+        List<String> eventsAtLocation = eventLocation.getEvents();
+        Log.d("Kenny", eventsAtLocation.toString());
+        eventsAtLocation.remove(event.getEventId());
+        eventLocation.setEvents(eventsAtLocation);
+        Log.d("Kenny", eventLocation.getEvents().toString());
+        eventLocation.updateFirestore();
+
+
+
+        eventsRef.document(event.getEventId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        eventDataList.remove(event);
+                        Log.d("AdminEventsList", "Event successfully Deleted");
+                    }
+                });
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,18 +111,26 @@ public class OrgEventLst extends Fragment {
                     ArrayList<String> selected = (ArrayList<String>) events.get(i).get("selectedEntrants");
                     ArrayList<String> declined = (ArrayList<String>) events.get(i).get("declinedEntrants");
                     // add waitlist and selected list to respective lists
-                    waitlists.add(waitlist);
-                    selecteds.add(selected);
-                    declineds.add(declined);
 
-                    Event event = new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
-                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
-                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"));
+                    String organizerId = events.get(i).getString("organizerId");
+                    String deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
-                    // I set the event description as the doc ID to make it easier to pass when clicked
-                    eventIds.add(eventId);
-                    eventDataList.add(event);
+                    if(organizerId.equals(deviceId)) {
+                        waitlists.add(waitlist);
+                        selecteds.add(selected);
+                        declineds.add(declined);
+
+                        Log.d("test", "onSuccess: " + events.get(i).get("price"));
+                        Event event = new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                                ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"), capacity, ((Number) events.get(i).get("price")).intValue(),
+                                events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"));
+
+
+                        // I set the event description as the doc ID to make it easier to pass when clicked
+                        eventIds.add(eventId);
+                        eventDataList.add(event);
+                    }
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
@@ -159,7 +168,7 @@ public class OrgEventLst extends Fragment {
                 bundle.putString("eventEnd",simpleDateFormat.format(eventDataList.get(i).getEventEnd()));
                 bundle.putString("registrationStart",simpleDateFormat.format(eventDataList.get(i).getRegistrationStart()));
                 bundle.putString("registrationEnd",simpleDateFormat.format(eventDataList.get(i).getRegistrationEnd()));
-                bundle.putInt("price",eventDataList.get(i).getPrice());
+                bundle.putDouble("price",eventDataList.get(i).getPrice());
                 bundle.putString("location",eventDataList.get(i).getLocation());
                 bundle.putString("posterURL",eventDataList.get(i).getPosterUrl());
                 bundle.putString("qrCodeHash",eventDataList.get(i).getQrCodeHash());

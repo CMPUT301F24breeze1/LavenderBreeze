@@ -1,15 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal"
+    android:background="@drawable/edit_text_border"
+    >
+
 
     <TextView
         android:id="@+id/facility_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Facility Name"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:padding="20dp"
+        android:textSize="30sp"
+        android:drawableRight="@drawable/delete_icon"
+        android:textColor="@color/white"
+        android:drawableTint="@color/white"
+        android:layout_marginBottom="16dp">
+    </TextView>
 
 </LinearLayout>

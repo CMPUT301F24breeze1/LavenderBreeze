@@ -32,7 +32,7 @@ public class Event implements java.io.Serializable {
     private Date registrationEnd;
     private String location;
     private int capacity;
-    private int price;
+    private double price;
     private String posterUrl;
     private String qrCodeHash;
     private List<String> waitlist;
@@ -41,9 +41,13 @@ public class Event implements java.io.Serializable {
     private List<String> declinedEntrants;
     private String organizerId;
     private static final long serialVersionUID = 1L;
+    private boolean waitingListLimited;
+    private int waitingListCap;
+    private int waitingListCount;
 
     private FirebaseFirestore database;
     private CollectionReference events;
+
 
     /**
      * Interface for callback when event data is loaded.
@@ -93,7 +97,7 @@ public class Event implements java.io.Serializable {
      * Constructors for creating a new Event
      */
     public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
-                 Date registrationStart, Date registrationEnd, String location, int capacity, int price,
+                 Date registrationStart, Date registrationEnd, String location, int capacity, double price,
                  String posterUrl, String qrCodeHash, String organizerId) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -115,12 +119,11 @@ public class Event implements java.io.Serializable {
         this.events = database.collection("events");
     }
     /**
-     * Constructors for creating a new Event, INCLUDING eventID
+            * Constructors for creating a new Event
      */
-    public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
-                 Date registrationStart, Date registrationEnd,String location, int capacity, int price,
-                 String posterUrl, String qrCodeHash, String organizerId) {
-        this.eventId = eventId;
+    public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd, String location, int capacity, double price,
+                 String posterUrl, String qrCodeHash, String organizerId, boolean waitingListLimited, int waitingListCap) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventStart = eventStart;
@@ -136,6 +139,58 @@ public class Event implements java.io.Serializable {
         this.selectedEntrants = new ArrayList<>();
         this.acceptedEntrants = new ArrayList<>();
         this.declinedEntrants = new ArrayList<>();
+        this.organizerId = organizerId;
+        this.waitingListLimited = waitingListLimited;
+        this.waitingListCap = waitingListCap;
+        this.database = FirebaseFirestore.getInstance();
+        this.events = database.collection("events");
+    }
+    /**
+     * Constructors for creating a new Event, INCLUDING eventID
+     */
+    public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd,String location, int capacity, double price,
+                 String posterUrl, String qrCodeHash, String organizerId) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+        this.posterUrl = posterUrl;
+        this.qrCodeHash = qrCodeHash;
+        this.waitlist = waitlist;
+        this.selectedEntrants = selectedEntrants;
+        this.acceptedEntrants = acceptedEntrants;
+        this.declinedEntrants = declinedEntrants;
+        this.organizerId = organizerId;
+        this.database = FirebaseFirestore.getInstance();
+        this.events = database.collection("events");
+    }
+    public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
+                 Date registrationStart, Date registrationEnd,String location, int capacity, int price,
+                 String posterUrl, String qrCodeHash, String organizerId, List<String> acceptedEntrants,
+                 List<String> selectedEntrants, List<String> declinedEntrants, List<String> waitlist) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+        this.posterUrl = posterUrl;
+        this.qrCodeHash = qrCodeHash;
+        this.waitlist = waitlist;
+        this.selectedEntrants = selectedEntrants;
+        this.acceptedEntrants = acceptedEntrants;
+        this.declinedEntrants = declinedEntrants;
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
@@ -165,6 +220,7 @@ public class Event implements java.io.Serializable {
         if (listener != null) {
             listener.onEventDataLoaded(this);
         }
+
     }
 
     /**
@@ -350,7 +406,7 @@ public class Event implements java.io.Serializable {
      * Get the event price
      * @return the event price
      */
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -485,7 +541,7 @@ public class Event implements java.io.Serializable {
      * Set the event price
      * @param price
      */
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
         events.document(eventId).update("price", price);
     }
@@ -693,6 +749,30 @@ public class Event implements java.io.Serializable {
         }
     }
 
+    public boolean isWaitingListLimited() {
+        return waitingListLimited;
+    }
+
+    public void setWaitingListLimited(boolean waitingListLimited) {
+        this.waitingListLimited = waitingListLimited;
+    }
+
+    public int getWaitingListCap() {
+        return waitingListCap;
+    }
+
+    public void setWaitingListCap(int waitingListCap) {
+        this.waitingListCap = waitingListCap;
+    }
+
+    public int getWaitingListCount() {
+        return waitingListCount;
+    }
+
+    public void setWaitingListCount(int waitingListCount) {
+        this.waitingListCount = waitingListCount;
+    }
+
     /**
      * Converts the Event object to a Map to be stored in Firestore.
      * @return A Map representing the Event object.
@@ -716,6 +796,8 @@ public class Event implements java.io.Serializable {
         eventMap.put("selectedEntrants", selectedEntrants);
         eventMap.put("acceptedEntrants", acceptedEntrants);
         eventMap.put("declinedEntrants", declinedEntrants);
+        eventMap.put("waitingListLimited", waitingListLimited);
+        eventMap.put("waitingListCap", waitingListCap);
 
         return eventMap;
     }

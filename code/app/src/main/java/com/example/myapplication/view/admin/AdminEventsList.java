@@ -2,6 +2,7 @@ package com.example.myapplication.view.admin;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.myapplication.R;
@@ -23,9 +25,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,50 +111,17 @@ public class AdminEventsList extends Fragment {
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                List<String> accepted = eventDataList.get(i).getAcceptedEntrants();
-                List<String> cancelled = eventDataList.get(i).getDeclinedEntrants();
-                List<String> selected = eventDataList.get(i).getSelectedEntrants();
-                List<String> waitlist = eventDataList.get(i).getWaitlist();
 
-                if(!accepted.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(accepted.get(j))).removeAcceptedEvent(eventDataList.get(i).getEventId());
-                    }
-                }
-                if(!cancelled.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(cancelled.get(j))).removeCancelledEvent(eventDataList.get(i).getEventId());
-                    }
-                }
-                if(!selected.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(selected.get(j))).removeSelectedEvent(eventDataList.get(i).getEventId());
-                    }
-                }
-                if(!waitlist.isEmpty()){
-                    for (int j = 0; j < accepted.size(); j++) {
-                        // finds the user by searching the userIds list, then removes the event from their accepted list
-                        userDataList.get(userIds.indexOf(waitlist.get(j))).removeRequestedEvent(eventDataList.get(i).getEventId());
-                    }
-                }
+                Event clicked = eventDataList.get(i);
 
-                /**
-                Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(eventDataList.get(i).getOrganizerId()));
-                eventLocation.getEvents().remove(eventDataList.get(i));
-                eventLocation.saveToFirestore();
-                 **/
-
-                eventsRef.document(eventDataList.get(i).getEventId())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("AdminEventsList", "Event successfully Deleted");
-                            }
-                        });
+                // Show a dialog to choose what to delete
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Options")
+                        .setMessage("What would you like to delete?")
+                        .setPositiveButton("Delete Entire Event", (dialog, which) -> deleteEvent(clicked))
+                        .setNeutralButton("Delete Image Only", (dialog, which) -> deleteEventImage(clicked))
+                        .setNegativeButton("Delete QR Code Only", (dialog, which) -> deleteEventQRCode(clicked))
+                        .show();
             }
         });
 
@@ -157,15 +129,15 @@ public class AdminEventsList extends Fragment {
         home.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_home));
 
-        Button users = view.findViewById(R.id.users);
+        ImageButton users = view.findViewById(R.id.users);
         users.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminUsersList));
 
-        Button facilities = view.findViewById(R.id.facilities);
+        ImageButton facilities = view.findViewById(R.id.facilities);
         facilities.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminFacilitiesList));
 
-        Button pictures = view.findViewById(R.id.images);
+        ImageButton pictures = view.findViewById(R.id.images);
         pictures.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_adminEventsList_to_adminPicturesList));
 
@@ -185,9 +157,13 @@ public class AdminEventsList extends Fragment {
 
 
                     // I set the event description as the doc ID to make it easier to pass when clicked
-                    eventDataList.add(new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
-                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"),capacity, ((Long)events.get(i).get("price")).intValue(),
-                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId")));
+                    eventDataList.add(new Event(events.get(i).getId(),eventName, events.get(i).getString("eventDescription"), ((Timestamp)
+                            events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
+                            ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(),
+                            events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
+                            events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"),
+                            (List<String>) events.get(i).get("acceptedEntrants"), (List<String>) events.get(i).get("selectedEntrants"),
+                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist")));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
@@ -223,13 +199,101 @@ public class AdminEventsList extends Fragment {
                 List<DocumentSnapshot> facilities = task.getResult().getDocuments();
                 Log.d("Firestore", "Documents Retrieved");
                 for(int i = 0; i < facilities.size(); i++){
-
-                    facilityDataList.add(new Facility(facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
+                    Facility facility = new Facility(facilities.get(i).getId(),facilities.get(i).getString("facilityName"),facilities.get(i).getString("facilityAddress"),
                             facilities.get(i).getString("facilityEmail"),facilities.get(i).getString("facilityPhoneNumber"),
-                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl")));
-                    facilityOrganizerIds.add(facilities.get(i).getString("organizerId"));
+                            facilities.get(i).getString("organizerId"),facilities.get(i).getString("profileImageUrl"));
+                    if(facilities.get(i).get("events") == null){
+                        facility.setEvents(new ArrayList<String>());
+                    } else {
+                        facility.setEvents((List<String>) facilities.get(i).get("events"));
+                    }
+
+
+                    facilityDataList.add(facility);
+                    facilityOrganizerIds.add(facility.getOrganizerId());
                 }
             }
         });
     }
+
+    private void deleteEvent(Event event){
+        List<String> accepted = event.getAcceptedEntrants();
+        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> selected = event.getSelectedEntrants();
+        List<String> waitlist = event.getWaitlist();
+
+        if(!accepted.isEmpty()){
+            for (int j = 0; j < accepted.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(accepted.get(j)));
+                user.removeAcceptedEvent(event.getEventId());            }
+        }
+        if(!cancelled.isEmpty()){
+            for (int j = 0; j < cancelled.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(cancelled.get(j)));
+                user.removeCancelledEvent(event.getEventId());
+            }
+        }
+        if(!selected.isEmpty()){
+            for (int j = 0; j < selected.size(); j++) {
+                Log.d("Kenny", "requested users detected");
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(selected.get(j)));
+                user.removeSelectedEvent(event.getEventId());            }
+        }
+        if(!waitlist.isEmpty()){
+            for (int j = 0; j < waitlist.size(); j++) {
+                // finds the user by searching the userIds list, then removes the event from their accepted list
+                User user = userDataList.get(userIds.indexOf(waitlist.get(j)));
+                user.removeRequestedEvent(event.getEventId());            }
+        }
+
+
+        Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
+        List<String> eventsAtLocation = eventLocation.getEvents();
+        Log.d("Kenny", eventsAtLocation.toString());
+        eventsAtLocation.remove(event.getEventId());
+        eventLocation.setEvents(eventsAtLocation);
+        Log.d("Kenny", eventLocation.getEvents().toString());
+        eventLocation.updateFirestore();
+
+
+
+        eventsRef.document(event.getEventId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        eventDataList.remove(event);
+                        eventArrayAdapter.notifyDataSetChanged();
+                        Log.d("AdminEventsList", "Event successfully Deleted");
+                    }
+                });
+    }
+
+    private void deleteEventQRCode(Event event) {
+        // Remove the QR code hash from Firestore
+        eventsRef.document(event.getEventId())
+                .update("qrCode", null)
+                .addOnSuccessListener(unused -> {
+                    Log.d("AdminEventsList", "QR Code successfully deleted.");
+                    // Update local data and refresh UI if needed
+                    event.setQrCodeHash(null);
+                    eventArrayAdapter.notifyDataSetChanged();
+                });
+    }
+
+    private void deleteEventImage(Event event) {
+        // Remove the image URL from Firestore
+        eventsRef.document(event.getEventId())
+                .update("posterUrl", null)
+                .addOnSuccessListener(unused -> {
+                    Log.d("AdminEventsList", "Image successfully deleted.");
+                    // Update local data and refresh UI if needed
+                    event.setPosterUrl(null);
+                    eventArrayAdapter.notifyDataSetChanged();
+                });
+    }
+
 }
