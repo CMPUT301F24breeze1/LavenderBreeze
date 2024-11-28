@@ -94,7 +94,6 @@ public class OrgMap extends Fragment implements OnMapReadyCallback {
     }
 
     private void fetchCoordinatesAndMapMarkers() {
-        String eventId = "ClJvtRS4z8Vs3lBBYei3"; // Replace with the actual event ID or pass it as an argument
         db.collection("events").document(eventId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
