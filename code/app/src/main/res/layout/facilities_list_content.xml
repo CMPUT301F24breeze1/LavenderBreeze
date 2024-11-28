@@ -1,22 +1,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="@drawable/edit_text_border"
-    >
-
-
-    <TextView
-        android:id="@+id/facility_name"
-        android:layout_width="match_parent"
+    android:background="@drawable/rounded_box_green"
+    android:padding="10dp">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Facility Name"
-        android:padding="20dp"
-        android:textSize="30sp"
-        android:drawableRight="@drawable/delete_icon"
-        android:textColor="@color/white"
-        android:drawableTint="@color/white"
-        android:layout_marginBottom="16dp">
-    </TextView>
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/facility_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Facility Name"
+            android:textSize="30sp"
+            android:textColor="@color/white"
+            android:drawableTint="@color/white"
+            android:paddingLeft="10dp">
+        </TextView>
+
+        <TextView
+            android:id="@+id/facility_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Facility address"
+            android:textAlignment="gravity"
+            android:gravity="top"
+            android:layout_gravity="top"
+            android:textColor="@color/white"
+            android:paddingLeft="10dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/number_of_events"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 "
+                android:textColor="@color/white"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"/>
+            <TextView
+                android:id="@+id/text_view_org_event_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="events scheduled at this facility"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right"
+        android:padding="20dp"
+        android:src="@drawable/delete_icon"
+        app:tint="@color/white" />
 </LinearLayout>

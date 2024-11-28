@@ -1,21 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#303030"
     android:padding="16dp">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My Events"
-        android:textSize="50dp"
-        android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:layout_marginBottom="10dp"/>
+        android:orientation="horizontal">
+
+        <!-- Button to go back to event -->
+
+        <Button
+            android:id="@+id/button_go_to_home_from_org_event_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:drawableLeft="@drawable/left_arrow"
+            android:backgroundTint="#303030"
+            android:textSize="18sp"
+            android:paddingHorizontal="0dp"
+            android:drawableTint="@color/white" />
+
+        <!-- Spacer -->
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:text="My Events"
+            android:textColor="@color/white"
+            android:paddingVertical="15dp"
+            android:layout_weight="1" />
+
+        <!-- Button to go to Notifications -->
+
+        <ImageButton
+            android:id="@+id/button_go_to_add_event_from_org_events_lst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@drawable/plus_icon"
+            android:background="@drawable/rounded_box_blue"
+            android:textSize="20sp"
+            android:minWidth="70dp"
+            android:paddingVertical="18dp"
+            app:tint="@color/white" />
+    </LinearLayout>
 
     <!-- ListView at the top with weight to take remaining space -->
     <ListView
@@ -25,45 +62,20 @@
         android:layout_weight="1" />
 
     <!-- LinearLayout to hold buttons at the bottom -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center|bottom">
 
-        <Button
-            android:id="@+id/button_go_to_home_from_org_event_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go to home" />
-
-        <Button
-            android:id="@+id/button_go_to_event_from_org_event_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go to event" />
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center|bottom">
-        <Button
-            android:id="@+id/button_go_to_add_event_from_org_events_lst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Event" />
+
         <Button
             android:id="@+id/button_go_to_facility_from_org_event_lst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Facility"/>
+            android:text="Facility"
+            android:backgroundTint="@color/kennyBlue"/>
 
-        <Button
-            android:id="@+id/button_go_to_edit_organizer_from_org_events_lst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit Organizer" />
+
     </LinearLayout>
 
 </LinearLayout>

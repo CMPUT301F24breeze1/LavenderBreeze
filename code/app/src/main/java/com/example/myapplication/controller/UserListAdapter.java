@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,14 +46,35 @@ public class UserListAdapter extends ArrayAdapter<User> {
         }
 
         User user = users.get(position);
+        String userStatus;
+        LinearLayout background = view.findViewById(R.id.user_background);
+        if(user.getIsAdmin()) {
+            userStatus = "Admin";
+            background.setBackgroundResource(R.drawable.rounded_box_red);
+        } else if (user.getIsOrganizer()) {
+            userStatus = "Organizer";
+            background.setBackgroundResource(R.drawable.rounded_box_yellow);
+        } else {
+            userStatus = "Entrant";
+            background.setBackgroundResource(R.drawable.rounded_box_green);
+        }
 
+        ImageView profilePicture = view.findViewById(R.id.user_profile_picture);
         TextView name = view.findViewById(R.id.user_name);
+        TextView status = view.findViewById(R.id.user_status);
+        TextView email = view.findViewById((R.id.user_email));
+        TextView phone1 = view.findViewById(R.id.user_phone_1);
+        TextView phone2 = view.findViewById(R.id.user_phone_2);
+        TextView phone3 = view.findViewById(R.id.user_phone_3);
 
-        TextView phone = view.findViewById(R.id.user_status);
-
+        user.loadProfilePictureInto(profilePicture,getContext());
         name.setText(user.getName());
+        status.setText(userStatus);
+        email.setText(user.getEmail());
+        phone1.setText("("+user.getPhoneNumber().substring(+0,3)+")- ");
+        phone2.setText(user.getPhoneNumber().substring(3,6)+"- ");
+        phone3.setText(user.getPhoneNumber().substring(6,10));
 
-        phone.setText(user.getPhoneNumber());
         //Log.d("Kenny", event.getEventName());
         return view;
     }

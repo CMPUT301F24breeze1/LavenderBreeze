@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.myapplication.R;
@@ -144,7 +145,7 @@ public class OrgEventLst extends Fragment {
         eventList = view.findViewById(R.id.event_list_view);
         eventDataList = new ArrayList<Event>();
 
-        eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList);
+        eventArrayAdapter = new EventsListAdapter(this.getContext(), eventDataList,false);
         eventList.setAdapter(eventArrayAdapter);
 
 
@@ -184,18 +185,12 @@ public class OrgEventLst extends Fragment {
         );
 
         // Button to navigate to Event Details
-        Button button_go_to_event_from_org_event_list = view.findViewById(R.id.button_go_to_event_from_org_event_list);
-        button_go_to_event_from_org_event_list.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_event)
-        );
-        Button buttonGoToAddEvent = view.findViewById(R.id.button_go_to_add_event_from_org_events_lst);
+
+        ImageButton buttonGoToAddEvent = view.findViewById(R.id.button_go_to_add_event_from_org_events_lst);
         buttonGoToAddEvent.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_add_event)
         );
-        Button buttonGoToEditOrganizer = view.findViewById(R.id.button_go_to_edit_organizer_from_org_events_lst);
-        buttonGoToEditOrganizer.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_org_events_lst_to_org_edit_organizer)
-        );
+
         Button buttonGoToFacility = view.findViewById(R.id.button_go_to_facility_from_org_event_lst);
         buttonGoToFacility.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_OrgEventLst_to_orgAddFacility));
