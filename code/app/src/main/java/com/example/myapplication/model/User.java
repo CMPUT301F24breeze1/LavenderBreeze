@@ -251,7 +251,7 @@ public class User implements java.io.Serializable {
         this.cancelledEvents = new ArrayList<>();
         this.acceptedEvents = new ArrayList<>();
         this.toggleNotif = true;
-        this.deterministicPicture = false;
+        this.deterministicPicture = true;
     }
 
     // Getters that return local values

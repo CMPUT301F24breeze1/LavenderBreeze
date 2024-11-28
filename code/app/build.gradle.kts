@@ -46,6 +46,7 @@ android {
 }
 
 dependencies {
+    debugImplementation("androidx.fragment:fragment-testing-manifest:1.8.5")
     implementation("com.squareup.picasso:picasso:2.8")
     implementation(libs.firebase.database)
     implementation(libs.window)
@@ -54,6 +55,7 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("org.mockito:mockito-core:3.9.0")
     //implementation("com.google.zxing:core:3.4.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation(libs.qr.generator)
