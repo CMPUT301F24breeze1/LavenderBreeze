@@ -112,25 +112,25 @@ public class EntrantEventsList extends Fragment {
         view.findViewById(R.id.button_show_waitlist).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = new User(requireContext(), ()->extractData());
+                user = new User(requireContext(), ()->updatedData());
                 showEventList(waitlist, "Requested");
             }});
         view.findViewById(R.id.button_show_selected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = new User(requireContext(), ()->extractData());
+                user = new User(requireContext(), ()->updatedData());
                 showEventList(selectedlist, "Selected");
             }});
         view.findViewById(R.id.button_show_cancelled).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = new User(requireContext(), ()->extractData());
+                user = new User(requireContext(), ()->updatedData());
                 showEventList(cancelledlist, "Cancelled");
             }});
         view.findViewById(R.id.button_show_accepted).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = new User(requireContext(), ()->extractData());
+                user = new User(requireContext(), ()->updatedData());
                 showEventList(acceptedlist, "Accepted");
             }});
         view.findViewById(R.id.addEventButton).setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantQrScan));
@@ -185,7 +185,15 @@ public class EntrantEventsList extends Fragment {
             selectedlist = user.getSelectedEvents();
             cancelledlist = user.getCancelledEvents();
             acceptedlist = user.getAcceptedEvents();
-            //showEventList(waitlist, "Requested"); // Show waitlist events by default
+            showEventList(waitlist, "Requested"); // Show waitlist events by default
+        }
+    }
+    private void updatedData() {
+        if (user != null) {
+            waitlist = user.getRequestedEvents();
+            selectedlist = user.getSelectedEvents();
+            cancelledlist = user.getCancelledEvents();
+            acceptedlist = user.getAcceptedEvents();
         }
     }
 }
