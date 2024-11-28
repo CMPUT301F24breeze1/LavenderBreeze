@@ -7,10 +7,39 @@
     android:background="#303030"
     tools:context=".view.organization.OrgAddFacility">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+    <Button
+        android:id="@+id/button_go_to_home_from_add_facility"
+        android:drawableLeft="@drawable/left_arrow"
+        android:drawableTint="@color/white"
+        android:text="Home"
+        android:backgroundTint="#303030"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+        <Space
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"></Space>
+    <Button
+        android:id="@+id/buttonCreateFacility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"></Space>
+
     <ImageView
         android:id="@+id/facilityProfileImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_gravity="center|top"
         android:layout_marginTop="16dp"
         android:contentDescription="Facility Profile Picture"
@@ -24,6 +53,9 @@
         android:layout_height="wrap_content"
         android:text="Upload Profile Picture"
         android:layout_gravity="center" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"></Space>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,74 +64,155 @@
         android:padding="16dp"
         android:gravity="center|bottom">
 
-        <EditText
-            android:id="@+id/editTextFacilityName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Facility Name"
-            android:inputType="textPersonName"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/editTextFacilityAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Facility Address"
-            android:inputType="textPostalAddress"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/editTextFacilityEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Facility Email"
-            android:inputType="textEmailAddress"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/editTextFacilityPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Facility Phone Number"
-            android:inputType="phone"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"/>
-
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal">
-            <Button
-                android:id="@+id/button_go_to_home_from_add_facility"
-                android:text="Back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
 
-            <Button
-                android:id="@+id/buttonCreateFacility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Confirm"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="16dp"/>
         </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:background="@drawable/rounded_box_blue"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Contact Information: "
+            android:textColor="@color/white"
+            android:textSize="28dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Email:"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/editTextFacilityEmail"
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:hint="example@email.com"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:padding="12dp"
+                android:backgroundTint="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Phone:"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/editTextFacilityPhone"
+                android:layout_width="315dp"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:textColor="#FFFFFF"
+                android:hint="1234567890"
+                android:textColorHint="#FFFFFF"
+                android:padding="12dp"
+                android:backgroundTint="@color/white"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Facility Name:"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTextFacilityName"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:hint="Location"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="Facility Address:"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTextFacilityAddress"
+                android:layout_width="227dp"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:inputType="textPostalAddress"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:hint="Street, City, Province"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
