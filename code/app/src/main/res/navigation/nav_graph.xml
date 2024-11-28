@@ -244,7 +244,11 @@
         android:id="@+id/OrgMap"
         android:name="com.example.myapplication.view.organization.OrgMap"
         android:label="fragment_org_map"
-        tools:layout="@layout/fragment_org_map" />
+        tools:layout="@layout/fragment_org_map" >
+        <action
+            android:id="@+id/action_OrgMap_to_OrgEventWaitingLst"
+            app:destination="@id/OrgEventWaitingLst" />
+    </fragment>
     <fragment
         android:id="@+id/OrgEditOrganizer"
         android:name="com.example.myapplication.view.organization.OrgEditOrganizer"

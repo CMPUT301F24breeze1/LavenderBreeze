@@ -107,13 +107,9 @@ public class OrgEventWaitingLst extends Fragment {
         });
 
         Button showMapButton = view.findViewById(R.id.button_go_to_map_from_org_event_waiting_lst);
-        showMapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEntrantMap();
-            }
-        });
-
+        showMapButton.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_map, getArguments())
+        );
         Button backButton = view.findViewById(R.id.button_go_to_event_from_org_event_waiting_lst);
         backButton.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_OrgEventWaitingLst_to_OrgEvent, getArguments())
@@ -333,11 +329,5 @@ public class OrgEventWaitingLst extends Fragment {
         Toast.makeText(getContext(), "Notification sent to entrants in the waiting list", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * This shows the map for the entrants
-     */
-    private void showEntrantMap() {
-        // Implement the logic to show the map for the entrants
 
-    }
 }

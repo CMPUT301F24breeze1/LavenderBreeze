@@ -13,13 +13,19 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
+import com.example.myapplication.controller.DeviceUtils;
+import com.example.myapplication.controller.PermissionHelper;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class entrantJoinPage extends Fragment {
 
     private String eventID;
     private User user;
+    private PermissionHelper permissionHelper;
 
     /**
      * Pulls eventID from bundle and initializes User object from deviceID
@@ -32,6 +38,10 @@ public class entrantJoinPage extends Fragment {
             eventID = (String) getArguments().getSerializable("eventID");
         }
         user = new User(requireContext(), null); // Initialize user and load data
+
+        // Check and request permissions
+        permissionHelper = new PermissionHelper(requireActivity());
+        permissionHelper.fetchAndStoreLocation(FirebaseFirestore.getInstance(), eventID);
     }
 
     /**
