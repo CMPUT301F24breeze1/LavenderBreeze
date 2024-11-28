@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:background="#303030">
+
+    <!-- Event Name -->
+    <TextView
+        android:id="@+id/eventNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Event Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white" />
+
+    <!-- Organizer Name -->
+    <TextView
+        android:id="@+id/organizerNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventNameTextView"
+        android:text="Organized by: Organizer Name"
+        android:textSize="14sp"
+        android:textColor="@color/white" />
+
+    <!-- Status Tag (e.g., Requested, Declined, Accepted, Selected) -->
+
+    <!-- Slide Arrow to Detail Page -->
+
+    <TextView
+        android:id="@+id/statusTagTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="124dp"
+        android:padding="6dp"
+        android:text="Status Tag"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/arrowImageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow_right"
+        android:contentDescription="Go to Detail Page"
+        android:layout_marginStart="8dp" />
+
+</RelativeLayout>

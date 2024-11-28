@@ -66,7 +66,7 @@ public class EntrantEditProfile extends Fragment {
     private User user;
     private static final int PICK_IMAGE_REQUEST = 1;
     private StorageReference storageRef;
-    Button homeButton, profileButton, eventsButton;
+    ImageButton homeButton, profileButton, eventsButton;
 
     /**
      * Default constructor required for instantiating the fragment.

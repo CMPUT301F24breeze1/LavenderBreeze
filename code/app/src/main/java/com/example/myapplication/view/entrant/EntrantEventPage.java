@@ -18,7 +18,7 @@ import com.example.myapplication.R;
 public class EntrantEventPage extends Fragment {
 
 
-    Button homeButton, profileButton, eventsButton;
+    ImageButton homeButton, profileButton, eventsButton;
 
     public EntrantEventPage() {
         // Required empty public constructor

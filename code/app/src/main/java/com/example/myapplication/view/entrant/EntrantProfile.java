@@ -33,7 +33,7 @@ public class EntrantProfile extends Fragment {
     private ImageButton edit, notifications;
     private ImageView profilePicture;
     private SwitchCompat notifSwitch;
-    Button homeButton, profileButton, eventsButton;
+    ImageButton homeButton, profileButton, eventsButton;
     /**
      * Default constructor required for instantiating the fragment.
      */
