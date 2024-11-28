@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int PERMISSION_REQUEST_CODE = 100;
-    private FusedLocationProviderClient fusedLocationClient;
     private PermissionHelper permissionHelper;
 
     @Override
@@ -54,12 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Check and request permissions
         List<String> ungrantedPermissions = permissionHelper.getUngrantedPermissions();
-
+        Log.d("test", "onCreate: " + ungrantedPermissions);
         if (!ungrantedPermissions.isEmpty()) {
-            permissionHelper.requestPermissions(ungrantedPermissions, "ClJvtRS4z8Vs3lBBYei3", db);
-        } else {
-            // All permissions granted, proceed with location
-            permissionHelper.fetchAndStoreLocation(db, "ClJvtRS4z8Vs3lBBYei3");
+            permissionHelper.requestPermissions(ungrantedPermissions, db);
         }
 
         // Start Polling Service

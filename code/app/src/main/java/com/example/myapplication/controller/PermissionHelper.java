@@ -28,14 +28,25 @@ public class PermissionHelper {
     private final Activity activity;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    public PermissionHelper(Fragment fragment) {
-        this.fragment = fragment;
-        this.activity = fragment.getActivity();
-    }
-
     public PermissionHelper(Activity activity) {
         this.activity = activity;
         this.fragment = null;
+    }
+    public void handlePermissionResult(String[] permissions, int[] grantResults,
+                                       PermissionResultCallback callback) {
+        boolean locationGranted = false;
+        boolean notificationGranted = false;
+        for (int i = 0; i < permissions.length; i++) {
+            String permission = permissions[i];
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
+                    locationGranted = true;
+                } else if (Manifest.permission.POST_NOTIFICATIONS.equals(permission)) {
+                    notificationGranted = true;
+                }
+            }
+        }
+        callback.onPermissionsResult(locationGranted, notificationGranted);
     }
 
     public List<String> getUngrantedPermissions() {
@@ -58,21 +69,15 @@ public class PermissionHelper {
         return ungrantedPermissions;
     }
 
-    public void requestPermissions(List<String> permissions, String eventId, FirebaseFirestore db) {
+    public void requestPermissions(List<String> permissions, FirebaseFirestore db) {
         if (!permissions.isEmpty()) {
             Log.d("PermissionHelper", "Requesting permissions: " + permissions);
 
-            if (fragment != null) {
-                fragment.requestPermissions(permissions.toArray(new String[0]), PERMISSION_REQUEST_CODE);
-            } else if (activity != null) {
+            if (activity != null) {
                 ActivityCompat.requestPermissions(activity, permissions.toArray(new String[0]), PERMISSION_REQUEST_CODE);
-                fetchAndStoreLocation(db, eventId);
             } else {
                 Log.e("PermissionHelper", "No valid context to request permissions.");
             }
-        } else {
-            Log.d("PermissionHelper", "All permissions are already granted.");
-            fetchAndStoreLocation(db, eventId);
         }
     }
 
@@ -105,6 +110,9 @@ public class PermissionHelper {
                         Log.e("PermissionHelper", "Failed to fetch location.");
                     }
                 });
+    }
+    public interface PermissionResultCallback {
+        void onPermissionsResult(boolean locationGranted, boolean notificationGranted);
     }
 
 }

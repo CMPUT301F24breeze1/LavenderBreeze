@@ -3,9 +3,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
-
-
-
 }
 
 android {
@@ -79,6 +76,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(libs.play.services.gcm)
-    implementation(libs.play.services.maps)
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 }

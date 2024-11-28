@@ -41,16 +41,7 @@ public class entrantJoinPage extends Fragment {
 
         // Check and request permissions
         permissionHelper = new PermissionHelper(requireActivity());
-
-        // Check and request permissions
-        List<String> ungrantedPermissions = permissionHelper.getUngrantedPermissions();
-        if (!ungrantedPermissions.isEmpty()) {
-            permissionHelper.requestPermissions(ungrantedPermissions, eventID, FirebaseFirestore.getInstance());
-        } else {
-            // All permissions granted, proceed with location
-            permissionHelper.fetchAndStoreLocation(FirebaseFirestore.getInstance(), eventID);
-        }
-
+        permissionHelper.fetchAndStoreLocation(FirebaseFirestore.getInstance(), eventID);
     }
 
     /**
