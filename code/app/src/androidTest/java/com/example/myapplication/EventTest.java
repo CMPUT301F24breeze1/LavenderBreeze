@@ -186,8 +186,8 @@ public class EventTest {
     public void testGetAndSetDeclinedEntrants() {
         List<String> declined = new ArrayList<>();
         declined.add("Test entrant");
-        event.setDeclinedEntrants(declined);
-        assertEquals(declined, event.getDeclinedEntrants());
+        event.setCancelledEntrants(declined);
+        assertEquals(declined, event.getCancelledEntrants());
     }
 
     /**
@@ -260,7 +260,7 @@ public class EventTest {
     public void testAddToDeclinedlist() {
         String userId = "888";
         event.addToDeclinedlist(userId);
-        assertTrue((event.getDeclinedEntrants()).contains(userId));
+        assertTrue((event.getCancelledEntrants()).contains(userId));
     }
 
     /**
@@ -271,7 +271,7 @@ public class EventTest {
         String userId = "888";
         event.addToDeclinedlist(userId);
         event.removeFromDeclinedlist(userId);
-        assertFalse(event.getDeclinedEntrants().contains(userId));
+        assertFalse(event.getCancelledEntrants().contains(userId));
     }
 
 }

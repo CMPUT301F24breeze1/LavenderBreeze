@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <RelativeLayout
+    android:orientation="vertical"
+    android:background="#303030">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -14,37 +17,44 @@
             android:id="@+id/button_go_to_event_from_org_event_selected_lst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Event"
             android:drawableLeft="@drawable/left_arrow"
-            android:backgroundTint="@color/white"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:padding="8dp"
-            android:textSize="40sp"/>
+            android:backgroundTint="#303030"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:drawableTint="@color/white" />
 
         <!-- Title: Selected List -->
         <TextView
             android:id="@+id/waitlist_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Selected List"
+            android:textColor="@color/white"
             android:textSize="27sp"
             android:textStyle="bold"
-            android:layout_centerInParent="true" />
+            android:paddingVertical="15dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
 
         <!-- Button to go to Notifications -->
 
-        <Button
+        <ImageButton
             android:id="@+id/button_go_to_notif_from_org_event_selected_lst"
             android:layout_width="wrap_content"
+            android:layout_weight="0.1"
+            android:maxWidth="10dp"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/send_notification"
-            android:backgroundTint="@color/white"
-            android:layout_gravity="right"
-            android:textSize="40sp"
+            android:src="@drawable/send_notification"
+            android:backgroundTint="#303030"
+            android:layout_gravity="center"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:padding="8dp"/>
-    </RelativeLayout>
+            android:padding="8dp"
+            app:tint="@color/white" />
+
+    </LinearLayout>
 
     <!-- Filter buttons -->
     <LinearLayout
@@ -60,13 +70,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="All" />
+            android:backgroundTint="@color/kennyBlue"
+            android:text="Selected" />
 
         <Button
             android:id="@+id/filterAccepted"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/kennyBlue"
             android:text="Accepted" />
 
         <Button
@@ -74,6 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/kennyBlue"
             android:text="Cancelled" />
     </LinearLayout>
 
