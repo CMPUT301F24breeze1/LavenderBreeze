@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
@@ -68,6 +71,7 @@ public class entrantSelectedPage extends Fragment {
         // Reference UI elements
         ImageButton backButton = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
+        ImageView eventImageView = view.findViewById(R.id.eventImageView);
         TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
         TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
@@ -76,7 +80,11 @@ public class entrantSelectedPage extends Fragment {
 
         // Populate UI with event details
         if (event != null) {
-            organizerNameTextView.setText("Organized by: " + event.getOrganizerId());
+            Glide.with(requireContext())
+                    .load(event.getPosterUrl())
+                    .transform(new CircleCrop())            // Make image circular
+                    .into(eventImageView);
+            organizerNameTextView.setText("Event: " + event.getEventName());
             eventDescriptionTextView.setText(event.getEventDescription());
             eventDateTextView.setText("Date: " + event.getEventStart()); // Format the date if needed
         }

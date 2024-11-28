@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import com.example.myapplication.R;
 public class EntrantProfile extends Fragment {
     private User user;
     private TextView personName, emailAddress, contactPhoneNumber;
-    private ImageButton edit, notifications;
+    private ImageButton edit;
     private ImageView profilePicture;
     private SwitchCompat notifSwitch;
     ImageButton homeButton, profileButton, eventsButton;
@@ -75,16 +76,6 @@ public class EntrantProfile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entrant_profile, container, false);
-        updateUserData();
-        // Find the button and set an onClickListener to navigate to org_event_lst.xml
-        edit = view.findViewById(R.id.editButton);
-
-        edit.setOnClickListener(v ->
-        {
-            Bundle result = new Bundle();
-            result.putSerializable("updated_user", user);
-            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile,result);
-        });
 
         // Reference the views
         personName = view.findViewById(R.id.personName);
@@ -92,6 +83,17 @@ public class EntrantProfile extends Fragment {
         contactPhoneNumber = view.findViewById(R.id.contactPhoneNumber);
         notifSwitch = view.findViewById(R.id.emailNotificationSwitch);
         profilePicture = view.findViewById(R.id.profilePicture);
+
+        // Find the button and set an onClickListener to navigate to org_event_lst.xml
+        edit = view.findViewById(R.id.editButton);
+        edit.setOnClickListener(v ->
+        {
+            Bundle result = new Bundle();
+            result.putSerializable("updated_user", user);
+            Navigation.findNavController(v).navigate(R.id.action_entrantProfile3_to_entrantEditProfile,result);
+        });
+
+        updateUserData();
         return view;
     }
     /**
@@ -103,6 +105,7 @@ public class EntrantProfile extends Fragment {
             personName.setText(user.getName());
             emailAddress.setText(user.getEmail());
             contactPhoneNumber.setText(user.getPhoneNumber());
+            Log.d("User", "Deterministic Picture " + user.getDeterministicPicture());
             if (!user.getDeterministicPicture()) user.loadProfilePictureInto(profilePicture,requireContext());
             else user.loadDeterministicProfilePictureInto(profilePicture,requireContext());
             notifSwitch.setChecked(user.isToggleNotif());

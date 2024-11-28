@@ -8,16 +8,6 @@
     android:scrollbars="vertical">
 
     <ImageButton
-        android:id="@+id/notificationButton"
-        android:layout_width="49dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="4dp"
-        android:background="#382E2E"
-        android:src="@drawable/notification"
-        app:layout_constraintEnd_toStartOf="@+id/editButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
         android:id="@+id/editButton"
         android:layout_width="43dp"
         android:layout_height="40dp"

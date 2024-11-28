@@ -110,10 +110,30 @@ public class EntrantEventsList extends Fragment {
      * @param view the root view of the fragment
      */
     private void setupFilterButtons(View view) {
-        view.findViewById(R.id.button_show_waitlist).setOnClickListener(v -> showEventList(waitlist, "Requested"));
-        view.findViewById(R.id.button_show_selected).setOnClickListener(v -> showEventList(selectedlist, "Selected"));
-        view.findViewById(R.id.button_show_cancelled).setOnClickListener(v -> showEventList(cancelledlist, "Cancelled"));
-        view.findViewById(R.id.button_show_accepted).setOnClickListener(v -> showEventList(acceptedlist, "Accepted"));
+        view.findViewById(R.id.button_show_waitlist).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user = new User(requireContext(), ()->updatedData());
+                showEventList(waitlist, "Requested");
+            }});
+        view.findViewById(R.id.button_show_selected).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user = new User(requireContext(), ()->updatedData());
+                showEventList(selectedlist, "Selected");
+            }});
+        view.findViewById(R.id.button_show_cancelled).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user = new User(requireContext(), ()->updatedData());
+                showEventList(cancelledlist, "Cancelled");
+            }});
+        view.findViewById(R.id.button_show_accepted).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                user = new User(requireContext(), ()->updatedData());
+                showEventList(acceptedlist, "Accepted");
+            }});
         view.findViewById(R.id.addEventButton).setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantQrScan));
     }
 
@@ -167,6 +187,14 @@ public class EntrantEventsList extends Fragment {
             cancelledlist = user.getCancelledEvents();
             acceptedlist = user.getAcceptedEvents();
             showEventList(waitlist, "Requested"); // Show waitlist events by default
+        }
+    }
+    private void updatedData() {
+        if (user != null) {
+            waitlist = user.getRequestedEvents();
+            selectedlist = user.getSelectedEvents();
+            cancelledlist = user.getCancelledEvents();
+            acceptedlist = user.getAcceptedEvents();
         }
     }
 }

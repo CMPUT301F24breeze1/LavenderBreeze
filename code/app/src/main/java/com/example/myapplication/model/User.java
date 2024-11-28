@@ -127,7 +127,7 @@ public class User implements java.io.Serializable {
                         loadUserData(document,listener);
                     } else {
                         // Document doesn't exist, create new user
-                        createNewUser();
+                        createNewUser(listener);
                     }
                 }
             }
@@ -215,7 +215,7 @@ public class User implements java.io.Serializable {
      * Create new user with default values
      */
     // Create new user with default values
-    private void createNewUser() {
+    private void createNewUser(OnUserDataLoadedListener listener) {
         HashMap<String, Object> userData = new HashMap<>();
         userData.put("name", "Default Name");
         userData.put("email", "default@example.com");
@@ -251,7 +251,10 @@ public class User implements java.io.Serializable {
         this.cancelledEvents = new ArrayList<>();
         this.acceptedEvents = new ArrayList<>();
         this.toggleNotif = true;
-        this.deterministicPicture = false;
+        this.deterministicPicture = true;
+        if (listener != null) {
+            listener.onUserDataLoaded();
+        }
     }
 
     // Getters that return local values
