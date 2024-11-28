@@ -23,16 +23,18 @@ import java.util.ArrayList;
 public class EventsListAdapter extends ArrayAdapter<com.example.myapplication.model.Event> {
     private ArrayList<com.example.myapplication.model.Event> events;
     private Context context;
+    private boolean isAdmin;
 
     /**
      * Constructs an EventAdapter.
      * @param context the context in which the adapter is being used
      * @param events a list of Event objects to be displayed
      */
-    public EventsListAdapter(Context context, ArrayList<com.example.myapplication.model.Event> events){
+    public EventsListAdapter(Context context, ArrayList<com.example.myapplication.model.Event> events, boolean isAdmin){
         super(context, 0, events);
         this.events = events;
-        this.context=context;
+        this.context = context;
+        this.isAdmin = isAdmin;
     }
     /**
      * Provides a view for an adapter view, displaying the Event name
@@ -47,8 +49,10 @@ public class EventsListAdapter extends ArrayAdapter<com.example.myapplication.mo
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 
-        if(view == null) {
+        if(view == null && isAdmin) {
             view = LayoutInflater.from(context).inflate(R.layout.events_list_content, parent, false);
+        } else if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.events_list_content_organizer,parent,false);
         }
 
         Event event = events.get(position);

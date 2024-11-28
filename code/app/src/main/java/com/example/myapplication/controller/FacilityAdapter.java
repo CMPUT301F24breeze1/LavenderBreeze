@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Facility;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 /**
  * A {@link ArrayAdapter< Facility >} subclass.
@@ -55,6 +57,10 @@ public class FacilityAdapter extends ArrayAdapter<Facility> {
 
         // Bind data to the views
         TextView facilityName = view.findViewById(R.id.facility_name);
+        TextView facilityAddress = view.findViewById(R.id.facility_address);
+        TextView facilityEvents = view.findViewById(R.id.number_of_events);
+        facilityAddress.setText(facility.getFacilityAddress());
+        facilityEvents.setText(String.valueOf(facility.getEvents().size()));
         facilityName.setText(facility.getFacilityName());
 
         return view;
