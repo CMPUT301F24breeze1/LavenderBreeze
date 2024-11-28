@@ -42,30 +42,6 @@
             app:destination="@id/home" />
     </fragment>
     <fragment
-        android:id="@+id/entrantNotification"
-        android:name="com.example.myapplication.view.entrant.EntrantNotification"
-        android:label="fragment_entrant_notification"
-        tools:layout="@layout/fragment_entrant_notification" >
-        <action
-            android:id="@+id/action_entrantNotification_to_entrantProfile3"
-            app:destination="@id/entrantProfile3" />
-    </fragment>
-    <fragment
-        android:id="@+id/entrantEventPage"
-        android:name="com.example.myapplication.view.entrant.EntrantEventPage"
-        android:label="fragment_entrant_event_page"
-        tools:layout="@layout/fragment_entrant_event_page" >
-        <action
-            android:id="@+id/action_entrantEventPage_to_entrantEventsList"
-            app:destination="@id/entrantEventsList" />
-        <action
-            android:id="@+id/action_entrantEventPage_to_entrantProfile3"
-            app:destination="@id/entrantProfile3" />
-        <action
-            android:id="@+id/action_entrantEventPage_to_home"
-            app:destination="@id/home" />
-    </fragment>
-    <fragment
         android:id="@+id/entrantEventsList"
         android:name="com.example.myapplication.view.entrant.EntrantEventsList"
         android:label="fragment_entrant_events_list"
@@ -76,9 +52,6 @@
         <action
             android:id="@+id/action_entrantEventsList_to_home"
             app:destination="@id/home" />
-        <action
-            android:id="@+id/action_entrantEventsList_to_entrantEventPage"
-            app:destination="@id/entrantEventPage" />
         <action
             android:id="@+id/action_entrantEventsList_to_entrantQrScan"
             app:destination="@id/entrantQrScan" />
@@ -100,9 +73,6 @@
         android:name="com.example.myapplication.view.entrant.EntrantQrScan"
         android:label="fragment_entrant_qr_scan"
         tools:layout="@layout/fragment_entrant_qr_scan" >
-        <action
-            android:id="@+id/action_entrantQrScan_to_entrantEventPage"
-            app:destination="@id/entrantEventPage" />
         <action
             android:id="@+id/action_entrantQrScan_to_entrantEventsList"
             app:destination="@id/entrantEventsList" />
