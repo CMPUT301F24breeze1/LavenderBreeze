@@ -29,6 +29,13 @@
         android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/imageViewPoster"/>
+    <Button
+        android:id="@+id/buttonAddEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="Create" />
 
     <ImageView
         android:id="@+id/imageViewPoster"
@@ -188,15 +195,28 @@
         android:padding="12dp"/>
 
     <!-- Create Event Button at the Bottom Center -->
-    <Button
-        android:id="@+id/buttonAddEvent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/optionalGeolocation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextWaitingList"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="Create Event" />
+        android:background="@drawable/edit_text_border"
+        android:layout_marginTop="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:text="Enable Geolocation?"
+            android:padding="12dp"
+            />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/geolocationSwitch"
+            android:gravity="center"
+            android:layout_width="175dp"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
 </RelativeLayout>
 </ScrollView>

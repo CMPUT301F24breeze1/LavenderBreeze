@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -31,9 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -289,7 +286,7 @@ public class AdminUsersList extends Fragment {
                 //finds events to which user was accepted, and removes them from the lists
                 Event event = eventDataList.get(eventIds.indexOf(cancelled.get(j)));
                 event.removeFromDeclinedlist(clicked.getDeviceID());
-                event.setDeclinedEntrants(event.getDeclinedEntrants());
+                event.setCancelledEntrants(event.getCancelledEntrants());
             }
         }
 
@@ -305,7 +302,7 @@ public class AdminUsersList extends Fragment {
 
     private void deleteEvent(Event event){
         List<String> accepted = event.getAcceptedEntrants();
-        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> cancelled = event.getCancelledEntrants();
         List<String> selected = event.getSelectedEntrants();
         List<String> waitlist = event.getWaitlist();
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -115,7 +116,7 @@ public class OrgEventWaitingLst extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_OrgEventWaitingLst_to_OrgEvent, getArguments())
         );
 
-        Button sendNotificationButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
+        ImageButton sendNotificationButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
         sendNotificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +129,7 @@ public class OrgEventWaitingLst extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_org_event_waiting_lst_to_org_event_selected_lst, getArguments())
         );
 
-        Button goToNotifButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
+        ImageButton goToNotifButton = view.findViewById(R.id.button_go_to_notif_from_org_event_waiting_lst);
         goToNotifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

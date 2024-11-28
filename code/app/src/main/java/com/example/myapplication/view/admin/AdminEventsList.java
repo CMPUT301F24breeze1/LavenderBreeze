@@ -17,7 +17,6 @@ import android.widget.ListView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.controller.EventsListAdapter;
-import com.example.myapplication.controller.UserListAdapter;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
 import com.example.myapplication.model.User;
@@ -25,12 +24,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,7 +214,7 @@ public class AdminEventsList extends Fragment {
 
     private void deleteEvent(Event event){
         List<String> accepted = event.getAcceptedEntrants();
-        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> cancelled = event.getCancelledEntrants();
         List<String> selected = event.getSelectedEntrants();
         List<String> waitlist = event.getWaitlist();
 

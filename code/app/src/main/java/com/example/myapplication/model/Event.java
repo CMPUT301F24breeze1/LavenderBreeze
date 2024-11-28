@@ -38,6 +38,7 @@ public class Event implements java.io.Serializable {
     private List<String> waitlist;
     private List<String> selectedEntrants;
     private List<String> acceptedEntrants;
+    private List<String> cancelledEntrants;
     private List<String> declinedEntrants;
     private String organizerId;
     private static final long serialVersionUID = 1L;
@@ -113,6 +114,7 @@ public class Event implements java.io.Serializable {
         this.waitlist = new ArrayList<>();
         this.selectedEntrants = new ArrayList<>();
         this.acceptedEntrants = new ArrayList<>();
+        this.cancelledEntrants = new ArrayList<>();
         this.declinedEntrants = new ArrayList<>();
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
@@ -138,6 +140,7 @@ public class Event implements java.io.Serializable {
         this.waitlist = new ArrayList<>();
         this.selectedEntrants = new ArrayList<>();
         this.acceptedEntrants = new ArrayList<>();
+        this.cancelledEntrants = new ArrayList<>();
         this.declinedEntrants = new ArrayList<>();
         this.organizerId = organizerId;
         this.waitingListLimited = waitingListLimited;
@@ -166,7 +169,7 @@ public class Event implements java.io.Serializable {
         this.waitlist = waitlist;
         this.selectedEntrants = selectedEntrants;
         this.acceptedEntrants = acceptedEntrants;
-        this.declinedEntrants = declinedEntrants;
+        this.cancelledEntrants = cancelledEntrants;
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
@@ -190,7 +193,7 @@ public class Event implements java.io.Serializable {
         this.waitlist = waitlist;
         this.selectedEntrants = selectedEntrants;
         this.acceptedEntrants = acceptedEntrants;
-        this.declinedEntrants = declinedEntrants;
+        this.cancelledEntrants = declinedEntrants;
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
@@ -216,7 +219,7 @@ public class Event implements java.io.Serializable {
         this.waitlist = (List<String>) document.get("waitlist");
         this.selectedEntrants = (List<String>) document.get("selectedEntrants");
         this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
-        this.declinedEntrants = (List<String>) document.get("declinedEntrants");
+        this.cancelledEntrants = (List<String>) document.get("declinedEntrants");
         if (listener != null) {
             listener.onEventDataLoaded(this);
         }
@@ -284,7 +287,7 @@ public class Event implements java.io.Serializable {
         this.waitlist = (List<String>) document.get("waitlist");
         this.selectedEntrants = (List<String>) document.get("selectedEntrants");
         this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
-        this.declinedEntrants = (List<String>) document.get("declinedEntrants");
+        this.cancelledEntrants = (List<String>) document.get("declinedEntrants");
     }
 
     /**
@@ -307,7 +310,7 @@ public class Event implements java.io.Serializable {
         eventData.put("waitlist", waitlist);
         eventData.put("selectedEntrants", selectedEntrants);
         eventData.put("acceptedEntrants", acceptedEntrants);
-        eventData.put("declinedEntrants", declinedEntrants);
+        eventData.put("declinedEntrants", cancelledEntrants);
 
         if (eventId == null || eventId.isEmpty()) {
             // Create a new event
@@ -460,9 +463,10 @@ public class Event implements java.io.Serializable {
      * Get the event declined entrants list
      * @return the event declined entrants list
      */
+    public List<String> getCancelledEntrants() { return cancelledEntrants; }
+
+
     public List<String> getDeclinedEntrants() { return declinedEntrants; }
-
-
     // Setters (updates corresponding field in Firestore)
 
     /**
@@ -623,13 +627,25 @@ public class Event implements java.io.Serializable {
 
     /**
      * Set the event declined entrants list
-     * @param declinedEntrants
+     * @param cancelledEntrants
      */
+    public void setCancelledEntrants(List<String> cancelledEntrants) {
+        if (cancelledEntrants == null || cancelledEntrants.isEmpty()){
+            cancelledEntrants = new ArrayList<String>();
+        } else {
+            this.cancelledEntrants = cancelledEntrants;
+        }
+        if (events == null){
+            events = FirebaseFirestore.getInstance().collection("events");
+        }
+        events.document(eventId).update("selectedEntrants", cancelledEntrants);
+    }
+
     public void setDeclinedEntrants(List<String> declinedEntrants) {
         if (declinedEntrants == null || declinedEntrants.isEmpty()){
             declinedEntrants = new ArrayList<String>();
         } else {
-            this.declinedEntrants = declinedEntrants;
+            this.cancelledEntrants = declinedEntrants;
         }
         if (events == null){
             events = FirebaseFirestore.getInstance().collection("events");
@@ -726,12 +742,12 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void addToDeclinedlist(String userId) {
-        if (declinedEntrants == null) {
-            declinedEntrants = new ArrayList<>();  // Initialize if null
+        if (cancelledEntrants == null) {
+            cancelledEntrants = new ArrayList<>();  // Initialize if null
         }
-        if (!declinedEntrants.contains(userId)) {
-            declinedEntrants.add(userId);
-            events.document(eventId).update("declinedEntrants", declinedEntrants);
+        if (!cancelledEntrants.contains(userId)) {
+            cancelledEntrants.add(userId);
+            events.document(eventId).update("declinedEntrants", cancelledEntrants);
         }
     }
 
@@ -740,12 +756,12 @@ public class Event implements java.io.Serializable {
      * @param userId
      */
     public void removeFromDeclinedlist(String userId) {
-        if (declinedEntrants == null) {
-            declinedEntrants = new ArrayList<>();  // Initialize if null
+        if (cancelledEntrants == null) {
+            cancelledEntrants = new ArrayList<>();  // Initialize if null
         }
-        if (declinedEntrants.contains(userId)) {
-            declinedEntrants.remove(userId);
-            events.document(eventId).update("declinedEntrants", declinedEntrants);
+        if (cancelledEntrants.contains(userId)) {
+            cancelledEntrants.remove(userId);
+            events.document(eventId).update("declinedEntrants", cancelledEntrants);
         }
     }
 
@@ -795,7 +811,7 @@ public class Event implements java.io.Serializable {
         eventMap.put("waitlist", waitlist);
         eventMap.put("selectedEntrants", selectedEntrants);
         eventMap.put("acceptedEntrants", acceptedEntrants);
-        eventMap.put("declinedEntrants", declinedEntrants);
+        eventMap.put("declinedEntrants", cancelledEntrants);
         eventMap.put("waitingListLimited", waitingListLimited);
         eventMap.put("waitingListCap", waitingListCap);
 

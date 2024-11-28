@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
@@ -35,7 +36,7 @@ public class EntrantEventsList extends Fragment {
     private ListView eventList;
     private EventAdapter eventAdapter;  // Use EventAdapter instead of ArrayAdapter
     private User user;
-    Button homeButton, profileButton, eventsButton;
+    ImageButton homeButton, profileButton, eventsButton;
     /**
      * Default constructor required for instantiating the fragment.
      */
