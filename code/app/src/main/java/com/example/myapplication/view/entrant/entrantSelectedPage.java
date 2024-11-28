@@ -15,10 +15,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A fragment that displays the details of a selected event and allows the user to accept or decline
@@ -29,6 +39,7 @@ public class entrantSelectedPage extends Fragment {
 
     private Event event; // Store the event object
     private User user;
+    private User winner;
     /**
      * Initializes the fragment, retrieves the Event data from arguments if available,
      * and sets up the User object.
@@ -121,6 +132,36 @@ public class entrantSelectedPage extends Fragment {
             event.removeFromSelectedlist(user.getDeviceID());
             event.addToDeclinedlist(user.getDeviceID());// Method to remove from selected events
             Log.d("EntrantSelectedPage", "Event declined: " + event.getEventId());
+            List<String> waitlist = event.getWaitlist();
+            List<String> selected = event.getSelectedEntrants();
+            int capacity = event.getCapacity();
+            String eventId = event.getEventId();
+
+            if (waitlist.isEmpty()) {
+                //Toast.makeText(getActivity(), "No remaining entrants", Toast.LENGTH_LONG).show();
+                Log.d("Lucas", "No more waitlisted entrants");
+                return;
+            }
+            //Select new entrant
+            Collections.shuffle(waitlist);
+                winner = new User(waitlist.get(0), null);
+                winner.addSelectedEvent(eventId);
+                winner.removeRequestedEvent(eventId);
+
+                // Move entrants in event lists
+                selected.add(waitlist.remove(0));
+            // Update Firestore
+            Map<String, Object> eventData = new HashMap<>();
+            eventData.put("waitlist", waitlist);
+            eventData.put("selectedEntrants", selected);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference eventsRef = db.collection("events");
+            eventsRef.document(eventId).update(eventData)
+                    .addOnSuccessListener(aVoid -> Log.d("Lucas", "Event updated successfully in Firestore."))
+                    .addOnFailureListener(e -> {
+                        Log.e("Lucas", "Error updating event in Firestore", e);
+                        Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
+                    });
 
             // Navigate back to the event list after declining
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantSelectedPage_to_entrantEventsList);
