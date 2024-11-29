@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         List<String> ungrantedPermissions = permissionHelper.getUngrantedPermissions();
         Log.d("test", "onCreate: " + ungrantedPermissions);
         if (!ungrantedPermissions.isEmpty()) {
-            permissionHelper.requestPermissions(ungrantedPermissions, db);
+            //permissionHelper.requestPermissions(ungrantedPermissions, db);
         }
 
         // Start Polling Service
