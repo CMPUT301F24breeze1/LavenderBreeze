@@ -118,6 +118,7 @@ public class EntrantProfile extends Fragment {
     public void intializeBottomNavButton(View view){
         homeButton = view.findViewById(R.id.homeButton);
         profileButton = view.findViewById(R.id.profileButton);
+        profileButton.setBackgroundResource(R.color.backgroundColoredHighlight);
         eventsButton = view.findViewById(R.id.eventsButton);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
