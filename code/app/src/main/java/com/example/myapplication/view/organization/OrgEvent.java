@@ -163,6 +163,8 @@ public class OrgEvent extends Fragment {
         TextView eventPriceTextView = view.findViewById(R.id.text_view_org_event_price);
         TextView eventRegistrationStartTextView = view.findViewById(R.id.text_view_org_event_registration_start);
         TextView eventRegistrationEndTextView = view.findViewById(R.id.text_view_org_event_registration_end);
+        TextView waitingListStatus = view.findViewById(R.id.waiting_list_status);
+        TextView waitingListInfo = view.findViewById(R.id.waiting_list_info);
 
         eventNameTextView.setText(eventName);
         eventDescriptionTextView.setText(eventDescription);
@@ -214,6 +216,8 @@ public class OrgEvent extends Fragment {
                         Double updatedPrice = snapshot.getDouble("price");
                         Date updatedRegistrationStart = snapshot.getTimestamp("registrationStart").toDate();
                         Date updatedRegistrationEnd = snapshot.getTimestamp("registrationEnd").toDate();
+                        Boolean isWaitingListLimited = snapshot.getBoolean("waitingListLimited");
+                        Long waitingListCap = snapshot.getLong("waitingListCap");
 
                         // Format the timestamps for display
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
@@ -231,6 +235,28 @@ public class OrgEvent extends Fragment {
                         eventPriceTextView.setText(String.valueOf(updatedPrice));
                         eventRegistrationStartTextView.setText(formattedRegistrationStart);
                         eventRegistrationEndTextView.setText(formattedRegistrationEnd);
+                        waitingListStatus.setText(isWaitingListLimited != null && isWaitingListLimited
+                                ? "Waiting List is Limited"
+                                : "Waiting List is Unlimited");
+
+                        // Fetch waiting list count
+                        db.collection("events").document(eventId).collection("waitlist")
+                                .addSnapshotListener((querySnapshot, listError) -> {
+                                    if (listError != null) {
+                                        Log.e("OrgEvent", "Error fetching waiting list", listError);
+                                        return;
+                                    }
+                                    if (querySnapshot != null) {
+                                        int currentCount = querySnapshot.size();
+                                        waitingListInfo.setText(isWaitingListLimited != null && isWaitingListLimited
+                                                ? "Waiting List: " + currentCount + " / " + waitingListCap
+                                                : "Waiting List: " + currentCount);
+                                    } else {
+                                        waitingListInfo.setText(isWaitingListLimited != null && isWaitingListLimited
+                                                ? "Waiting List: 0 / " + waitingListCap
+                                                : "Waiting List: 0");
+                                    }
+                                });
                     }
                 });
 
