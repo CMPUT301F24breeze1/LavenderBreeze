@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -102,7 +103,7 @@ public class OrgEventSelectedLst extends Fragment {
         });
 
       // Set up the notification button for selected participants
-        Button notifyButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
+        ImageButton notifyButton = view.findViewById(R.id.button_go_to_notif_from_org_event_selected_lst);
         notifyButton.setOnClickListener(v -> sendNotification());
 
         return view;
@@ -132,7 +133,7 @@ public class OrgEventSelectedLst extends Fragment {
                 if (loadedEvent != null) {
                     selectedList = loadedEvent.getSelectedEntrants();
                     acceptedList = loadedEvent.getAcceptedEntrants();
-                    canceledList = loadedEvent.getDeclinedEntrants();
+                    canceledList = loadedEvent.getCancelledEntrants();
                     showUserList("all");  // Show all by default
                 }
                 Log.d("OrgEventSelectedLst", "Received Accepted List: ");

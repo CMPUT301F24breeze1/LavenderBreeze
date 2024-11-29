@@ -24,6 +24,7 @@
             android:backgroundTint="#303030"
             android:textSize="18sp"
             android:paddingHorizontal="0dp"
+            android:layout_gravity="center"
             android:drawableTint="@color/white" />
 
         <!-- Spacer -->

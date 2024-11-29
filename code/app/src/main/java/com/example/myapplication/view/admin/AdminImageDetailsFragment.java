@@ -18,9 +18,6 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
-import java.util.Objects;
-
 public class AdminImageDetailsFragment extends Fragment {
     private String documentId;
     private String currentType;
@@ -31,7 +28,6 @@ public class AdminImageDetailsFragment extends Fragment {
 
         ImageView imageView = view.findViewById(R.id.image_view);
         TextView typeText = view.findViewById(R.id.image_type_text);
-        //TextView uploadDateText = view.findViewById(R.id.image_upload_date_text);
         Button backButton = view.findViewById(R.id.back_to_list_button);
         Button deleteImageButton = view.findViewById(R.id.delete_image_button);
         // Retrieve arguments
@@ -49,11 +45,21 @@ public class AdminImageDetailsFragment extends Fragment {
             String imageUrl = currentType.equals("users")
                     ? document.getString("profilePicture")
                     : document.getString("posterUrl");
-            //Date uploadDate = Objects.requireNonNull(document.getTimestamp("uploadDate")).toDate();
-
             Glide.with(requireContext()).load(imageUrl).into(imageView);
-            typeText.setText("Type: " + (currentType.equals("users") ? "Profile Picture" : "Event Poster"));
-            //uploadDateText.setText("Upload Date: " + uploadDate.toString());
+            // Fetch the name and set type text accordingly
+            String displayText;
+            if (currentType.equals("users")) {
+                String userName = document.getString("userName"); // Assuming there's a "userName" field
+                displayText = "Profile Picture\nUser Name: " + userName;
+            } else if (currentType.equals("events")) {
+                String eventName = document.getString("eventName"); // Assuming there's an "eventName" field
+                displayText = "Event Poster\nEvent Name: " + eventName;
+            } else {
+                displayText = "Unknown Type";
+            }
+
+            // Set the type text to include both the type and the corresponding name
+            typeText.setText(displayText);
         });
 
         deleteImageButton.setOnClickListener(v -> deleteImage());

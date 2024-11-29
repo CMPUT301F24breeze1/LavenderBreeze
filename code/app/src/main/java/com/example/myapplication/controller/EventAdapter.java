@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
+import com.example.myapplication.model.User;
 
 import java.util.List;
 /**
@@ -56,7 +57,11 @@ public class EventAdapter extends ArrayAdapter<Event> {
         ImageView arrowImage = convertView.findViewById(R.id.arrowImageView);
 
         eventName.setText(event.getEventName());
-        organizerName.setText("Organized by: " + event.getOrganizerId());
+        new User(event.getOrganizerId(), user -> {
+            if (user != null) {
+                organizerName.setText("Organized by: " + user.getName());
+            }
+        });
         statusTag.setText(status);
 
         // Set arrow click listener based on status
@@ -78,7 +83,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
                     Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entranteventdescription,bundle);
                     break;
                 default:
-                    Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_to_entrantEventPage);
+                    Navigation.findNavController(v).navigate(R.id.action_entrantEventsList_self);
                     break;
             }
             //Navigation.findNavController(v).navigate(actionId);

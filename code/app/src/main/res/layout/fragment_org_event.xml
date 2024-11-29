@@ -1,5 +1,8 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -31,7 +34,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <!-- Button to go to Notifications -->
+        <!-- Button to Edit -->
 
         <Button
             android:id="@+id/button_go_to_edit_event_from_org_event"
@@ -170,6 +173,21 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/waiting_list_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Waiting List Status"
+
+        android:textColor="#ffffff"/>
+
+    <TextView
+        android:id="@+id/waiting_list_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:textColor="#ffffff"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
@@ -195,3 +213,4 @@
         android:backgroundTint="@color/kennyBlue"
         android:text="View Selected List" />
 </LinearLayout>
+</ScrollView>

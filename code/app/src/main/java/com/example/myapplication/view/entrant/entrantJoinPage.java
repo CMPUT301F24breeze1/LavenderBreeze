@@ -7,19 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.myapplication.R;
+import com.example.myapplication.controller.DeviceUtils;
+import com.example.myapplication.controller.PermissionHelper;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class entrantJoinPage extends Fragment {
 
     private String eventID;
     private User user;
+    private PermissionHelper permissionHelper;
 
     /**
      * Pulls eventID from bundle and initializes User object from deviceID
@@ -32,6 +41,10 @@ public class entrantJoinPage extends Fragment {
             eventID = (String) getArguments().getSerializable("eventID");
         }
         user = new User(requireContext(), null); // Initialize user and load data
+
+        // Check and request permissions
+        permissionHelper = new PermissionHelper(requireActivity());
+        permissionHelper.fetchAndStoreLocation(FirebaseFirestore.getInstance(), eventID);
     }
 
     /**
@@ -49,6 +62,7 @@ public class entrantJoinPage extends Fragment {
 
         ImageButton eventList = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
+        ImageView eventImageView = view.findViewById(R.id.eventImageView);
         TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
         TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
@@ -58,7 +72,11 @@ public class entrantJoinPage extends Fragment {
             if (loadedEvent != null) {
                 Log.d("entrantJoinPage_LoadedEvent", "Loaded Event: " + loadedEvent.getEventId());
                 // Populate information for event on page.
-                organizerNameTextView.setText("Organized by: " + loadedEvent.getOrganizerId());
+                Glide.with(requireContext())
+                        .load(loadedEvent.getPosterUrl())
+                        .transform(new CircleCrop())            // Make image circular
+                        .into(eventImageView);
+                organizerNameTextView.setText("Event: " + loadedEvent.getEventName());
                 eventDescriptionTextView.setText(loadedEvent.getEventDescription());
                 eventDateTextView.setText("Date: " + loadedEvent.getEventStart());
                 // Call function to add user to waitlist for event, and event to the requested list of user. (On join button press)

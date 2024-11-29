@@ -1,6 +1,5 @@
 package com.example.myapplication.view.admin;
 
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,11 +13,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.controller.FacilityAdapter;
-import com.example.myapplication.controller.UserListAdapter;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
 import com.example.myapplication.model.User;
@@ -26,10 +23,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -236,7 +231,7 @@ public class AdminFacilitiesList extends Fragment {
 
     private void deleteEvent(Event event){
         List<String> accepted = event.getAcceptedEntrants();
-        List<String> cancelled = event.getDeclinedEntrants();
+        List<String> cancelled = event.getCancelledEntrants();
         List<String> selected = event.getSelectedEntrants();
         List<String> waitlist = event.getWaitlist();
 
