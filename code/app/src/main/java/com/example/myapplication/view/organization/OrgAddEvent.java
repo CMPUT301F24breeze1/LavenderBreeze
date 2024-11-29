@@ -42,13 +42,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * Event Start and End Date, Registration Start and End Date
  */
 public class OrgAddEvent extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -57,7 +52,6 @@ public class OrgAddEvent extends Fragment {
     public EditText editWaitingListCap;
     private ImageView posterImageView;
     private FirebaseFirestore database;
-    private String eventQRCode;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
