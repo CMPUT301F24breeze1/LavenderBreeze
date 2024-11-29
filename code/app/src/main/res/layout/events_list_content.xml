@@ -14,7 +14,7 @@
         android:padding="20dp"
         android:textSize="30sp"
         android:textColor="@color/white"
-        android:drawableRight="@drawable/delete_icon"
+        android:drawableRight="@drawable/right_arrow"
         android:drawableTint="@color/white">
     </TextView>
 
