@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="lightGrey">#999999</color>
     <color name="Purple">#69416C</color>
     <color name="Green">#269338</color>
     <color name="backgroundColored">#382E2E</color>
@@ -9,5 +10,6 @@
     <color name="kennyRed">#943333</color>
     <color name="kennyYellow">#88853C</color>
     <color name="kennyBlue">#385475</color>
+    <color name="kennyBlueHighlight">#5F7691</color>
     <color name="backgroundColoredHighlight">#695959</color>
 </resources>

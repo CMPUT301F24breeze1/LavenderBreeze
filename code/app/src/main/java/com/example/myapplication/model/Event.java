@@ -45,6 +45,7 @@ public class Event implements java.io.Serializable {
     private boolean waitingListLimited;
     private int waitingListCap;
     private int waitingListCount;
+    private boolean geolocationRequired;
 
     private FirebaseFirestore database;
     private CollectionReference events;
@@ -99,7 +100,7 @@ public class Event implements java.io.Serializable {
      */
     public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd, String location, int capacity, double price,
-                 String posterUrl, String qrCodeHash, String organizerId) {
+                 String posterUrl, String qrCodeHash, String organizerId, boolean geolocationRequired) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventStart = eventStart;
@@ -119,13 +120,15 @@ public class Event implements java.io.Serializable {
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
+        this.geolocationRequired = geolocationRequired;
     }
     /**
             * Constructors for creating a new Event
      */
     public Event(String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd, String location, int capacity, double price,
-                 String posterUrl, String qrCodeHash, String organizerId, boolean waitingListLimited, int waitingListCap) {
+                 String posterUrl, String qrCodeHash, String organizerId, boolean waitingListLimited, int waitingListCap,
+                 boolean geolocationRequired) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventStart = eventStart;
@@ -147,13 +150,14 @@ public class Event implements java.io.Serializable {
         this.waitingListCap = waitingListCap;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
+        this.geolocationRequired = geolocationRequired;
     }
     /**
      * Constructors for creating a new Event, INCLUDING eventID
      */
     public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd,String location, int capacity, double price,
-                 String posterUrl, String qrCodeHash, String organizerId) {
+                 String posterUrl, String qrCodeHash, String organizerId, boolean geolocationRequired) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -173,11 +177,13 @@ public class Event implements java.io.Serializable {
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
+        this.geolocationRequired = geolocationRequired;
     }
     public Event(String eventId,String eventName, String eventDescription, Date eventStart, Date eventEnd,
                  Date registrationStart, Date registrationEnd,String location, int capacity, int price,
                  String posterUrl, String qrCodeHash, String organizerId, List<String> acceptedEntrants,
-                 List<String> selectedEntrants, List<String> declinedEntrants, List<String> waitlist) {
+                 List<String> selectedEntrants, List<String> declinedEntrants, List<String> waitlist,
+                 boolean geolocationRequired) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -197,6 +203,7 @@ public class Event implements java.io.Serializable {
         this.organizerId = organizerId;
         this.database = FirebaseFirestore.getInstance();
         this.events = database.collection("events");
+        this.geolocationRequired = geolocationRequired;
     }
 
     /**
@@ -205,6 +212,7 @@ public class Event implements java.io.Serializable {
      * @param listener callback for when data is loaded
      */
     public void EventData(DocumentSnapshot document, Event.OnEventDataLoadedListener listener) {
+        this.eventName = document.getString("eventName");
         this.eventDescription = document.getString("eventDescription");
         this.eventStart = document.getDate("eventStart");
         this.eventEnd = document.getDate("eventEnd");
@@ -220,6 +228,7 @@ public class Event implements java.io.Serializable {
         this.selectedEntrants = (List<String>) document.get("selectedEntrants");
         this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
         this.cancelledEntrants = (List<String>) document.get("declinedEntrants");
+        this.geolocationRequired = document.getBoolean("geolocationRequired");
         if (listener != null) {
             listener.onEventDataLoaded(this);
         }
@@ -288,6 +297,7 @@ public class Event implements java.io.Serializable {
         this.selectedEntrants = (List<String>) document.get("selectedEntrants");
         this.acceptedEntrants = (List<String>) document.get("acceptedEntrants");
         this.cancelledEntrants = (List<String>) document.get("declinedEntrants");
+        this.geolocationRequired = document.getBoolean("geolocationRequired");
     }
 
     /**
@@ -311,6 +321,7 @@ public class Event implements java.io.Serializable {
         eventData.put("selectedEntrants", selectedEntrants);
         eventData.put("acceptedEntrants", acceptedEntrants);
         eventData.put("declinedEntrants", cancelledEntrants);
+        eventData.put("geolocationRequired", geolocationRequired);
 
         if (eventId == null || eventId.isEmpty()) {
             // Create a new event
@@ -350,7 +361,7 @@ public class Event implements java.io.Serializable {
     }
 
     /**
-     * Get the event desciption
+     * Get the event description
      * @return the event description
      */
     public String getEventDescription() {
@@ -435,6 +446,14 @@ public class Event implements java.io.Serializable {
      */
     public String getOrganizerId() {
         return organizerId;
+    }
+
+    /**
+     * Get a boolean representing whether or not geolocation is required
+     * @return geolocationRequired Boolean
+     */
+    public boolean getGeolocationRequirement() {
+        return geolocationRequired;
     }
 
     /**
@@ -575,6 +594,15 @@ public class Event implements java.io.Serializable {
     public void setOrganizerId(String organizerId) {
         this.organizerId = organizerId;
         events.document(eventId).update("organizerId", organizerId);
+    }
+
+    /**
+     * Set whether or not the event requires geolocation
+     * @param geolocationRequired
+     */
+    public void setGeolocationRequirement(boolean geolocationRequired) {
+        this.geolocationRequired = geolocationRequired;
+        events.document(eventId).update("geolocationRequired", geolocationRequired);
     }
 
     /**
@@ -814,6 +842,7 @@ public class Event implements java.io.Serializable {
         eventMap.put("declinedEntrants", cancelledEntrants);
         eventMap.put("waitingListLimited", waitingListLimited);
         eventMap.put("waitingListCap", waitingListCap);
+        eventMap.put("geolocationRequired", geolocationRequired);
 
         return eventMap;
     }
