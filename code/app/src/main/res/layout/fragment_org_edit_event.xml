@@ -78,54 +78,116 @@
     <!-- Event Start Date -->
     <EditText
         android:id="@+id/editEventStart"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/editEventDescription"
         android:layout_marginTop="8dp"
+        android:hint="Event Start Date"
         android:inputType="datetime"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         android:background="@drawable/edit_text_border"
         android:padding="12dp"/>
 
+
     <!-- Event End Date -->
+    <Button
+        android:id="@+id/selectStartDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editEventDescription"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/editEventStart"
+        android:text="Select Date"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
     <EditText
         android:id="@+id/editEventEnd"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/editEventStart"
         android:layout_marginTop="8dp"
+        android:hint="Event End Date"
         android:inputType="datetime"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         android:background="@drawable/edit_text_border"
         android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectEndDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectStartDateButton"
+        android:layout_toRightOf="@+id/editEventEnd"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+
 
     <!-- Registration Start Date -->
     <EditText
         android:id="@+id/editRegistrationStart"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/editEventEnd"
         android:layout_marginTop="8dp"
+        android:hint="Registration Start Date"
         android:inputType="datetime"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         android:background="@drawable/edit_text_border"
         android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectRegistrationStartDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectEndDateButton"
+        android:layout_toEndOf="@+id/editRegistrationStart"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
 
     <!-- Registration End Date -->
     <EditText
         android:id="@+id/editRegistrationEnd"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/editRegistrationStart"
         android:layout_marginTop="8dp"
+        android:hint="Registration End Date"
         android:inputType="datetime"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         android:background="@drawable/edit_text_border"
         android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectRegistrationEndDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectRegistrationStartDateButton"
+        android:layout_toEndOf="@+id/editRegistrationEnd"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
 
     <!-- Location -->
     <EditText
