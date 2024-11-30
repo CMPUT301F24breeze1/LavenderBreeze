@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import android.util.Log;
@@ -45,13 +46,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * Event Start and End Date, Registration Start and End Date
  */
 public class OrgAddEvent extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -65,6 +61,7 @@ public class OrgAddEvent extends Fragment {
     private FirebaseFirestore database;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
+    private SwitchCompat geoSwitch;
 
     public OrgAddEvent() {
         // Required empty public constructor
@@ -160,6 +157,7 @@ public class OrgAddEvent extends Fragment {
         eventPickEndDate = view.findViewById(R.id.selectEndDateButton);
         registrationPickStartDate = view.findViewById(R.id.selectRegistrationStartDateButton);
         registrationPickEndDate = view.findViewById(R.id.selectRegistrationEndDateButton);
+        geoSwitch = view.findViewById(R.id.geolocationSwitch);
     }
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
@@ -280,6 +278,7 @@ public class OrgAddEvent extends Fragment {
         String location = editTextLocation.getText().toString();
         int capacity = Integer.parseInt(editTextCapacity.getText().toString());
         double price = Double.parseDouble(editTextPrice.getText().toString());
+        boolean geoRequired = geoSwitch.isChecked();
 
         // Determine waiting list settings
         boolean waitingListLimited = false;
@@ -292,7 +291,7 @@ public class OrgAddEvent extends Fragment {
 
         Event event = new Event(eventName, editTextEventDescription.getText().toString(), eventStartDate,
                 eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl,
-                "tempQRCode", organizerID, waitingListLimited, waitingListCap);
+                "tempQRCode", organizerID, waitingListLimited, waitingListCap, geoRequired);
 
         // First, get the facility name and its ID
         database.collection("facilities")

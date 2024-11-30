@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -76,11 +78,33 @@ public class entrantJoinPage extends Fragment {
                         .load(loadedEvent.getPosterUrl())
                         .transform(new CircleCrop())            // Make image circular
                         .into(eventImageView);
-                organizerNameTextView.setText("Event: " + loadedEvent.getEventName());
+                organizerNameTextView.setText(loadedEvent.getEventName());
                 eventDescriptionTextView.setText(loadedEvent.getEventDescription());
                 eventDateTextView.setText("Date: " + loadedEvent.getEventStart());
                 // Call function to add user to waitlist for event, and event to the requested list of user. (On join button press)
-                addButton.setOnClickListener(v -> addEvent(loadedEvent));
+                addButton.setOnClickListener(v -> {
+                    if (loadedEvent.getSelectedEntrants().isEmpty()) {
+                        if (loadedEvent.getGeolocationRequirement()) {
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Location Required")
+                                    .setMessage("This event requires you to share your location")
+                                    .setPositiveButton("I would like to join anyway", (dialog, which) -> addEvent(loadedEvent))
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                        }
+                        else {
+                            addEvent(loadedEvent);
+                        }
+                    }
+                    else {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Unable to join waitlist")
+                                .setMessage("The lottery for this event has already been drawn")
+                                .setPositiveButton("Back to events list", (dialog, which) ->
+                                        Navigation.findNavController(v).navigate(R.id.action_entrantJoinPage_to_entrantEventsList))
+                                .show();
+                    }
+                });
             }
             else {
                 Log.d("entrantJoinPage_LoadedEvent", "NULL");

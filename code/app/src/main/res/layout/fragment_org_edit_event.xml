@@ -14,7 +14,7 @@
 
         <!-- Cancel Button at the Top Left Corner -->
         <Button
-            android:id="@+id/buttonCancel"
+            android:id="@+id/buttonEditCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -42,7 +42,7 @@
             android:id="@+id/imageViewEditPoster"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_below="@id/buttonCancel"
+            android:layout_below="@id/buttonEditCancel"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_centerHorizontal="true"
@@ -241,11 +241,10 @@
 
         <!-- Create Event Button at the Bottom Center -->
         <LinearLayout
-            android:id="@+id/optionalGeolocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editWaitingList"
             android:background="@drawable/edit_text_border"
+            android:layout_below="@id/editWaitingList"
             android:layout_marginTop="8dp">
             <TextView
                 android:layout_width="wrap_content"
@@ -257,7 +256,7 @@
                 android:padding="12dp"
                 />
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/geolocationSwitch"
+                android:id="@+id/editGeolocationSwitch"
                 android:gravity="center"
                 android:layout_width="175dp"
                 android:layout_height="match_parent"/>

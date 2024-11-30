@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -52,6 +53,8 @@ public class OrgEditEvent extends Fragment {
     private EditText editWaitingListCap;
     private ImageView posterEditView;
     private Button buttonSaveEvent, buttonCancelSave;
+    private SwitchCompat editGeoSwitch;
+
     private Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
@@ -99,7 +102,8 @@ public class OrgEditEvent extends Fragment {
         posterEditView = view.findViewById(R.id.imageViewEditPoster);
         editWaitingListCap = view.findViewById(R.id.editWaitingList);
         buttonSaveEvent = view.findViewById(R.id.buttonSaveEvent);
-        buttonCancelSave = view.findViewById(R.id.buttonCancel);
+        buttonCancelSave = view.findViewById(R.id.buttonEditCancel);
+        editGeoSwitch = view.findViewById(R.id.editGeolocationSwitch);
 
         // Date Picker buttons for event and registration dates
         eventPickStartDate = view.findViewById(R.id.selectStartDateButton);
@@ -158,6 +162,7 @@ public class OrgEditEvent extends Fragment {
         editLocation.setEnabled(false);
         editCapacity.setText(String.valueOf(snapshot.getLong("capacity")));
         editPrice.setText(String.valueOf(snapshot.getDouble("price")));
+        editGeoSwitch.setChecked(snapshot.getBoolean("geolocationRequired"));
 
         posterURL = snapshot.getString("posterUrl");
         tempPosterURL = posterURL;
@@ -288,6 +293,8 @@ public class OrgEditEvent extends Fragment {
         data.put("waitingListCap", waitingListCap);
         data.put("waitingListLimited", waitingListCap > 0);
 
+        data.put("geolocationRequired", editGeoSwitch.isChecked());
+
         return data;
     }
 
@@ -387,5 +394,4 @@ public class OrgEditEvent extends Fragment {
     interface OnPosterUploadCallback {
         void onUploadSuccess(String posterUrl);
     }
-
 }
