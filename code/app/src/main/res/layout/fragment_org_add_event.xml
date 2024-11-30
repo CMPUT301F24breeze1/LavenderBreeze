@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Cancel" />
+        android:text="Cancel"
+        android:backgroundTint="#ff0000"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="Create" />
+        android:text="Create"
+        android:backgroundTint="#007f00"/>
 
     <ImageView
         android:id="@+id/imageViewPoster"
@@ -197,7 +199,6 @@
         android:background="@drawable/edit_text_border"
         android:padding="12dp"/>
 
-    <!-- Create Event Button at the Bottom Center -->
     <LinearLayout
         android:id="@+id/optionalGeolocation"
         android:layout_width="match_parent"

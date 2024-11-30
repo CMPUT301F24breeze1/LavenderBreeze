@@ -212,6 +212,7 @@ public class Event implements java.io.Serializable {
      * @param listener callback for when data is loaded
      */
     public void EventData(DocumentSnapshot document, Event.OnEventDataLoadedListener listener) {
+        this.eventName = document.getString("eventName");
         this.eventDescription = document.getString("eventDescription");
         this.eventStart = document.getDate("eventStart");
         this.eventEnd = document.getDate("eventEnd");
@@ -360,7 +361,7 @@ public class Event implements java.io.Serializable {
     }
 
     /**
-     * Get the event desciption
+     * Get the event description
      * @return the event description
      */
     public String getEventDescription() {
@@ -445,6 +446,14 @@ public class Event implements java.io.Serializable {
      */
     public String getOrganizerId() {
         return organizerId;
+    }
+
+    /**
+     * Get a boolean representing whether or not geolocation is required
+     * @return geolocationRequired Boolean
+     */
+    public boolean getGeolocationRequirement() {
+        return geolocationRequired;
     }
 
     /**

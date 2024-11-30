@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -49,6 +50,7 @@ public class OrgEditEvent extends Fragment {
     private EditText editWaitingListCap;
     private ImageView posterEditView;
     private Button buttonSaveEvent, buttonCancelSave;
+    private SwitchCompat editGeoSwitch;
 
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
@@ -95,8 +97,9 @@ public class OrgEditEvent extends Fragment {
         editPrice = view.findViewById(R.id.editPrice);
         posterEditView = view.findViewById(R.id.imageViewEditPoster);
         editWaitingListCap = view.findViewById(R.id.editWaitingList);
-        buttonSaveEvent = view.findViewById(R.id.buttonSaveEvent);
-        buttonCancelSave = view.findViewById(R.id.buttonCancel);
+        buttonSaveEvent = view.findViewById(R.id.buttonEditSave);
+        buttonCancelSave = view.findViewById(R.id.buttonEditCancel);
+        editGeoSwitch = view.findViewById(R.id.editGeolocation);
 
         view.findViewById(R.id.buttonEditPoster).setOnClickListener(v -> launchImagePicker());
         buttonSaveEvent.setOnClickListener(v -> saveChanges(view));
@@ -143,6 +146,7 @@ public class OrgEditEvent extends Fragment {
         editLocation.setEnabled(false);
         editCapacity.setText(String.valueOf(snapshot.getLong("capacity")));
         editPrice.setText(String.valueOf(snapshot.getDouble("price")));
+        editGeoSwitch.setChecked(snapshot.getBoolean("geolocationRequired"));
 
         posterURL = snapshot.getString("posterUrl");
         tempPosterURL = posterURL;
@@ -272,6 +276,8 @@ public class OrgEditEvent extends Fragment {
         int waitingListCap = Integer.parseInt(editWaitingListCap.getText().toString());
         data.put("waitingListCap", waitingListCap);
         data.put("waitingListLimited", waitingListCap > 0);
+
+        data.put("geolocationRequired", editGeoSwitch.isChecked());
 
         return data;
     }
