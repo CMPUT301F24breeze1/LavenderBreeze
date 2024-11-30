@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.myapplication.R;
+import com.example.myapplication.controller.NotificationHelper;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 import com.google.firebase.firestore.CollectionReference;
@@ -42,7 +43,7 @@ public class entrantSelectedPage extends Fragment {
 
     private Event event; // Store the event object
     private User user;
-    private User winner;
+
     /**
      * Initializes the fragment, retrieves the Event data from arguments if available,
      * and sets up the User object.
@@ -152,12 +153,15 @@ public class entrantSelectedPage extends Fragment {
             }
             //Select new entrant
             Collections.shuffle(waitlist);
-                winner = new User(waitlist.get(0), null);
-                winner.addSelectedEvent(eventId);
-                winner.removeRequestedEvent(eventId);
+            User winner = new User(waitlist.get(0), null);
+            winner.addSelectedEvent(eventId);
+            winner.removeRequestedEvent(eventId);
 
-                // Move entrants in event lists
-                selected.add(waitlist.remove(0));
+            List<String> notifyUser = new ArrayList<>();
+            notifyUser.add(waitlist.get(0));
+
+            // Move entrants in event lists
+            selected.add(waitlist.remove(0));
             // Update Firestore
             Map<String, Object> eventData = new HashMap<>();
             eventData.put("waitlist", waitlist);
@@ -170,6 +174,14 @@ public class entrantSelectedPage extends Fragment {
                         Log.e("Lucas", "Error updating event in Firestore", e);
                         Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
                     });
+
+            // Send new selected a notification
+            NotificationHelper notificationHelper = new NotificationHelper();
+            notificationHelper.sendNotification(
+                    notifyUser,             // List containing only the new selected person's device ID
+                    "Congratulations!",     // Notification title
+                    "You won the lottery! Claim your prize now." // Notification message
+            );
 
             // Navigate back to the event list after declining
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantSelectedPage_to_entrantEventsList);
