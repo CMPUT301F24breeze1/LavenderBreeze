@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import android.util.Log;
@@ -54,6 +55,7 @@ public class OrgAddEvent extends Fragment {
     private FirebaseFirestore database;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
+    private SwitchCompat geoSwitch;
 
     public OrgAddEvent() {
         // Required empty public constructor
@@ -143,6 +145,7 @@ public class OrgAddEvent extends Fragment {
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
         posterImageView = view.findViewById(R.id.imageViewPoster);
         editWaitingListCap = view.findViewById(R.id.editTextWaitingList);
+        geoSwitch = view.findViewById(R.id.geolocationSwitch);
     }
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
@@ -257,6 +260,7 @@ public class OrgAddEvent extends Fragment {
         String location = editTextLocation.getText().toString();
         int capacity = Integer.parseInt(editTextCapacity.getText().toString());
         double price = Double.parseDouble(editTextPrice.getText().toString());
+        boolean geoRequired = geoSwitch.isChecked();
 
         // Determine waiting list settings
         boolean waitingListLimited = false;
@@ -269,7 +273,7 @@ public class OrgAddEvent extends Fragment {
 
         Event event = new Event(eventName, editTextEventDescription.getText().toString(), eventStartDate,
                 eventEndDate, registrationStartDate, registrationEndDate, location, capacity, price, posterUrl,
-                "tempQRCode", organizerID, waitingListLimited, waitingListCap);
+                "tempQRCode", organizerID, waitingListLimited, waitingListCap, geoRequired);
 
         // First, get the facility name and its ID
         database.collection("facilities")
