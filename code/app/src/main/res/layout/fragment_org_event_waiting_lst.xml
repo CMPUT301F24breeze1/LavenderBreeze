@@ -6,25 +6,25 @@
     android:padding="16dp"
     android:background="#303030">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <!-- Button to go back to event -->
-
-
-
+        <!-- Back Button -->
         <Button
             android:id="@+id/button_go_to_event_from_org_event_waiting_lst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event"
+            android:text="Back"
             android:drawableLeft="@drawable/left_arrow"
-            android:backgroundTint="#303030"
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:drawableTint="@color/white"/>
+            android:drawableTint="@color/white"
+            android:backgroundTint="@color/kennyBlue"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
 
         <!-- Title: Waiting List -->
         <TextView
@@ -35,25 +35,26 @@
             android:textColor="@color/white"
             android:textSize="27sp"
             android:textStyle="bold"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"/>
+            app:layout_constraintStart_toEndOf="@id/button_go_to_event_from_org_event_waiting_lst"
+            app:layout_constraintEnd_toStartOf="@id/button_go_to_notif_from_org_event_waiting_lst"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" />
 
-        <!-- Button to go to Notifications -->
-
+        <!-- Notification Button -->
         <ImageButton
             android:id="@+id/button_go_to_notif_from_org_event_waiting_lst"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.1"
-            android:maxWidth="10dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/send_notification"
-            android:backgroundTint="#303030"
-            android:layout_gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="8dp"
-            app:tint="@color/white" />
-    </LinearLayout>
+            android:background="@drawable/rounded_box_blue"
+            app:tint="@color/white"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Button to go to the Selected List -->
     <LinearLayout
@@ -67,10 +68,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Go to Selected List"
-            android:backgroundTint="@color/kennyBlue"/>
+            android:backgroundTint="@color/kennyBlue" />
 
         <!-- Button to go to Map -->
-
         <Button
             android:id="@+id/button_go_to_map_from_org_event_waiting_lst"
             android:layout_width="wrap_content"
@@ -78,11 +78,12 @@
             android:backgroundTint="@color/kennyBlue"
             android:text="Go to Map" />
     </LinearLayout>
+
     <ListView
         android:id="@+id/event_waitlist_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,13 +93,12 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_select_entrants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/select_entrants"
-            />
+            app:srcCompat="@drawable/select_entrants" />
     </LinearLayout>
 </LinearLayout>

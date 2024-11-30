@@ -163,8 +163,8 @@ public class OrgEvent extends Fragment {
         TextView eventPriceTextView = view.findViewById(R.id.text_view_org_event_price);
         TextView eventRegistrationStartTextView = view.findViewById(R.id.text_view_org_event_registration_start);
         TextView eventRegistrationEndTextView = view.findViewById(R.id.text_view_org_event_registration_end);
-        TextView waitingListStatus = view.findViewById(R.id.waiting_list_status);
-        TextView waitingListInfo = view.findViewById(R.id.waiting_list_info);
+        TextView waitingListStatus = view.findViewById(R.id.text_view_waiting_list_status);
+        TextView waitingListInfo = view.findViewById(R.id.text_view_waiting_list_info);
 
         eventNameTextView.setText(eventName);
         eventDescriptionTextView.setText(eventDescription);

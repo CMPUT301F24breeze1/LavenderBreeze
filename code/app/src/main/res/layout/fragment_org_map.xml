@@ -8,13 +8,17 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!-- Back Button at the top-left -->
+    <!-- Back Button -->
     <Button
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Back"
-        android:layout_margin="16dp"
-        android:layout_gravity="top|start" />
+        android:drawableLeft="@drawable/left_arrow"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_gravity="top|start"/>
+
 </FrameLayout>
