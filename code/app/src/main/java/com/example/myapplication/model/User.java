@@ -31,9 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
- * The User class represents a user in the application with properties such as name, email,
+ * Purpose: The User class represents a user in the application
+ * Design rationale: The User class represents a user in the application with properties such as name, email,
  * phone number, roles, profile picture, and lists of events they are associated with. This class
  * manages user data persistence in Firebase Firestore and provides methods to interact with user-related data.
+ * Outstanding issues: None
  */
 public class User implements java.io.Serializable {
     /**
