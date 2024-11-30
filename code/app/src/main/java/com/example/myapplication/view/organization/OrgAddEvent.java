@@ -55,9 +55,11 @@ public class OrgAddEvent extends Fragment {
     public EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
     public EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
     public EditText editWaitingListCap;
+    public EditText editTextEventStartTime, editTextEventEndTime, editTextRegistrationStartTime, editTextRegistrationEndTime;
+    public Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
+    public Button eventPickStartTime, eventPickEndTime, registrationPickStartTime, registrationPickEndTime;
     private ImageView posterImageView;
     private FirebaseFirestore database;
-    private String eventQRCode;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
@@ -149,6 +151,18 @@ public class OrgAddEvent extends Fragment {
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
         posterImageView = view.findViewById(R.id.imageViewPoster);
         editWaitingListCap = view.findViewById(R.id.editTextWaitingList);
+        editTextEventStartTime = view.findViewById(R.id.editTextEventStartTime);
+        editTextEventEndTime = view.findViewById(R.id.editTextEventEndTime);
+        editTextRegistrationStartTime = view.findViewById(R.id.editTextRegistrationStartTime);
+        editTextRegistrationEndTime = view.findViewById(R.id.editTextRegistrationEndTime);
+        eventPickStartDate = view.findViewById(R.id.selectStartDateButton);
+        eventPickEndDate = view.findViewById(R.id.selectEndDateButton);
+        eventPickStartTime = view.findViewById(R.id.selectStartTimeButton);
+        eventPickEndTime = view.findViewById(R.id.selectEndTimeButton);
+        registrationPickStartDate = view.findViewById(R.id.selectRegistrationStartDateButton);
+        registrationPickEndDate = view.findViewById(R.id.selectRegistrationEndDateButton);
+        registrationPickStartTime = view.findViewById(R.id.selectRegistrationStartTimeButton);
+        registrationPickEndTime = view.findViewById(R.id.selectRegistrationEndTimeButton);
     }
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
