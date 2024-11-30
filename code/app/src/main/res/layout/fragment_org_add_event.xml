@@ -86,6 +86,8 @@
         android:padding="12dp"
         android:maxLength="450"/>
 
+
+
     <!-- Event Start Date -->
     <EditText
         android:id="@+id/editTextEventStart"

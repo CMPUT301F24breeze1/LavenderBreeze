@@ -1,233 +1,268 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:fillViewport="true"
     android:background="#303030">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Button to go back to event -->
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_go_to_event_lst_from_org_event"
+            <!-- Back Button -->
+            <Button
+                android:id="@+id/button_go_to_event_lst_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:drawableLeft="@drawable/left_arrow"
+                android:drawableTint="@color/white"
+                android:backgroundTint="@color/kennyBlue"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+            <!-- Edit Button -->
+            <Button
+                android:id="@+id/button_go_to_edit_event_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:backgroundTint="@color/kennyBlue"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Event Poster -->
+        <ImageView
+            android:id="@+id/image_view_org_event_poster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/select_entrants"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="16dp" />
+
+        <!-- Event Name -->
+        <TextView
+            android:id="@+id/text_view_org_event_event_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
-            android:drawableLeft="@drawable/left_arrow"
-            android:backgroundTint="#303030"
-            android:textSize="18sp"
-            android:drawableTint="@color/white"
-            />
+            android:layout_gravity="center"
+            android:text="Event Name"
+            android:textSize="24sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
 
-        <!-- Spacer -->
+        <!-- Event Details -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/text_view_org_event_event_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Information"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="8dp"
+            android:maxHeight="200dp" />
+
+        <!-- Schedule Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+            <TextView
+                android:id="@+id/text_view_org_event_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" to "
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/text_view_org_event_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Date"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Registration Period -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration Period:"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/text_view_org_event_registration_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" to "
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/text_view_org_event_registration_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Date"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Capacity and Price -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capacity: "
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/text_view_org_event_capacity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capacity"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: "
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/text_view_org_event_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Waiting List -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_view_waiting_list_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Waiting List Info -->
+        <TextView
+            android:id="@+id/text_view_waiting_list_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textColor="#ffffff" />
 
         <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
 
-        <!-- Button to Edit -->
-
-        <Button
-            android:id="@+id/button_go_to_edit_event_from_org_event"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:text="Edit"
-            android:backgroundTint="@color/kennyBlue"
-            android:textSize="20sp"/>
-    </LinearLayout>
-    <ImageView
-        android:id="@+id/image_view_org_event_poster"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/select_entrants"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:maxHeight="225dp"/>
-
-    <TextView
-        android:id="@+id/text_view_org_event_event_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event Name"
-        android:layout_gravity="center"
-        android:textSize="30sp"
-        android:textColor="#ffffff"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description: "
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textSize="15dp"/>
-    <TextView
-        android:id="@+id/text_view_org_event_event_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Event Information"
-        android:textSize="15sp"
-        android:textColor="#ffffff"
-        android:padding="12dp"
-        android:maxHeight="200dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Schedule: "
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textSize="15dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/text_view_org_event_start_date"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Date"
-            android:textColor="#ffffff"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" to "
-            android:textColor="#ffffff"/>
-        <TextView
-            android:id="@+id/text_view_org_event_end_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="End date"
-            android:textColor="#ffffff"/>
+            android:gravity="center">
+            <Button
+                android:id="@+id/button_go_to_qrcode_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/kennyBlue"
+                android:text="QR Code" />
+
+            <Button
+                android:id="@+id/button_go_to_waiting_list_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/kennyBlue"
+                android:text="Waiting List" />
+
+            <Button
+                android:id="@+id/button_go_to_selected_list_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/kennyBlue"
+                android:text="Selected List" />
+
+        </LinearLayout>
+        <!-- Buttons -->
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Capacity: "
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            />
-        <TextView
-            android:id="@+id/text_view_org_event_capacity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="capacity"
-            android:textColor="#ffffff"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price: "
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:textSize="15dp"/>
-        <TextView
-            android:id="@+id/text_view_org_event_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price"
-            android:textColor="#ffffff"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registration Period: "
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textSize="15dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/text_view_org_event_registration_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Date"
-            android:textColor="#ffffff"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" to "
-            android:textColor="#ffffff"/>
-        <TextView
-            android:id="@+id/text_view_org_event_registration_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="End date"
-            android:textColor="#ffffff"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/waiting_list_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Waiting List Status"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textSize="15dp"/>
-
-    <TextView
-        android:id="@+id/waiting_list_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Loading..."
-        android:textColor="#ffffff"/>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp"></Space>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-        <Button
-            android:id="@+id/button_go_to_qrcode_from_org_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/kennyBlue"
-            android:text="QR Code" />
-        <Button
-            android:id="@+id/button_go_to_waiting_list_from_org_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/kennyBlue"
-            android:text="Waiting List" />
-
-        <Button
-            android:id="@+id/button_go_to_selected_list_from_org_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/kennyBlue"
-            android:text="Selected List" />
-    </LinearLayout>
-
-</LinearLayout>
 </ScrollView>
