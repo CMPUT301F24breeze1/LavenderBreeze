@@ -1,6 +1,8 @@
 package com.example.myapplication.view.organization;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -264,6 +267,10 @@ public class OrgAddEvent extends Fragment {
         int capacity = Integer.parseInt(editTextCapacity.getText().toString());
         double price = Double.parseDouble(editTextPrice.getText().toString());
 
+//        editTextRegistrationStart.setOnClickListener(v -> showDateTimePicker(editTextRegistrationStart));
+//        editTextRegistrationEnd.setOnClickListener(v -> showDateTimePicker(editTextRegistrationEnd));
+//        editTextEventStart.setOnClickListener(v -> showDateTimePicker(editTextEventStart));
+//        editTextEventEnd.setOnClickListener(v -> showDateTimePicker(editTextEventEnd));
         // Determine waiting list settings
         boolean waitingListLimited = false;
         int waitingListCap = 0;
@@ -393,4 +400,31 @@ public class OrgAddEvent extends Fragment {
                     Log.e("OrgAddEvent", "Error adding QR code to event", e);
                 });
     }
+    private void showDateTimePicker(EditText targetEditText) {
+        // Get the current date and time
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Show DatePickerDialog
+        new DatePickerDialog(requireContext(), (view, year1, month1, dayOfMonth) -> {
+            // Update the calendar with the selected date
+            calendar.set(Calendar.YEAR, year1);
+            calendar.set(Calendar.MONTH, month1);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Show TimePickerDialog
+            new TimePickerDialog(requireContext(), (view1, hourOfDay, minute) -> {
+                // Update the calendar with the selected time
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                // Format and set the selected date and time on the EditText
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                targetEditText.setText(dateTimeFormat.format(calendar.getTime()));
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+        }, year, month, day).show();
+    }
+
 }
