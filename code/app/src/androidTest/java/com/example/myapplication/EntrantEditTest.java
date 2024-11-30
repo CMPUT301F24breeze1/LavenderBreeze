@@ -57,10 +57,9 @@ public class EntrantEditTest {
 //        // Click on the save button in EntrantEditProfile
 //        Espresso.onView(ViewMatchers.withId(R.id.doneEdit))
 //                .perform(ViewActions.click());
-
-// Verify the updated name is displayed in EntrantProfile
-
-//Espresso.onView(ViewMatchers.withId(R.id.button_go_to_entrant_profile)).perform(ViewActions.click());
-
-//            Espresso.onView(ViewMatchers.withId(R.id.personName))
-//                    .check(ViewAssertions.matches(ViewMatchers.withText("Cyrus")));
+//
+//        // Verify the updated name is displayed in EntrantProfile
+//        Espresso.onView(ViewMatchers.withId(R.id.personName))
+//                .check(ViewAssertions.matches(ViewMatchers.withText("Test1")));
+//    }
+//}

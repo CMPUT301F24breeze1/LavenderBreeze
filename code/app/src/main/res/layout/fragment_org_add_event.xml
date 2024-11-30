@@ -12,15 +12,20 @@
     android:padding="16dp"
     tools:context=".view.organization.OrgAddEvent">
 
-    <!-- Cancel Button at the Top Left Corner -->
+
+    <!-- Back Button -->
     <Button
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Cancel"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Cancel"
-        android:backgroundTint="#ff0000"/>
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,8 +42,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="Create"
-        android:backgroundTint="#007f00"/>
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
 
     <ImageView
         android:id="@+id/imageViewPoster"
@@ -241,6 +249,7 @@
         android:background="@drawable/edit_text_border"
         android:padding="12dp"/>
 
+    <!-- Create Event Button at the Bottom Center -->
     <LinearLayout
         android:id="@+id/optionalGeolocation"
         android:layout_width="match_parent"
