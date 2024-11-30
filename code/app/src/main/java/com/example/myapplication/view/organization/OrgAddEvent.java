@@ -1,6 +1,8 @@
 package com.example.myapplication.view.organization;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -52,12 +55,14 @@ public class OrgAddEvent extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
-    public EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
-    public EditText editWaitingListCap;
+    private EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
+    private EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
+    private EditText editWaitingListCap;
+    public EditText editTextEventStartTime, editTextEventEndTime, editTextRegistrationStartTime, editTextRegistrationEndTime;
+    public Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
+    public Button eventPickStartTime, eventPickEndTime, registrationPickStartTime, registrationPickEndTime;
     private ImageView posterImageView;
     private FirebaseFirestore database;
-    private String eventQRCode;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
@@ -149,11 +154,23 @@ public class OrgAddEvent extends Fragment {
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
         posterImageView = view.findViewById(R.id.imageViewPoster);
         editWaitingListCap = view.findViewById(R.id.editTextWaitingList);
+
+
+        eventPickStartDate = view.findViewById(R.id.selectStartDateButton);
+        eventPickEndDate = view.findViewById(R.id.selectEndDateButton);
+        registrationPickStartDate = view.findViewById(R.id.selectRegistrationStartDateButton);
+        registrationPickEndDate = view.findViewById(R.id.selectRegistrationEndDateButton);
     }
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
         Button cancelButton = view.findViewById(R.id.buttonCancel);
         FloatingActionButton addPosterButton = view.findViewById(R.id.buttonAddPoster);
+
+        // Set up Date Picker button handlers for event and registration dates
+        eventPickStartDate.setOnClickListener(v -> showDateTimePicker(editTextEventStart));
+        eventPickEndDate.setOnClickListener(v -> showDateTimePicker(editTextEventEnd));
+        registrationPickStartDate.setOnClickListener(v -> showDateTimePicker(editTextRegistrationStart));
+        registrationPickEndDate.setOnClickListener(v -> showDateTimePicker(editTextRegistrationEnd));
 
         createEventButton.setOnClickListener(v -> {
             if (validateFields()) {
@@ -393,4 +410,31 @@ public class OrgAddEvent extends Fragment {
                     Log.e("OrgAddEvent", "Error adding QR code to event", e);
                 });
     }
+    private void showDateTimePicker(EditText targetEditText) {
+        // Get the current date and time
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Show DatePickerDialog
+        new DatePickerDialog(requireContext(), (view, year1, month1, dayOfMonth) -> {
+            // Update the calendar with the selected date
+            calendar.set(Calendar.YEAR, year1);
+            calendar.set(Calendar.MONTH, month1);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Show TimePickerDialog
+            new TimePickerDialog(requireContext(), (view1, hourOfDay, minute) -> {
+                // Update the calendar with the selected time
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                // Format and set the selected date and time on the EditText
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                targetEditText.setText(dateTimeFormat.format(calendar.getTime()));
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+        }, year, month, day).show();
+    }
+
 }

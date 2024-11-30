@@ -30,7 +30,7 @@
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="10dp"
                 android:layout_weight="1" />
 
             <!-- Edit Button -->
@@ -85,7 +85,8 @@
             android:textSize="14sp"
             android:textColor="#ffffff"
             android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:maxHeight="200dp" />
 
         <!-- Schedule Section -->
         <TextView
@@ -121,6 +122,7 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
         </LinearLayout>
+
         <!-- Registration Period -->
         <TextView
             android:layout_width="wrap_content"
@@ -154,6 +156,7 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
         </LinearLayout>
+
         <!-- Capacity and Price -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -178,7 +181,7 @@
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="10dp"
                 android:layout_weight="1" />
 
             <TextView
@@ -213,55 +216,53 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/waiting_list_status"
+                android:id="@+id/text_view_waiting_list_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Status"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/waiting_list_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Loading..."
-                android:textColor="#ffffff" />
         </LinearLayout>
 
+        <!-- Waiting List Info -->
+        <TextView
+            android:id="@+id/text_view_waiting_list_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textColor="#ffffff" />
 
-
-
-        <!-- Buttons -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="16dp" />
-        <Button
-            android:id="@+id/button_go_to_qrcode_from_org_event"
+            android:layout_height="25dp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/kennyBlue"
-            android:text="View QR Code"
-            android:textColor="@color/white"
-            android:layout_marginBottom="8dp" />
-        <Button
-            android:id="@+id/button_go_to_waiting_list_from_org_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/kennyBlue"
-            android:text="View Waiting List"
-            android:textColor="@color/white"
-            android:layout_marginBottom="8dp" />
-        <Button
-            android:id="@+id/button_go_to_selected_list_from_org_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/kennyBlue"
-            android:text="View Selected List"
-            android:textColor="@color/white" />
+            android:gravity="center">
+            <Button
+                android:id="@+id/button_go_to_qrcode_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/kennyBlue"
+                android:text="QR Code" />
+
+            <Button
+                android:id="@+id/button_go_to_waiting_list_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/kennyBlue"
+                android:text="Waiting List" />
+
+            <Button
+                android:id="@+id/button_go_to_selected_list_from_org_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/kennyBlue"
+                android:text="Selected List" />
+
+        </LinearLayout>
+        <!-- Buttons -->
+
     </LinearLayout>
 </ScrollView>
