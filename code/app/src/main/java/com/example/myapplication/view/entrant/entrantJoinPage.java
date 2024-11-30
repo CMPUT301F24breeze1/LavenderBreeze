@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
@@ -134,11 +135,26 @@ public class entrantJoinPage extends Fragment {
      */
     private void addEvent(Event event) {
         if (event != null) {
-            Log.d("EntrantAddPage", "User: " + user.getRequestedEvents());
-            user.addRequestedEvent(event.getEventId());
-            event.addToWaitlist(user.getDeviceID());
-
-            Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
+            // Check if the waitlist is limited
+            if (event.isWaitingListLimited()) {
+                if (event.getWaitingListCount() < event.getWaitingListCap()) {
+                    // Waitlist is not full, allow user to join
+                    user.addRequestedEvent(event.getEventId());
+                    event.addToWaitlist(user.getDeviceID());
+                    Toast.makeText(requireContext(), "You have successfully joined the waitlist!", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
+                } else {
+                    // Waitlist is full
+                    Toast.makeText(requireContext(), "Waitlist is full. You cannot join.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Unlimited waitlist, allow user to join
+                user.addRequestedEvent(event.getEventId());
+                event.addToWaitlist(user.getDeviceID());
+                Toast.makeText(requireContext(), "You have successfully joined the waitlist!", Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
+            }
         }
     }
+
 }
