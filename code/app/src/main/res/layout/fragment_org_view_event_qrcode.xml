@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     tools:context=".view.organization.OrgViewEventQrCode">
 
-    <ImageView
-        android:id="@+id/qr_code_image_view"
-        android:layout_width="512px"
-        android:layout_height="512px"
-        />
+    <!-- Back Button -->
     <Button
         android:id="@+id/button_go_to_org_event_from_org_view_qrcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
         android:text="Back"
-        />
+        android:drawableLeft="@drawable/left_arrow"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
-</LinearLayout>
+    <!-- QR Code Image -->
+    <ImageView
+        android:id="@+id/qr_code_image_view"
+        android:layout_width="512px"
+        android:layout_height="512px"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>
