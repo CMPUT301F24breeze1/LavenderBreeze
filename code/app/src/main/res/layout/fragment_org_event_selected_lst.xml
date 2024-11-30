@@ -4,56 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#303030">
+    android:background="#303030"
+    android:padding="16dp">
 
+    <!-- Header with Back Button, Title, and Notification -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
 
-        <!-- Button to go back to event -->
-
+        <!-- Back Button -->
         <Button
             android:id="@+id/button_go_to_event_from_org_event_selected_lst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event"
+            android:text="Back"
             android:drawableLeft="@drawable/left_arrow"
-            android:backgroundTint="#303030"
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:drawableTint="@color/white" />
+            android:drawableTint="@color/white"
+            android:backgroundTint="@color/kennyBlue"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <!-- Title: Selected List -->
         <TextView
             android:id="@+id/waitlist_title"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Selected List"
             android:textColor="@color/white"
-            android:textSize="27sp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:paddingVertical="15dp"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center" />
+            android:paddingStart="10dp" />
 
-        <!-- Button to go to Notifications -->
-
+        <!-- Notification Button -->
         <ImageButton
             android:id="@+id/button_go_to_notif_from_org_event_selected_lst"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.1"
-            android:maxWidth="10dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/send_notification"
-            android:backgroundTint="#303030"
-            android:layout_gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="8dp"
-            app:tint="@color/white" />
-
+            android:background="@drawable/rounded_box_blue"
+            app:tint="@color/white"
+            android:padding="10dp" />
     </LinearLayout>
 
     <!-- Filter buttons -->
@@ -89,7 +83,6 @@
             android:backgroundTint="@color/kennyBlue"
             android:text="Cancelled" />
     </LinearLayout>
-
 
     <ListView
         android:id="@+id/list_view_event_selected_list"
