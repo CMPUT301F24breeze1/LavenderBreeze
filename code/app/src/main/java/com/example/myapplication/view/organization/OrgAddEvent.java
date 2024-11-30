@@ -55,9 +55,9 @@ public class OrgAddEvent extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
-    public EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
-    public EditText editWaitingListCap;
+    private EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
+    private EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
+    private EditText editWaitingListCap;
     public EditText editTextEventStartTime, editTextEventEndTime, editTextRegistrationStartTime, editTextRegistrationEndTime;
     public Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
     public Button eventPickStartTime, eventPickEndTime, registrationPickStartTime, registrationPickEndTime;
@@ -154,23 +154,23 @@ public class OrgAddEvent extends Fragment {
         editTextRegistrationEnd = view.findViewById(R.id.editTextRegistrationEnd);
         posterImageView = view.findViewById(R.id.imageViewPoster);
         editWaitingListCap = view.findViewById(R.id.editTextWaitingList);
-        editTextEventStartTime = view.findViewById(R.id.editTextEventStartTime);
-        editTextEventEndTime = view.findViewById(R.id.editTextEventEndTime);
-        editTextRegistrationStartTime = view.findViewById(R.id.editTextRegistrationStartTime);
-        editTextRegistrationEndTime = view.findViewById(R.id.editTextRegistrationEndTime);
+
+
         eventPickStartDate = view.findViewById(R.id.selectStartDateButton);
         eventPickEndDate = view.findViewById(R.id.selectEndDateButton);
-        eventPickStartTime = view.findViewById(R.id.selectStartTimeButton);
-        eventPickEndTime = view.findViewById(R.id.selectEndTimeButton);
         registrationPickStartDate = view.findViewById(R.id.selectRegistrationStartDateButton);
         registrationPickEndDate = view.findViewById(R.id.selectRegistrationEndDateButton);
-        registrationPickStartTime = view.findViewById(R.id.selectRegistrationStartTimeButton);
-        registrationPickEndTime = view.findViewById(R.id.selectRegistrationEndTimeButton);
     }
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
         Button cancelButton = view.findViewById(R.id.buttonCancel);
         FloatingActionButton addPosterButton = view.findViewById(R.id.buttonAddPoster);
+
+        // Set up Date Picker button handlers for event and registration dates
+        eventPickStartDate.setOnClickListener(v -> showDateTimePicker(editTextEventStart));
+        eventPickEndDate.setOnClickListener(v -> showDateTimePicker(editTextEventEnd));
+        registrationPickStartDate.setOnClickListener(v -> showDateTimePicker(editTextRegistrationStart));
+        registrationPickEndDate.setOnClickListener(v -> showDateTimePicker(editTextRegistrationEnd));
 
         createEventButton.setOnClickListener(v -> {
             if (validateFields()) {
@@ -281,10 +281,6 @@ public class OrgAddEvent extends Fragment {
         int capacity = Integer.parseInt(editTextCapacity.getText().toString());
         double price = Double.parseDouble(editTextPrice.getText().toString());
 
-//        editTextRegistrationStart.setOnClickListener(v -> showDateTimePicker(editTextRegistrationStart));
-//        editTextRegistrationEnd.setOnClickListener(v -> showDateTimePicker(editTextRegistrationEnd));
-//        editTextEventStart.setOnClickListener(v -> showDateTimePicker(editTextEventStart));
-//        editTextEventEnd.setOnClickListener(v -> showDateTimePicker(editTextEventEnd));
         // Determine waiting list settings
         boolean waitingListLimited = false;
         int waitingListCap = 0;
