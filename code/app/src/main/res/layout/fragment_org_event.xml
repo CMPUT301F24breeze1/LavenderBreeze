@@ -70,14 +70,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description: "
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="15dp"/>
     <TextView
         android:id="@+id/text_view_org_event_event_description"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Event Information"
         android:textSize="15sp"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:padding="12dp"
+        android:maxHeight="200dp"/>
 
     <View
         android:layout_width="match_parent"
@@ -87,7 +91,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Schedule: "
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="15dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -118,7 +124,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Capacity: "
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            />
         <TextView
             android:id="@+id/text_view_org_event_capacity"
             android:layout_width="wrap_content"
@@ -135,7 +144,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Price: "
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="15dp"/>
         <TextView
             android:id="@+id/text_view_org_event_price"
             android:layout_width="wrap_content"
@@ -149,7 +160,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Registration Period: "
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="15dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -178,8 +191,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Waiting List Status"
-
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="15dp"/>
 
     <TextView
         android:id="@+id/waiting_list_info"
@@ -187,30 +201,33 @@
         android:layout_height="wrap_content"
         android:text="Loading..."
         android:textColor="#ffffff"/>
-
-    <View
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-
-    <Button
-        android:id="@+id/button_go_to_qrcode_from_org_event"
-        android:layout_width="wrap_content"
+        android:layout_height="30dp"></Space>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/kennyBlue"
-        android:text="View QR Code" />
+        android:gravity="center">
+        <Button
+            android:id="@+id/button_go_to_qrcode_from_org_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/kennyBlue"
+            android:text="QR Code" />
+        <Button
+            android:id="@+id/button_go_to_waiting_list_from_org_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/kennyBlue"
+            android:text="Waiting List" />
 
-    <Button
-        android:id="@+id/button_go_to_waiting_list_from_org_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/kennyBlue"
-        android:text="View Waiting List" />
+        <Button
+            android:id="@+id/button_go_to_selected_list_from_org_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/kennyBlue"
+            android:text="Selected List" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_go_to_selected_list_from_org_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/kennyBlue"
-        android:text="View Selected List" />
 </LinearLayout>
 </ScrollView>

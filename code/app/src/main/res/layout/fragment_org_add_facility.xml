@@ -110,16 +110,17 @@
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/editTextFacilityEmail"
                 android:layout_width="325dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
                 android:hint="example@email.com"
                 android:inputType="textEmailAddress"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#FFFFFF"
                 android:padding="12dp"
-                android:backgroundTint="@color/white"/>
+                android:textColor="#FFFFFF"
+                android:textColorHint="#80FFFFFF" />
 
         </LinearLayout>
 
@@ -146,7 +147,7 @@
                 android:inputType="phone"
                 android:textColor="#FFFFFF"
                 android:hint="1234567890"
-                android:textColorHint="#FFFFFF"
+                android:textColorHint="#80F0f0f0"
                 android:padding="12dp"
                 android:backgroundTint="@color/white"/>
 
@@ -179,7 +180,7 @@
                 android:inputType="textPersonName"
                 android:padding="12dp"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#FFFFFF"
+                android:textColorHint="#80FFFFFF"
                 android:hint="Location"/>
 
         </LinearLayout>
@@ -210,7 +211,7 @@
                 android:inputType="textPostalAddress"
                 android:padding="12dp"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#FFFFFF"
+                android:textColorHint="#80FFFFFF"
                 android:hint="Street, City, Province"/>
 
         </LinearLayout>
