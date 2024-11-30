@@ -29,28 +29,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/button_show_accepted"
-            android:background="@drawable/buttonborder"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
             android:text="Accept" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/button_show_waitlist"
-            android:background="@drawable/buttonborder"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
             android:text="Request" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/button_show_selected"
-            android:background="@drawable/buttonborder"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
             android:text="Select" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/button_show_cancelled"
-            android:background="@drawable/buttonborder"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
             android:text="Decline" />
     </LinearLayout>
 

@@ -85,6 +85,7 @@ public class EntrantEventsList extends Fragment {
         homeButton = view.findViewById(R.id.homeButton);
         profileButton = view.findViewById(R.id.profileButton);
         eventsButton = view.findViewById(R.id.eventsButton);
+        eventsButton.setBackgroundResource(R.color.backgroundColoredHighlight);
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
