@@ -42,7 +42,7 @@
             android:id="@+id/imageViewEditPoster"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_below="@id/buttonCancel"
+            android:layout_below="@id/buttonEditCancel"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_centerHorizontal="true"
