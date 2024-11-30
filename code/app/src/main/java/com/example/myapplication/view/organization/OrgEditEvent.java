@@ -3,12 +3,15 @@ package com.example.myapplication.view.organization;
 import static android.text.TextUtils.isEmpty;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -31,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -49,7 +53,9 @@ public class OrgEditEvent extends Fragment {
     private EditText editWaitingListCap;
     private ImageView posterEditView;
     private Button buttonSaveEvent, buttonCancelSave;
+    private SwitchCompat editGeoSwitch;
 
+    private Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
     public OrgEditEvent() {
@@ -96,11 +102,24 @@ public class OrgEditEvent extends Fragment {
         posterEditView = view.findViewById(R.id.imageViewEditPoster);
         editWaitingListCap = view.findViewById(R.id.editWaitingList);
         buttonSaveEvent = view.findViewById(R.id.buttonSaveEvent);
-        buttonCancelSave = view.findViewById(R.id.buttonCancel);
+        buttonCancelSave = view.findViewById(R.id.buttonEditCancel);
+        editGeoSwitch = view.findViewById(R.id.editGeolocationSwitch);
+
+        // Date Picker buttons for event and registration dates
+        eventPickStartDate = view.findViewById(R.id.selectStartDateButton);
+        eventPickEndDate = view.findViewById(R.id.selectEndDateButton);
+        registrationPickStartDate = view.findViewById(R.id.selectRegistrationStartDateButton);
+        registrationPickEndDate = view.findViewById(R.id.selectRegistrationEndDateButton);
 
         view.findViewById(R.id.buttonEditPoster).setOnClickListener(v -> launchImagePicker());
         buttonSaveEvent.setOnClickListener(v -> saveChanges(view));
         buttonCancelSave.setOnClickListener(v -> cancelChanges(view));
+
+        // Set up date pickers
+        eventPickStartDate.setOnClickListener(v -> showDateTimePicker(editEventStart));
+        eventPickEndDate.setOnClickListener(v -> showDateTimePicker(editEventEnd));
+        registrationPickStartDate.setOnClickListener(v -> showDateTimePicker(editRegistrationStart));
+        registrationPickEndDate.setOnClickListener(v -> showDateTimePicker(editRegistrationEnd));
     }
 
     private void initializeImagePicker() {
@@ -143,6 +162,7 @@ public class OrgEditEvent extends Fragment {
         editLocation.setEnabled(false);
         editCapacity.setText(String.valueOf(snapshot.getLong("capacity")));
         editPrice.setText(String.valueOf(snapshot.getDouble("price")));
+        editGeoSwitch.setChecked(snapshot.getBoolean("geolocationRequired"));
 
         posterURL = snapshot.getString("posterUrl");
         tempPosterURL = posterURL;
@@ -273,6 +293,8 @@ public class OrgEditEvent extends Fragment {
         data.put("waitingListCap", waitingListCap);
         data.put("waitingListLimited", waitingListCap > 0);
 
+        data.put("geolocationRequired", editGeoSwitch.isChecked());
+
         return data;
     }
 
@@ -343,6 +365,32 @@ public class OrgEditEvent extends Fragment {
         }
     }
 
+    private void showDateTimePicker(EditText targetEditText) {
+        // Get the current date and time
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Show DatePickerDialog
+        new DatePickerDialog(requireContext(), (view, year1, month1, dayOfMonth) -> {
+            // Update the calendar with the selected date
+            calendar.set(Calendar.YEAR, year1);
+            calendar.set(Calendar.MONTH, month1);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Show TimePickerDialog
+            new TimePickerDialog(requireContext(), (view1, hourOfDay, minute) -> {
+                // Update the calendar with the selected time
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                // Format and set the selected date and time on the EditText
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                targetEditText.setText(dateTimeFormat.format(calendar.getTime()));
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+        }, year, month, day).show();
+    }
     interface OnPosterUploadCallback {
         void onUploadSuccess(String posterUrl);
     }

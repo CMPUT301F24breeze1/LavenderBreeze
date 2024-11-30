@@ -1,63 +1,21 @@
 package com.example.myapplication;
 
-
-//import static androidx.test.espresso.Espresso.onView;
-//import static androidx.test.espresso.action.ViewActions.click;
-//import static androidx.test.espresso.matcher.ViewMatchers.withId;
-//
-//import android.app.Activity;
-//import android.content.Intent;
-//import android.util.Log;
-//
-//import androidx.fragment.app.FragmentActivity;
-//import androidx.fragment.app.testing.FragmentScenario;
-//import androidx.navigation.NavController;
-//import androidx.navigation.Navigation;
-//import androidx.test.ext.junit.rules.ActivityScenarioRule;
-//import androidx.test.ext.junit.runners.AndroidJUnit4;
-//import androidx.test.espresso.Espresso;
-//import androidx.test.espresso.action.ViewActions;
-//import androidx.test.espresso.assertion.ViewAssertions;
-//import androidx.test.espresso.matcher.ViewMatchers;
-//
-//import com.example.myapplication.R;
-//import com.example.myapplication.MainActivity;
-//import com.example.myapplication.view.entrant.EntrantProfile;
-//import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-//import static androidx.test.espresso.action.ViewActions.click;
-//import static
-//        androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-//import static androidx.test.espresso.assertion.ViewAssertions.matches;
-//import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-//import static androidx.test.espresso.matcher.ViewMatchers.withId;
-//import static androidx.test.espresso.matcher.ViewMatchers.withText;
-//import static org.hamcrest.CoreMatchers.anything;
-//import static org.hamcrest.CoreMatchers.instanceOf;
-//import static org.hamcrest.CoreMatchers.is;
-//import androidx.test.core.app.ActivityScenario;
-//import androidx.test.espresso.action.ViewActions;
-//import androidx.test.ext.junit.rules.ActivityScenarioRule;
-//import androidx.test.ext.junit.runners.AndroidJUnit4;
-//import androidx.test.filters.LargeTest;
 import android.util.Log;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-//import androidx.test.ext.junit.rules.ActivityScenarioRule;
+
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.lang.Thread;
-//import org.junit.Rule;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class EntrantEditTest {
@@ -99,10 +57,9 @@ public class EntrantEditTest {
 //        // Click on the save button in EntrantEditProfile
 //        Espresso.onView(ViewMatchers.withId(R.id.doneEdit))
 //                .perform(ViewActions.click());
-
-// Verify the updated name is displayed in EntrantProfile
-
-//Espresso.onView(ViewMatchers.withId(R.id.button_go_to_entrant_profile)).perform(ViewActions.click());
-
-//            Espresso.onView(ViewMatchers.withId(R.id.personName))
-//                    .check(ViewAssertions.matches(ViewMatchers.withText("Cyrus")));
+//
+//        // Verify the updated name is displayed in EntrantProfile
+//        Espresso.onView(ViewMatchers.withId(R.id.personName))
+//                .check(ViewAssertions.matches(ViewMatchers.withText("Test1")));
+//    }
+//}

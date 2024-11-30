@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,7 +88,7 @@ public class OrgEventSelectedLst extends Fragment {
 
         // Initialize the ListView and set an empty adapter initially
         userListView = view.findViewById(R.id.list_view_event_selected_list);
-        userAdapter = new UserAdapter(requireContext(),displayedUsers, "all",eventId,getArguments());
+        userAdapter = new UserAdapter(requireContext(),displayedUsers, "Selected",eventId,getArguments());
         userListView.setAdapter(userAdapter);  // Set adapter here to avoid NullPointerException
 
 
@@ -98,7 +99,7 @@ public class OrgEventSelectedLst extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack();
+                Navigation.findNavController(view).navigate(R.id.action_OrgEventSelectedLst_to_OrgEvent,getArguments());
             }
         });
 
@@ -117,9 +118,33 @@ public class OrgEventSelectedLst extends Fragment {
         filterAcceptedButton = view.findViewById(R.id.filterAccepted);
         filterCanceledButton = view.findViewById(R.id.filterCancelled);
 
-        filterAllButton.setOnClickListener(v -> showUserList("all"));
-        filterAcceptedButton.setOnClickListener(v -> showUserList("accepted"));
-        filterCanceledButton.setOnClickListener(v -> showUserList("canceled"));
+        filterAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateListData();
+                showUserList("Selected");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+            }});
+        filterAcceptedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateListData();
+                showUserList("Accepted");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+            }});
+        filterCanceledButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateListData();
+                showUserList("Canceled");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+            }});
     }
 
     /**
@@ -134,9 +159,25 @@ public class OrgEventSelectedLst extends Fragment {
                     selectedList = loadedEvent.getSelectedEntrants();
                     acceptedList = loadedEvent.getAcceptedEntrants();
                     canceledList = loadedEvent.getCancelledEntrants();
-                    showUserList("all");  // Show all by default
+                    showUserList("Selected");  // Show all by default
                 }
-                Log.d("OrgEventSelectedLst", "Received Accepted List: ");
+                Log.d("OrgEventSelectedLst", "selected list"+selectedList   + "accepted list"+acceptedList + "canceled list"+canceledList);
+                //userAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void updateListData() {
+        event = new Event(eventId);
+        event.loadEventDataAsync(new Event.OnEventDataLoadedListener() {
+            @Override
+            public void onEventDataLoaded(Event loadedEvent) {
+                if (loadedEvent != null) {
+                    selectedList = loadedEvent.getSelectedEntrants();
+                    acceptedList = loadedEvent.getAcceptedEntrants();
+                    canceledList = loadedEvent.getCancelledEntrants();
+                }
+                Log.d("OrgEventSelectedLst", "selected list"+selectedList   + "accepted list"+acceptedList + "canceled list"+canceledList);
                 //userAdapter.notifyDataSetChanged();
             }
         });
@@ -149,10 +190,10 @@ public class OrgEventSelectedLst extends Fragment {
         displayedUsers.clear();
 
         List<String> userIdsToDisplay = new ArrayList<>();
-        if ("accepted".equals(filter)) {
+        if ("Accepted".equals(filter)) {
             userIdsToDisplay.addAll(acceptedList);
             notifyList = acceptedList;
-        } else if ("canceled".equals(filter)) {
+        } else if ("Canceled".equals(filter)) {
             userIdsToDisplay.addAll(canceledList);
             notifyList = canceledList;
         } else {
