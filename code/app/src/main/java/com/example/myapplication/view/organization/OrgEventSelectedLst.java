@@ -123,18 +123,27 @@ public class OrgEventSelectedLst extends Fragment {
             public void onClick(View view) {
                 updateListData();
                 showUserList("Selected");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
             }});
         filterAcceptedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateListData();
                 showUserList("Accepted");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
             }});
         filterCanceledButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateListData();
                 showUserList("Canceled");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
             }});
     }
 
