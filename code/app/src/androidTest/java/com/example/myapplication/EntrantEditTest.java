@@ -1,28 +1,54 @@
-//package com.example.myapplication;
-//
-//import androidx.fragment.app.FragmentActivity;
-//import androidx.fragment.app.testing.FragmentScenario;
-//import androidx.test.ext.junit.rules.ActivityScenarioRule;
-//import androidx.test.ext.junit.runners.AndroidJUnit4;
-//import androidx.test.espresso.Espresso;
-//import androidx.test.espresso.action.ViewActions;
-//import androidx.test.espresso.assertion.ViewAssertions;
-//import androidx.test.espresso.matcher.ViewMatchers;
-//
-//import com.example.myapplication.R;
-//import com.example.myapplication.MainActivity;
-//import com.example.myapplication.view.entrant.EntrantProfile;
-//
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//
-//@RunWith(AndroidJUnit4.class)
-//public class EntrantEditTest {
-//    @Test fun testEditUserName() {
-//        // Click on the edit button in EntrantProfile
-//        scenario= FragmentScenario.launchFragmentInContainer<EntrantProfile>();
-//        Espresso.onView(ViewMatchers.withId(R.id.editButton))
-//                .perform(ViewActions.click());
+package com.example.myapplication;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import android.util.Log;
+
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.lang.Thread;
+
+@RunWith(AndroidJUnit4.class)
+public class EntrantEditTest {
+    @Rule
+    public ActivityScenarioRule<MainActivity> scenario = new
+            ActivityScenarioRule<MainActivity>(MainActivity.class);
+
+    @Test
+    public void testEditUserName() {
+        scenario.getScenario().onActivity(activity -> {
+            // Navigate to EntrantProfile using NavController
+            NavController navController = Navigation.findNavController(activity, R.id.fragmentContainerView);
+            navController.navigate(R.id.entrantProfile3);
+
+
+        });
+        try {
+            Thread.sleep(10000);
+            Log.d("test", "testEditUserName: ");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        onView(withId(R.id.editButton)).perform(click());
+
+        try {
+            Thread.sleep(10000);
+            Log.d("test", "testEditUserName: ");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
 //
 //        // Update the user name in the EntrantEditProfile fragment
 //        Espresso.onView(ViewMatchers.withId(R.id.editNameButton))
@@ -31,9 +57,10 @@
 //        // Click on the save button in EntrantEditProfile
 //        Espresso.onView(ViewMatchers.withId(R.id.doneEdit))
 //                .perform(ViewActions.click());
-//
-//        // Verify the updated name is displayed in EntrantProfile
-//        Espresso.onView(ViewMatchers.withId(R.id.personName))
-//                .check(ViewAssertions.matches(ViewMatchers.withText("Test1")));
-//    }
-//}
+
+// Verify the updated name is displayed in EntrantProfile
+
+//Espresso.onView(ViewMatchers.withId(R.id.button_go_to_entrant_profile)).perform(ViewActions.click());
+
+//            Espresso.onView(ViewMatchers.withId(R.id.personName))
+//                    .check(ViewAssertions.matches(ViewMatchers.withText("Cyrus")));

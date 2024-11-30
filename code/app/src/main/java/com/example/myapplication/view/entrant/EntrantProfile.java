@@ -58,7 +58,9 @@ public class EntrantProfile extends Fragment {
             }
         });
         if(user == null) {
-            user = new User(requireContext(), () -> updateUserData());
+            if (getContext() != null) {
+                user = new User(requireContext(), this::updateUserData);
+            }
         }
         // Update UI with new user data
         intializeBottomNavButton(view);
