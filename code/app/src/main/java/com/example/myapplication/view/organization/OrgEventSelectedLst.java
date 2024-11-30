@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,7 +99,7 @@ public class OrgEventSelectedLst extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack();
+                Navigation.findNavController(view).navigate(R.id.action_OrgEventSelectedLst_to_OrgEvent,getArguments());
             }
         });
 
@@ -122,18 +123,27 @@ public class OrgEventSelectedLst extends Fragment {
             public void onClick(View view) {
                 updateListData();
                 showUserList("Selected");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
             }});
         filterAcceptedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateListData();
                 showUserList("Accepted");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
             }});
         filterCanceledButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateListData();
                 showUserList("Canceled");
+                filterAllButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterAcceptedButton.setBackgroundColor(getResources().getColor(R.color.kennyBlue));
+                filterCanceledButton.setBackgroundColor(getResources().getColor(R.color.kennyBlueHighlight));
             }});
     }
 

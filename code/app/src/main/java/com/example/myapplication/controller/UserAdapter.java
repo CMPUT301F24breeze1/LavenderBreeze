@@ -97,49 +97,59 @@ public class UserAdapter extends ArrayAdapter<User> {
                     Log.d("OrgEventSelectedLst", "Received Accepted List: ");
 
                     // Check if a replacement entrant can be drawn
-                    if(waitlist.isEmpty()){
-                        Toast.makeText(v.getContext(), "There is nobody to replace this entrant", Toast.LENGTH_SHORT).show();
-                    } else {
-                        replacement = new User(waitlist.get(0),loadedUser -> {
+                    if(!waitlist.isEmpty()){
+                        replacement = new User(waitlist.get(0), loadedUser -> {
                             if (loadedUser != null) {
                                 Log.d("UserAdapter", "Loaded User: " + loadedUser.getName());
                             }
 
                         });
-                        switch (status) {
-                            case "all":
+                    }
+                    Log.d("Kenny", "onEventDataLoaded: switch case reached: "+status);
+
+                    switch (status) {
+                            case "Selected":
                                 // move event in the profile of the entrant being cancelled
                                 replaced.removeSelectedEvent(event.getEventId());
                                 replaced.addCancelledEvent(event.getEventId());
 
-                                // move event in the profile of the entrant being drawn
-                                replacement.addSelectedEvent(event.getEventId());
-                                replacement.removeRequestedEvent(event.getEventId());
-
-                                // move entrants in event lists
-                                event.removeFromWaitlist(replacement.getDeviceID());
-                                event.addToSelectedlist(replacement.getDeviceID());
+                                // remove cancelled entrant in the event
                                 event.removeFromSelectedlist(replaced.getDeviceID());
                                 event.addToDeclinedlist(replaced.getDeviceID());
+                                // move event in the profile of the entrant being drawn
+
+                                if(!waitlist.isEmpty()) {
+                                    replacement.addSelectedEvent(event.getEventId());
+                                    replacement.removeRequestedEvent(event.getEventId());
+
+                                    // move entrants in event lists
+                                    event.removeFromWaitlist(replacement.getDeviceID());
+                                    event.addToSelectedlist(replacement.getDeviceID());
+                                }
                                 notifyDataSetChanged();
                                 break;
-                            case "accepted":
+                            case "Accepted":
+                                Log.d("Kenny", "onEventDataLoaded: accepted reached");
                                 // move event in the profile of the entrant being cancelled
                                 replaced.removeAcceptedEvent(event.getEventId());
                                 replaced.addCancelledEvent(event.getEventId());
 
-                                // move event in the profile of the entrant being drawn
-                                replacement.addSelectedEvent(event.getEventId());
-                                replacement.removeRequestedEvent(event.getEventId());
-
-                                // move entrants in event lists
-                                event.removeFromWaitlist(replacement.getDeviceID());
-                                event.addToSelectedlist(replacement.getDeviceID());
+                                // remove cancelled entrant from event
                                 event.removeFromAcceptedlist(replaced.getDeviceID());
                                 event.addToDeclinedlist(replaced.getDeviceID());
+
+                                if(!waitlist.isEmpty()) {
+                                    // move event in the profile of the entrant being drawn
+                                    replacement.addSelectedEvent(event.getEventId());
+                                    replacement.removeRequestedEvent(event.getEventId());
+
+                                    // move entrants in event lists
+                                    event.removeFromWaitlist(replacement.getDeviceID());
+                                    event.addToSelectedlist(replacement.getDeviceID());
+                                }
                                 notifyDataSetChanged();
                                 break;
-                            case "canceled":
+                            case "Canceled":
                                 Toast.makeText(v.getContext(), "This entrant has already been cancelled", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
@@ -148,7 +158,7 @@ public class UserAdapter extends ArrayAdapter<User> {
                         }
                         Navigation.findNavController(v).navigate(R.id.action_OrgEventSelectedLst_self,arguments);
                     }
-                }
+
             });
 
             //Navigation.findNavController(v).navigate(actionId);
