@@ -28,6 +28,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,21 +74,32 @@ public class entrantSelectedPage extends Fragment {
         ImageButton backButton = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
         ImageView eventImageView = view.findViewById(R.id.eventImageView);
-        TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
-        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
+        TextView eventNameTextView = view.findViewById(R.id.eventNameTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
+        TextView eventCapacityTextView = view.findViewById(R.id.eventCapacityTextView);
+        TextView eventPriceTextView = view.findViewById(R.id.eventPriceTextView);
+        TextView eventRegistrationTextView = view.findViewById(R.id.eventRegistrationTextView);
+        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
         Button acceptButton = view.findViewById(R.id.AcceptButton);
         Button declineButton = view.findViewById(R.id.DeclineButton);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         // Populate UI with event details
         if (event != null) {
             Glide.with(requireContext())
                     .load(event.getPosterUrl())
-                    .transform(new CircleCrop())            // Make image circular
                     .into(eventImageView);
-            organizerNameTextView.setText("Event: " + event.getEventName());
+            String eventStart = sdf.format(event.getEventStart());
+            String eventEnd = sdf.format(event.getEventEnd());
+            String registrationStart = sdf.format(event.getRegistrationStart());
+            String registrationEnd = sdf.format(event.getRegistrationEnd());
+            eventNameTextView.setText(event.getEventName());
+            eventDateTextView.setText("Schedule: " + eventStart + " to " + eventEnd);
+            eventCapacityTextView.setText("Capacity: " + event.getCapacity());
+            eventPriceTextView.setText("Price: " + String.format("$%.2f", event.getPrice()));
+            eventRegistrationTextView.setText("Registration Period: " + registrationStart + " to " + registrationEnd);
             eventDescriptionTextView.setText(event.getEventDescription());
-            eventDateTextView.setText("Date: " + event.getEventStart()); // Format the date if needed
         }
 
         // Back button to navigate to the event list

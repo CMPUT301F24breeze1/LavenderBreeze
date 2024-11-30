@@ -3,8 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#382E2E">
     <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -20,21 +22,38 @@
             android:src="@drawable/arrow_back"
             android:contentDescription="Back to Event List" />
         </LinearLayout>
-
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="600dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:contentDescription="Camera_Placeholder"
-        android:scaleType="centerCrop"
-        android:src="@drawable/camera_icon" />
+        android:layout_below="@+id/topBar"
+        android:layout_marginTop="50dp"
+        android:background="#3E5372">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp"
+            android:contentDescription="Camera_Placeholder"
+            android:src="@drawable/camera_icon"/>
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="75dp"
+            android:contentDescription="Barcode_Placeholder"
+            android:src="@drawable/barcode_icon"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/scanQR"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="600dp"
-        android:text="SCAN" />
+        android:layout_marginTop="750dp"
+        android:text="SCAN"
+        android:textSize="25dp"
+        android:backgroundTint="#939EF8"
+        android:textColor="#FFFFFF"/>
 </RelativeLayout>
