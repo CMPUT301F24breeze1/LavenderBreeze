@@ -153,6 +153,7 @@ public class entrantJoinPage extends Fragment {
                 } else {
                     // Waitlist is full
                     Toast.makeText(requireContext(), "Waitlist is full. You cannot join.", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
                 }
             } else {
                 // Unlimited waitlist, allow user to join
