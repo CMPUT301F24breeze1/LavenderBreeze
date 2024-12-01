@@ -1,3 +1,6 @@
+// From chatgpt, openai, "write a java implementation with java documentation of AdminPicturesList
+//class with methods to show the images of users and events
+//given here is the xml code for it", 2024-11-27
 package com.example.myapplication.view.admin;
 
 import android.media.Image;
@@ -30,7 +33,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A fragment that displays user or event photos.
+ * A fragment that displays a list of images, either user profile pictures or event posters,
+ * and provides navigation options for admin functionalities.
  */
 public class AdminPicturesList extends Fragment {
 
@@ -46,15 +50,28 @@ public class AdminPicturesList extends Fragment {
     private AdminImageAdapter imageAdapter;
     private Button userButton, eventButton;
 
+    /**
+     * Default constructor for the fragment.
+     */
     public AdminPicturesList() {
         // Required empty public constructor
     }
-
+    /**
+     * Called to initialize the fragment when it is created.
+     * @param savedInstanceState Bundle containing the saved instance state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
+    /**
+     * Inflates the fragment layout and sets up UI elements and event listeners.
+     *
+     * @param inflater           LayoutInflater to inflate the view.
+     * @param container          ViewGroup container for the fragment.
+     * @param savedInstanceState Bundle containing the saved instance state.
+     * @return the inflated view for the fragment.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,6 +106,11 @@ public class AdminPicturesList extends Fragment {
 
         return view;
     }
+    /**
+     * Sets up filter buttons to toggle between user photos and event posters.
+     *
+     * @param view The root view of the fragment.
+     */
     private void setupFilterButtons(View view) {
         view.findViewById(R.id.button_user_photos).setOnClickListener(v ->{
             fetchDocuments("users");
@@ -99,8 +121,8 @@ public class AdminPicturesList extends Fragment {
         });
     }
     /**
-     * Fetches document IDs from the appropriate collection based on the photo type.
-     * @param type The type of photos to display (users or events).
+     * Fetches document IDs from the Firestore database based on the selected photo type.
+     * @param type The type of photos to display ("users" or "events").
      */
     private void fetchDocuments(String type) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -158,19 +180,21 @@ public class AdminPicturesList extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_to_imageDetails, bundle);
         });
     }
-
+    /**
+     * Displays a message when no images are found for the selected type.
+     */
     private void showEmptyState() {
         imageList.setVisibility(View.GONE); // Hide the ListView
         TextView emptyStateView = requireView().findViewById(R.id.empty_state_text);
         emptyStateView.setVisibility(View.VISIBLE); // Show the "No images" message
     }
 
+    /**
+     * Hides the message when images are available for the selected type.
+     */
     private void hideEmptyState() {
         imageList.setVisibility(View.VISIBLE); // Show the ListView
         TextView emptyStateView = requireView().findViewById(R.id.empty_state_text);
         emptyStateView.setVisibility(View.GONE); // Hide the "No images" message
     }
-
-
-
 }
