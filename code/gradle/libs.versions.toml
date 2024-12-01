@@ -40,4 +40,3 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

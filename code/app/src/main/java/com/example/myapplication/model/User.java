@@ -31,9 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
- * The User class represents a user in the application with properties such as name, email,
+ * Purpose: The User class represents a user in the application
+ * Design rationale: The User class represents a user in the application with properties such as name, email,
  * phone number, roles, profile picture, and lists of events they are associated with. This class
  * manages user data persistence in Firebase Firestore and provides methods to interact with user-related data.
+ * Outstanding issues: None
  */
 public class User implements java.io.Serializable {
     /**
@@ -48,7 +50,14 @@ public class User implements java.io.Serializable {
     public interface OnUserLoadedListener {
         void onUserLoaded(User user); // Dedicated listener for User object
     }
+    /**
+     * Interface for callback when profile picture URL is fetched.
+     */
     public interface OnFetchCompleteListener {
+        /**
+         * Callback method when profile picture URL is fetched.
+         * @param url
+         */
         void onFetchComplete(String url);
     }
     private String name;
@@ -202,6 +211,11 @@ public class User implements java.io.Serializable {
         isFacility = document.getBoolean("isFacility");
     }
 
+    /**
+     * Update the notification toggle in the database
+     * @param isEnabled Boolean to toggle notification
+     * @param deviceID Device ID of the user
+     */
     public void updateToggleNotifInDatabase(boolean isEnabled, String deviceID) {
         toggleNotif = isEnabled;
 
@@ -369,10 +383,18 @@ public class User implements java.io.Serializable {
     public String getDeviceID() {
         return deviceID;
     }
+    /**
+     * Get the deterministic picture
+     * @return the deterministic picture
+     */
     public Boolean getDeterministicPicture() {
         return deterministicPicture;
     }
 
+    /**
+     * Set the deterministic picture
+     * @param deterministicPicture
+     */
     public void setDeterministicPicture(Boolean deterministicPicture) {
         this.deterministicPicture = deterministicPicture;
     }
@@ -602,6 +624,11 @@ public class User implements java.io.Serializable {
             imageView.setImageResource(R.drawable.account_circle);
         }
     }
+    /**
+     * Load the deterministic profile picture into an ImageView
+     * @param imageView Takes the ImageView as a parameter
+     * @param context   Takes the Context as a parameter
+     */
     public void loadDeterministicProfilePictureInto(ImageView imageView,Context context){
         char firstLetter = this.name.toUpperCase().charAt(0);
         fetchDefaultProfilePictureUrl(firstLetter, url -> {
@@ -623,6 +650,11 @@ public class User implements java.io.Serializable {
         });
     }
 
+    /**
+     * Fetch the default profile picture URL for a given first letter
+     * @param firstLetter Takes the first letter of the name as a parameter
+     * @param callback  Takes the OnFetchCompleteListener as a parameter
+     */
     private void fetchDefaultProfilePictureUrl(char firstLetter, OnFetchCompleteListener callback) {
         String letter = String.valueOf(firstLetter).toUpperCase();
 
@@ -641,10 +673,18 @@ public class User implements java.io.Serializable {
                 });
     }
 
+    /**
+     * Get the notification toggle
+     * @return the notification toggle
+     */
     public boolean isToggleNotif() {
         return toggleNotif;
     }
 
+    /**
+     * Set the notification toggle
+     * @param toggleNotif the notification toggle
+     */
     public void setToggleNotif(boolean toggleNotif) {
         this.toggleNotif = toggleNotif;
     }
