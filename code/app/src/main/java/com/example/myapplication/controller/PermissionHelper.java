@@ -20,18 +20,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A utility class for managing permissions and handling location data.
+ * This class helps to request permissions, process their results, and store location data in Firebase Firestore.
+ */
 public class PermissionHelper {
 
+    /**
+     * The request code used when requesting permissions.
+     */
     private static final int PERMISSION_REQUEST_CODE = 1001;
 
+    /**
+     * The fragment context, if applicable.
+     */
     private final Fragment fragment;
+
+    /**
+     * The activity context.
+     */
     private final Activity activity;
+
+    /**
+     * The client used to fetch the device's location.
+     */
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    /**
+     * Constructor for creating a PermissionHelper instance with an activity context.
+     *
+     * @param activity The activity from which this class is instantiated.
+     */
     public PermissionHelper(Activity activity) {
         this.activity = activity;
         this.fragment = null;
     }
+
+    /**
+     * Handles the results of a permission request.
+     *
+     * @param permissions  The permissions requested.
+     * @param grantResults The grant results corresponding to the requested permissions.
+     * @param callback     The callback to handle permission results.
+     */
     public void handlePermissionResult(String[] permissions, int[] grantResults,
                                        PermissionResultCallback callback) {
         boolean locationGranted = false;
@@ -49,11 +80,16 @@ public class PermissionHelper {
         callback.onPermissionsResult(locationGranted, notificationGranted);
     }
 
+    /**
+     * Returns a list of required permissions that have not yet been granted.
+     *
+     * @return A list of ungranted permissions.
+     */
     public List<String> getUngrantedPermissions() {
         List<String> requiredPermissions = new ArrayList<>();
         requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
 
-        // Add POST_NOTIFICATIONS only for Android 13+
+        // Add POST_NOTIFICATIONS permission only for Android 13 and above.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requiredPermissions.add(Manifest.permission.POST_NOTIFICATIONS);
         }
@@ -69,6 +105,12 @@ public class PermissionHelper {
         return ungrantedPermissions;
     }
 
+    /**
+     * Requests the specified permissions from the user.
+     *
+     * @param permissions A list of permissions to request.
+     * @param db          The FirebaseFirestore instance for database operations.
+     */
     public void requestPermissions(List<String> permissions, FirebaseFirestore db) {
         if (!permissions.isEmpty()) {
             Log.d("PermissionHelper", "Requesting permissions: " + permissions);
@@ -81,7 +123,12 @@ public class PermissionHelper {
         }
     }
 
-
+    /**
+     * Fetches the device's last known location and stores it in the specified Firestore document.
+     *
+     * @param db      The FirebaseFirestore instance for database operations.
+     * @param eventId The ID of the event document in Firestore where the location data will be stored.
+     */
     public void fetchAndStoreLocation(FirebaseFirestore db, String eventId) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -111,8 +158,17 @@ public class PermissionHelper {
                     }
                 });
     }
+
+    /**
+     * Callback interface for handling the results of permission requests.
+     */
     public interface PermissionResultCallback {
+        /**
+         * Called when the results of a permission request are available.
+         *
+         * @param locationGranted     Whether the location permission was granted.
+         * @param notificationGranted Whether the notification permission was granted.
+         */
         void onPermissionsResult(boolean locationGranted, boolean notificationGranted);
     }
-
 }

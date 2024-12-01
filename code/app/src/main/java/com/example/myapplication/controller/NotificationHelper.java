@@ -7,18 +7,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// NotificationSender.java
+/**
+ * A helper class for managing notifications and sending them to multiple devices.
+ * This class interacts with Firebase Firestore to store notification data for specific users.
+ */
 public class NotificationHelper {
-    private FirebaseFirestore db;
 
+    private FirebaseFirestore db;
     public NotificationHelper() {
         db = FirebaseFirestore.getInstance();
     }
 
     /**
-     * Send notification to multiple devices
+     * Sends a notification to multiple devices.
+     *
+     * @param deviceIds A list of device IDs representing the recipients of the notification.
+     * @param title     The title of the notification.
+     * @param message   The message content of the notification.
+     *
+     * The method creates a map of notification data, including the title, message, and timestamp,
+     * and stores it in the Firestore database for each recipient.
      */
-
     public void sendNotification(List<String> deviceIds, String title, String message) {
         Map<String, Object> notificationData = new HashMap<>();
         notificationData.put("title", title);
@@ -31,6 +40,4 @@ public class NotificationHelper {
                     .set(notificationData, SetOptions.merge());
         }
     }
-
-
 }
