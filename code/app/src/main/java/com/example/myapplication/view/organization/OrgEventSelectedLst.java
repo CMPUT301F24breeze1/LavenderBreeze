@@ -194,10 +194,13 @@ public class OrgEventSelectedLst extends Fragment {
 
         List<String> userIdsToDisplay = new ArrayList<>();
         if ("Accepted".equals(filter)) {
+            userIdsToDisplay.addAll(acceptedList);
             notifyList = 1;
         } else if ("Canceled".equals(filter)) {
+            userIdsToDisplay.addAll(canceledList);
             notifyList = 2;
         } else {
+            userIdsToDisplay.addAll(canceledList);
             notifyList = 3;
         }
         Log.d("OrgEventSelectedLst", "User Ids to Display: " + userIdsToDisplay);
