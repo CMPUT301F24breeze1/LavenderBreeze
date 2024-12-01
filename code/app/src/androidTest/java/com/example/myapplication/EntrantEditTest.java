@@ -9,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 
 import org.junit.Rule;
@@ -22,6 +23,10 @@ public class EntrantEditTest {
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new
             ActivityScenarioRule<MainActivity>(MainActivity.class);
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
     @Test
     public void testEditUserName() {
@@ -29,8 +34,6 @@ public class EntrantEditTest {
             // Navigate to EntrantProfile using NavController
             NavController navController = Navigation.findNavController(activity, R.id.fragmentContainerView);
             navController.navigate(R.id.entrantProfile3);
-
-
         });
         try {
             Thread.sleep(10000);
