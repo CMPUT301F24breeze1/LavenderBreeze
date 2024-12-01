@@ -145,6 +145,7 @@ public class entrantSelectedPage extends Fragment {
     /**
      * Declines the event by removing it from the user's selected events and adding it to
      * the declined events. Updates the event's participant lists accordingly.
+     * The lottery system will then pull 1 more person from the waitlist to the selected list to replace the decliner.
      * After declining, navigates back to the event list.
      */
     private void declineEvent() {

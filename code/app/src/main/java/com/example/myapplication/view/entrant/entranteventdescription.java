@@ -21,6 +21,8 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 
+import java.text.SimpleDateFormat;
+
 /**
  * A fragment that displays details about a specific event, including the organizer's name,
  * description, and date. It also includes functionality to expand or collapse the event description.
@@ -58,19 +60,30 @@ public class entranteventdescription extends Fragment {
         ImageButton backButton = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
         ImageView eventImageView = view.findViewById(R.id.eventImageView);
-        TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
-        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
+        TextView eventNameTextView = view.findViewById(R.id.eventNameTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
+        TextView eventCapacityTextView = view.findViewById(R.id.eventCapacityTextView);
+        TextView eventPriceTextView = view.findViewById(R.id.eventPriceTextView);
+        TextView eventRegistrationTextView = view.findViewById(R.id.eventRegistrationTextView);
+        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         // Populate UI with event details
         if (event != null) {
             Glide.with(requireContext())
                     .load(event.getPosterUrl())
-                    .transform(new CircleCrop())            // Make image circular
                     .into(eventImageView);
-            organizerNameTextView.setText("Event: " + event.getEventName());
+            String eventStart = sdf.format(event.getEventStart());
+            String eventEnd = sdf.format(event.getEventEnd());
+            String registrationStart = sdf.format(event.getRegistrationStart());
+            String registrationEnd = sdf.format(event.getRegistrationEnd());
+            eventNameTextView.setText(event.getEventName());
+            eventDateTextView.setText("Schedule: " + eventStart + " to " + eventEnd);
+            eventCapacityTextView.setText("Capacity: " + event.getCapacity());
+            eventPriceTextView.setText("Price: " + String.format("$%.2f", event.getPrice()));
+            eventRegistrationTextView.setText("Registration Period: " + registrationStart + " to " + registrationEnd);
             eventDescriptionTextView.setText(event.getEventDescription());
-            eventDateTextView.setText("Date: " + event.getEventStart()); // Format the date if needed
         }
 
         // Back button to navigate to the event list
