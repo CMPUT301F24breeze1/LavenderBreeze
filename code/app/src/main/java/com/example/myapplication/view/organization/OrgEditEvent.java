@@ -40,7 +40,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Fragment for editing an existing event. Allows users to modify event details such as
+ * name, description, dates, location, capacity, price, poster, and geolocation settings.
+ * Users can upload a new poster, and changes are saved to Firestore.
+ */
 public class OrgEditEvent extends Fragment {
+    /**
+     * Argument key for passing the event ID to this fragment.
+     */
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
 
@@ -58,10 +66,19 @@ public class OrgEditEvent extends Fragment {
     private Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
+    /**
+     * Required empty public constructor for the fragment.
+     */
     public OrgEditEvent() {
         // Required empty public constructor
     }
 
+    /**
+     * Factory method to create a new instance of this fragment using the provided event ID.
+     *
+     * @param eventID The ID of the event to edit.
+     * @return A new instance of fragment OrgEditEvent.
+     */
     public static OrgEditEvent newInstance(String eventID) {
         OrgEditEvent fragment = new OrgEditEvent();
         Bundle args = new Bundle();
@@ -70,6 +87,12 @@ public class OrgEditEvent extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called when the fragment is created. Initializes Firestore and image picker functionality.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+     *                           this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +104,17 @@ public class OrgEditEvent extends Fragment {
         initializeImagePicker();
     }
 
+    /**
+     * Inflates the layout for this fragment and initializes the UI elements.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views
+     *                           in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI
+     *                           should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-created from a previous
+     *                           saved state.
+     * @return The view for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_org_edit_event, container, false);
@@ -89,6 +123,11 @@ public class OrgEditEvent extends Fragment {
         return view;
     }
 
+    /**
+     * Initializes the UI elements and sets up button click listeners.
+     *
+     * @param view The fragment's root view.
+     */
     private void initializeUI(View view) {
         editEventName = view.findViewById(R.id.editEventName);
         editEventDescription = view.findViewById(R.id.editEventDescription);
@@ -122,6 +161,9 @@ public class OrgEditEvent extends Fragment {
         registrationPickEndDate.setOnClickListener(v -> showDateTimePicker(editRegistrationEnd));
     }
 
+    /**
+     * Initializes the image picker functionality for selecting a new event poster.
+     */
     private void initializeImagePicker() {
         pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
@@ -131,12 +173,18 @@ public class OrgEditEvent extends Fragment {
         });
     }
 
+    /**
+     * Launches the image picker to allow the user to select a new event poster.
+     */
     private void launchImagePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         pickImageLauncher.launch(Intent.createChooser(intent, "Select Event Poster"));
     }
 
+    /**
+     * Fetches event information from Firestore based on the provided event ID.
+     */
     private void fetchEventInformation() {
         if (eventId == null || eventId.isEmpty()) {
             Toast.makeText(getContext(), "Missing Event ID", Toast.LENGTH_SHORT).show();
@@ -151,6 +199,11 @@ public class OrgEditEvent extends Fragment {
                 });
     }
 
+    /**
+     * Populates the UI fields with the fetched event data.
+     *
+     * @param snapshot A Firestore DocumentSnapshot containing the event data.
+     */
     private void populateFields(DocumentSnapshot snapshot) {
         editEventName.setText(snapshot.getString("eventName"));
         editEventDescription.setText(snapshot.getString("eventDescription"));
@@ -173,6 +226,12 @@ public class OrgEditEvent extends Fragment {
         editWaitingListCap.setText(String.valueOf(waitingListCap));
     }
 
+    /**
+     * Saves the changes made to the event. If a new poster is selected, it is uploaded
+     * before updating Firestore.
+     *
+     * @param view The current view context.
+     */
     private void saveChanges(View view) {
         if (!validateInputs()) {
             Toast.makeText(getContext(), "Please fill in all fields correctly.", Toast.LENGTH_SHORT).show();
@@ -190,6 +249,12 @@ public class OrgEditEvent extends Fragment {
             updateEventInFirestore(view);
         }
     }
+
+    /**
+     * Updates the event details in Firestore.
+     *
+     * @param view The current view context.
+     */
     private void updateEventInFirestore(View view) {
         Map<String, Object> updates = collectEventData();
         db.collection("events").document(eventId).update(updates)
@@ -204,6 +269,11 @@ public class OrgEditEvent extends Fragment {
                 });
     }
 
+    /**
+     * Cancels the changes made and resets the UI to the original event data.
+     *
+     * @param view The current view context.
+     */
     private void cancelChanges(View view) {
         if (tempPosterURL != null && !tempPosterURL.isEmpty()) {
             Glide.with(this).load(tempPosterURL).into(posterEditView);
@@ -213,6 +283,12 @@ public class OrgEditEvent extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_OrgEditEvent_to_OrgEvent, getArguments());
     }
 
+    /**
+     * Uploads a new event poster to Firebase Storage and retrieves its URL.
+     *
+     * @param callback Callback for handling the uploaded poster URL.
+     * @param view     The current view context.
+     */
     private void uploadPosterToStorage(OnPosterUploadCallback callback, View view) {
         String storagePath = "event_posters/" + eventId + ".jpg";
         FirebaseStorage.getInstance().getReference(storagePath).putFile(imageUri)
@@ -231,7 +307,11 @@ public class OrgEditEvent extends Fragment {
                 });
     }
 
-
+    /**
+     * Validates user inputs to ensure all required fields are filled correctly.
+     *
+     * @return True if all inputs are valid, false otherwise.
+     */
     private boolean validateInputs() {
         boolean valid = true;
         // Check each field and log if any validation fails
@@ -276,6 +356,11 @@ public class OrgEditEvent extends Fragment {
         return valid;
     }
 
+    /**
+     * Collects event data from the UI fields into a map for updating Firestore.
+     *
+     * @return A map containing the event data.
+     */
     private Map<String, Object> collectEventData() {
         Map<String, Object> data = new HashMap<>();
         data.put("eventName", editEventName.getText().toString());
@@ -298,6 +383,12 @@ public class OrgEditEvent extends Fragment {
         return data;
     }
 
+    /**
+     * Parses a date string into a Firestore Timestamp object.
+     *
+     * @param dateStr The date string to parse.
+     * @return A Firestore Timestamp object or null if parsing fails.
+     */
     private com.google.firebase.Timestamp parseDateToTimestamp(String dateStr) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -309,6 +400,12 @@ public class OrgEditEvent extends Fragment {
         }
     }
 
+    /**
+     * Formats a Firestore Timestamp object into a readable date string.
+     *
+     * @param timestamp The Firestore Timestamp to format.
+     * @return A formatted date string.
+     */
     private String formatTimestamp(Object timestamp) {
         if (timestamp instanceof com.google.firebase.Timestamp) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -317,10 +414,23 @@ public class OrgEditEvent extends Fragment {
         return "";
     }
 
+    /**
+     * Checks if the given EditText field is empty.
+     *
+     * @param input the EditText field to be checked.
+     * @return {@code true} if the input field is empty or contains only whitespace, {@code false} otherwise.
+     */
     private boolean isEmpty(EditText input) {
         return input.getText().toString().trim().isEmpty();
     }
 
+    /**
+     * Validates whether a given string represents a positive integer.
+     *
+     * @param value the string to be validated.
+     * @return {@code true} if the string can be parsed into a positive integer, {@code false} otherwise.
+     *         (e.g., "1", "10" return {@code true}, but "0", "-1", "abc" return {@code false}).
+     */
     private boolean isPositiveInteger(String value) {
         try {
             return Integer.parseInt(value) > 0;
@@ -329,6 +439,13 @@ public class OrgEditEvent extends Fragment {
         }
     }
 
+    /**
+     * Validates whether a given string represents a positive double.
+     *
+     * @param value the string to be validated.
+     * @return {@code true} if the string can be parsed into a positive double, {@code false} otherwise.
+     *         (e.g., "1.5", "10.0" return {@code true}, but "0", "-1.0", "abc" return {@code false}).
+     */
     private boolean isPositiveDouble(String value) {
         try {
             double parsedValue = Double.parseDouble(value);
@@ -343,6 +460,13 @@ public class OrgEditEvent extends Fragment {
         }
     }
 
+    /**
+     * Validates whether a given string represents a non-negative integer.
+     *
+     * @param value the string to be validated.
+     * @return {@code true} if the string can be parsed into a non-negative integer (including 0), {@code false} otherwise.
+     *         (e.g., "0", "5" return {@code true}, but "-1", "abc" return {@code false}).
+     */
     private boolean isNonNegativeInteger(String value) {
         try {
             return Integer.parseInt(value) >= 0;
@@ -350,10 +474,12 @@ public class OrgEditEvent extends Fragment {
             return false;
         }
     }
+
     /**
-     * Helper method to turn a String into a Date data type
-     * @param dateString
-     * @return
+     * Parses a date string into a Date object.
+     *
+     * @param dateString The date string to parse.
+     * @return A Date object or null if parsing fails.
      */
     public Date parseDate(String dateString) {
         try {
@@ -365,6 +491,11 @@ public class OrgEditEvent extends Fragment {
         }
     }
 
+    /**
+     * Displays a date and time picker dialog for the user to select a date and time.
+     *
+     * @param targetEditText The EditText to populate with the selected date and time.
+     */
     private void showDateTimePicker(EditText targetEditText) {
         // Get the current date and time
         final Calendar calendar = Calendar.getInstance();
@@ -391,6 +522,10 @@ public class OrgEditEvent extends Fragment {
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
         }, year, month, day).show();
     }
+
+    /**
+     * Callback interface for handling poster upload success.
+     */
     interface OnPosterUploadCallback {
         void onUploadSuccess(String posterUrl);
     }
