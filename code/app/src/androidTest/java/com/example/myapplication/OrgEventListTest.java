@@ -9,12 +9,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
 import android.app.UiAutomation;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,17 +32,13 @@ public class OrgEventListTest {
 
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<>(MainActivity.class);
-    @BeforeClass
-    public static void disableAnimations() {
-        if (SDK_INT >= JELLY_BEAN_MR1) {
-            UiAutomation automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
-            automation.executeShellCommand("settings put global window_animation_scale 0");
-            automation.executeShellCommand("settings put global transition_animation_scale 0");
-            automation.executeShellCommand("settings put global animator_duration_scale 0");
-        }
-    }
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
-    private void navigate() throws InterruptedException {
+    @Before
+    public void navigate() throws InterruptedException {
         // Simulate user interaction to navigate to the desired screen
 
         // Click the button to go to Facility screen from OrgEventList
@@ -48,18 +46,16 @@ public class OrgEventListTest {
 
         // Click the "Create Facility" button to navigate further
         onView(withId(R.id.buttonCreateFacility)).perform(click());
-
+        Thread.sleep(1000);
     }
 
     @Test
-    public void testNavigateToAddEventFromOrgEventList() throws InterruptedException {
-        navigate();
+    public void testNavigateToAddEventFromOrgEventList() {
         onView(withId(R.id.button_go_to_add_event_from_org_events_lst)).perform(click());
     }
 
     @Test
-    public void testNavigateToHomeFromOrgEventList() throws InterruptedException {
-        navigate();
+    public void testNavigateToHomeFromOrgEventList(){
         onView(withId(R.id.button_go_to_home_from_org_event_list)).perform(click());
     }
 }
