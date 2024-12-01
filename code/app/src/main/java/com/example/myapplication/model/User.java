@@ -397,6 +397,7 @@ public class User implements java.io.Serializable {
      */
     public void setDeterministicPicture(Boolean deterministicPicture) {
         this.deterministicPicture = deterministicPicture;
+        users.document(deviceID).update("deterministicPicture", deterministicPicture);
     }
     /**
      * Set the email

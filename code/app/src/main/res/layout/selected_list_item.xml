@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
@@ -42,13 +43,14 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/arrowImageView"
+        android:id="@+id/delete_event"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/arrow_right"
+        android:src="@drawable/delete_icon"
         android:contentDescription="Go to Detail Page"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="8dp"
+        app:tint="@color/white" />
 
 </RelativeLayout>

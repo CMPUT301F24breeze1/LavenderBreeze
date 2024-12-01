@@ -303,7 +303,9 @@ public class OrgEventWaitingLst extends Fragment {
 
         // Update Firestore document
         eventsRef.document(eventId).update(eventData)
-                .addOnSuccessListener(aVoid -> Log.d("Kenny", "Event updated successfully in Firestore."))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getActivity(), "Lottery has been drawn", Toast.LENGTH_LONG).show();
+                })
                 .addOnFailureListener(e -> {
                     Log.e("Kenny", "Error updating event in Firestore", e);
                     Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();

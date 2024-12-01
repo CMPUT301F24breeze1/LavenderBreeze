@@ -362,7 +362,7 @@ public class OrgAddEvent extends Fragment {
                 .document(facilityId)
                 .update("events", FieldValue.arrayUnion(eventId))  // Save only the eventId
                 .addOnSuccessListener(aVoid -> {
-                    showToast("Event ID added to facility successfully");
+                    Log.d("Event creation","Event ID added to facility successfully");
                 })
                 .addOnFailureListener(e -> {
                     Log.e("OrgAddEvent", "Error adding event ID to facility", e);
