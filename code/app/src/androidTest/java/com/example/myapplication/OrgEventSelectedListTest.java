@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.is;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.example.myapplication.model.Event;
 
@@ -19,7 +20,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
+
 public class OrgEventSelectedListTest {
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
+
     @Before
     public void navigate() throws InterruptedException {
         // Perform navigation to the required screen before each test

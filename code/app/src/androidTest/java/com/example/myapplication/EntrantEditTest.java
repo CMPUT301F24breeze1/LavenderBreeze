@@ -15,6 +15,7 @@ import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +38,10 @@ public class EntrantEditTest {
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new
             ActivityScenarioRule<MainActivity>(MainActivity.class);
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
     /**
      * Tests the editing functionality for the user's name.
