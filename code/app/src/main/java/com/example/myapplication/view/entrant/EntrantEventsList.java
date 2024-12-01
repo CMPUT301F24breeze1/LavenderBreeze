@@ -36,7 +36,7 @@ public class EntrantEventsList extends Fragment {
     private ListView eventList;
     private EventAdapter eventAdapter;  // Use EventAdapter instead of ArrayAdapter
     private User user;
-    ImageButton homeButton, profileButton, eventsButton;
+    private ImageButton homeButton, profileButton, eventsButton;
     /**
      * Default constructor required for instantiating the fragment.
      */
@@ -190,6 +190,9 @@ public class EntrantEventsList extends Fragment {
             showEventList(waitlist, "Requested"); // Show waitlist events by default
         }
     }
+    /**
+     * Updates event lists when the user data changes.
+     */
     private void updatedData() {
         if (user != null) {
             waitlist = user.getRequestedEvents();

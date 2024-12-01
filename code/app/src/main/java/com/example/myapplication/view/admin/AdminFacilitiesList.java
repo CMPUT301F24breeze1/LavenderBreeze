@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,11 +73,21 @@ public class AdminFacilitiesList extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes the fragment
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -154,6 +165,9 @@ public class AdminFacilitiesList extends Fragment {
         return view;
     }
 
+    /**
+     * This method loads event data from Firestore
+     */
     private void fetchEvents(){
         Task<QuerySnapshot> task = eventsRef.get();
         task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -173,13 +187,16 @@ public class AdminFacilitiesList extends Fragment {
                             events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
                             events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"),
                             (List<String>) events.get(i).get("acceptedEntrants"), (List<String>) events.get(i).get("selectedEntrants"),
-                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist"), events.get(i).getBoolean("geolocationRequired")));
+                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist"), Boolean.TRUE.equals(events.get(i).getBoolean("geolocationRequired"))));
                     eventIds.add(events.get(i).getId());
                 }
             }
         });
     }
 
+    /**
+     * This method loads user data from Firestore
+     */
     private void fetchUsers(){
         Task<QuerySnapshot> task = usersRef.get();
         task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -202,6 +219,9 @@ public class AdminFacilitiesList extends Fragment {
         });
     }
 
+    /**
+     * This method loads facility data from Firestore
+     */
     private void fetchFacilities(){
         Task<QuerySnapshot> task = facilitiesRef.get();
         task.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -229,6 +249,13 @@ public class AdminFacilitiesList extends Fragment {
         });
     }
 
+    /**
+     * @param event
+     *
+     * This method takes an event and goes through the lists of accepted, cancelled, selected, and accepted
+     * users and goes into the user profile to remove the event being deleted, then it goes into the host
+     * facility and deletes the event, then finally, the event is deleted from firestore
+     */
     private void deleteEvent(Event event){
         List<String> accepted = event.getAcceptedEntrants();
         List<String> cancelled = event.getCancelledEntrants();

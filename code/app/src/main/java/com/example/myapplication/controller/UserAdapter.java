@@ -76,7 +76,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         ImageView arrowImage = convertView.findViewById(R.id.arrowImageView);
 
         eventName.setText(user.getName());
-        organizerName.setText("User Name: " + user.getEmail());
+        organizerName.setText("User Email: " + user.getEmail());
         statusTag.setText(status);
 
         // Set arrow click listener based on status

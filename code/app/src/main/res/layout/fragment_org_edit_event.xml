@@ -19,10 +19,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+
             android:drawableTint="@color/white"
             android:backgroundTint="@color/kennyBlue"
             android:textColor="@color/white"
             android:text="Cancel" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,6 +45,7 @@
             android:backgroundTint="@color/kennyBlue"
             android:textColor="@color/white"
             android:text="Save" />
+
 
         <ImageView
             android:id="@+id/imageViewEditPoster"

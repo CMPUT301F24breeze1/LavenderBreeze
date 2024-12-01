@@ -30,7 +30,10 @@ import com.squareup.picasso.Picasso;
 import java.io.Serializable;
 
 /**
- * Fragment for adding a Facility
+ * Fragment for adding or editing a facility associated with an organizer.
+ * Allows organizers to input facility details, select a profile image,
+ * and save the information to Firestore. If a facility already exists
+ * for the organizer, its details are preloaded for editing.
  */
 public class OrgAddFacility extends Fragment {
     private static final String TAG = "OrgAddFacility";
@@ -55,15 +58,13 @@ public class OrgAddFacility extends Fragment {
     );
 
     /**
-     * Opens and populates a page for an organizer to add their facility to their organizer profile.
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     * @return the inflated view for the fragment
+     * Inflates the layout for this fragment and initializes views and data.
+     *
+     * @param inflater The LayoutInflater object to inflate views in the fragment.
+     * @param container The parent view that the fragment's UI should attach to.
+     * @param savedInstanceState If non-null, the fragment is being re-constructed
+     *                           from a previous saved state.
+     * @return The inflated view for this fragment.
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,8 +79,11 @@ public class OrgAddFacility extends Fragment {
 
         return view;
     }
+
     /**
-     * Initializes the UI components and sets up button listeners.
+     * Initializes UI components and sets up click listeners for buttons.
+     *
+     * @param view The root view containing the fragment's UI elements.
      */
     private void initializeViews(View view) {
         editFacilityName = view.findViewById(R.id.editTextFacilityName);
@@ -99,7 +103,8 @@ public class OrgAddFacility extends Fragment {
     }
 
     /**
-     * Loads the facility associated with the organizer's deviceID, if it exists
+     * Fetches the existing facility associated with the organizer's ID from Firestore.
+     * If a facility exists, its details are populated in the input fields.
      */
     private void fetchExistingFacility() {
         db.collection("facilities")
@@ -126,7 +131,9 @@ public class OrgAddFacility extends Fragment {
     }
 
     /**
-     * Sets up any fields for the facility that can be auto-populated
+     * Populates the input fields with the details of the existing facility.
+     *
+     * @param facility The existing facility to populate the fields with.
      */
     private void populateFields(Facility facility) {
         editFacilityName.setText(existingFacility.getFacilityName());
@@ -138,8 +145,9 @@ public class OrgAddFacility extends Fragment {
             Picasso.get().load(facility.getProfileImageUrl()).into(facilityProfileImage);
         }
     }
+
     /**
-     * Handles the save button click to validate and save the facility.
+     * Handles the save action, validating inputs and saving the facility.
      */
     private void handleSave() {
         String name = editFacilityName.getText().toString().trim();
@@ -160,7 +168,12 @@ public class OrgAddFacility extends Fragment {
     }
 
     /**
-     * Uploads the selected image to Firebase Storage and saves the facility.
+     * Uploads the selected profile image to Firebase Storage and then saves the facility.
+     *
+     * @param name  The facility name.
+     * @param address The facility address.
+     * @param email The facility email.
+     * @param phone The facility phone number.
      */
     private void uploadImageAndSave(String name, String address, String email, String phone) {
         StorageReference imageRef = storage.getReference().child("facilities/" + organizerId + "/profile.jpg");
@@ -173,7 +186,13 @@ public class OrgAddFacility extends Fragment {
     }
 
     /**
-     * Saves or updates the facility details in Firestore.
+     * Saves a new facility or updates an existing one in Firestore.
+     *
+     * @param name The facility name.
+     * @param address The facility address.
+     * @param email The facility email.
+     * @param phone The facility phone number.
+     * @param imageUrl The URL of the facility's profile image.
      */
     private void saveFacility(String name, String address, String email, String phone, String imageUrl) {
         if (existingFacility != null) {
@@ -182,8 +201,15 @@ public class OrgAddFacility extends Fragment {
             createFacility(name, address, email, phone, imageUrl);
         }
     }
+
     /**
-     * Updates an existing facility in Firestore.
+     * Updates the existing facility's details in Firestore.
+     *
+     * @param name The facility name.
+     * @param address The facility address.
+     * @param email The facility email.
+     * @param phone The facility phone number.
+     * @param imageUrl The URL of the facility's profile image.
      */
     private void updateFacility(String name, String address, String email, String phone, String imageUrl) {
         existingFacility.setFacilityName(name);
@@ -198,8 +224,15 @@ public class OrgAddFacility extends Fragment {
                 .addOnSuccessListener(aVoid -> navigateToEventList("Facility updated successfully"))
                 .addOnFailureListener(e -> showError("Failed to update facility"));
     }
+
     /**
      * Creates a new facility in Firestore.
+     *
+     * @param name The facility name.
+     * @param address The facility address.
+     * @param email The facility email.
+     * @param phone The facility phone number.
+     * @param imageUrl The URL of the facility's profile image.
      */
     private void createFacility(String name, String address, String email, String phone, String imageUrl) {
         Facility newFacility = new Facility(name, address, email, phone, organizerId, imageUrl);
