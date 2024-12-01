@@ -162,7 +162,7 @@ public class OrgEditEvent extends Fragment {
         editLocation.setEnabled(false);
         editCapacity.setText(String.valueOf(snapshot.getLong("capacity")));
         editPrice.setText(String.valueOf(snapshot.getDouble("price")));
-        editGeoSwitch.setChecked(snapshot.getBoolean("geolocationRequired"));
+        editGeoSwitch.setChecked(Boolean.TRUE.equals(snapshot.getBoolean("geolocationRequired")));
 
         posterURL = snapshot.getString("posterUrl");
         tempPosterURL = posterURL;
