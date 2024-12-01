@@ -25,6 +25,7 @@ import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -73,10 +74,15 @@ public class entrantJoinPage extends Fragment {
         ImageButton eventList = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
         ImageView eventImageView = view.findViewById(R.id.eventImageView);
-        TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
-        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
+        TextView eventNameTextView = view.findViewById(R.id.eventNameTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
+        TextView eventCapacityTextView = view.findViewById(R.id.eventCapacityTextView);
+        TextView eventPriceTextView = view.findViewById(R.id.eventPriceTextView);
+        TextView eventRegistrationTextView = view.findViewById(R.id.eventRegistrationTextView);
+        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
         Button addButton = view.findViewById(R.id.addButton);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Event temp = new Event(eventID, loadedEvent -> { // Means of loading the event asynchronously
             if (loadedEvent != null) {
@@ -84,11 +90,17 @@ public class entrantJoinPage extends Fragment {
                 // Populate information for event on page.
                 Glide.with(requireContext())
                         .load(loadedEvent.getPosterUrl())
-                        .transform(new CircleCrop())            // Make image circular
                         .into(eventImageView);
-                organizerNameTextView.setText(loadedEvent.getEventName());
+                String eventStart = sdf.format(loadedEvent.getEventStart());
+                String eventEnd = sdf.format(loadedEvent.getEventEnd());
+                String registrationStart = sdf.format(loadedEvent.getRegistrationStart());
+                String registrationEnd = sdf.format(loadedEvent.getRegistrationEnd());
+                eventNameTextView.setText(loadedEvent.getEventName());
+                eventDateTextView.setText("Schedule: " + eventStart + " to " + eventEnd);
+                eventCapacityTextView.setText("Capacity: " + loadedEvent.getCapacity());
+                eventPriceTextView.setText("Price: " + String.format("$%.2f", loadedEvent.getPrice()));
+                eventRegistrationTextView.setText("Registration Period: " + registrationStart + " to " + registrationEnd);
                 eventDescriptionTextView.setText(loadedEvent.getEventDescription());
-                eventDateTextView.setText("Date: " + loadedEvent.getEventStart());
                 // Call function to add user to waitlist for event, and event to the requested list of user. (On join button press)
                 addButton.setOnClickListener(v -> {
                     if (loadedEvent.getSelectedEntrants().isEmpty()) {
