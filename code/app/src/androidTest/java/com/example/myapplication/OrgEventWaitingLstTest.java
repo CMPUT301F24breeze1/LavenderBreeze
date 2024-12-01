@@ -41,7 +41,7 @@ public class OrgEventWaitingLstTest {
         // Perform navigation to the required screen before each test
         onView(withId(R.id.button_go_to_add_facility)).perform(click());
         onView(withId(R.id.buttonCreateFacility)).perform(click());
-        Thread.sleep(1000); // Wait for the facility creation process (use IdlingResource instead of Thread.sleep in production)
+        Thread.sleep(3000); // Wait for the facility creation process (use IdlingResource instead of Thread.sleep in production)
         onData(is(instanceOf(Event.class)))
                 .inAdapterView(withId(R.id.event_list_view))
                 .atPosition(0)

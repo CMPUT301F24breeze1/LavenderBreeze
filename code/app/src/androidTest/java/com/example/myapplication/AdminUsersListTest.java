@@ -13,6 +13,7 @@ import android.util.Log;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.permission.UiAutomationPermissionGranter;
 
 import com.example.myapplication.model.Event;
@@ -34,11 +35,11 @@ public class AdminUsersListTest {
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<>(MainActivity.class);
 
-//    @Before
-//    public void setPermissionGranter() {
-//        UiAutomationPermissionGranter permissionGranter = new UiAutomationPermissionGranter();
-//        permissionGranter.addPermissions("Manifest.permissions.ACCESS_FINE_LOCATION","Manifest.permissions.CAMERA");
-//    }
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
+
 
     @Before
     public void CreateUser() throws InterruptedException {
