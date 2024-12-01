@@ -84,7 +84,8 @@ public class EntrantQrScan extends Fragment {
     private void switchPage(String eventID) {
         // The QR Code is the eventID encoded, so we put it into a bundle
         Bundle bundle = new Bundle();
-        bundle.putSerializable("eventID", eventID);
+        //bundle.putSerializable("eventID", eventID);
+        bundle.putString("eventID", eventID);
         Navigation.findNavController(requireView()).navigate(R.id.action_entrantQrScan_to_entrantJoinPage, bundle);
     }
 }

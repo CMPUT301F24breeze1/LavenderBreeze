@@ -47,7 +47,8 @@ public class entrantJoinPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventID = (String) getArguments().getSerializable("eventID");
+            //eventID = (String) getArguments().getSerializable("eventID");
+            eventID = getArguments().getString("eventID");
         }
         user = new User(requireContext(), null); // Initialize user and load data
 
@@ -152,6 +153,7 @@ public class entrantJoinPage extends Fragment {
                 } else {
                     // Waitlist is full
                     Toast.makeText(requireContext(), "Waitlist is full. You cannot join.", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
                 }
             } else {
                 // Unlimited waitlist, allow user to join
