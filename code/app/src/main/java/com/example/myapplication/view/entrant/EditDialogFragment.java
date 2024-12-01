@@ -1,4 +1,5 @@
-// From chatgpt, openai, "write a java implementation of EditDialogFragment Class", 2024-11-02
+// From chatgpt, openai, "write a java implementation of EditDialogFragment Class
+// that will take phone number, email address as well as name", 2024-11-02
 
 package com.example.myapplication.view.entrant;
 
@@ -85,7 +86,9 @@ public class EditDialogFragment extends DialogFragment {
 
         // Override the Save button's click listener for validation
         dialog.setOnShowListener(dialogInterface -> {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            View positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setId(R.id.dialog_positive_button);
+            positiveButton.setOnClickListener(v -> {
                 String newValue = editText.getText().toString().trim();
 
                 if (TextUtils.isEmpty(newValue)) {

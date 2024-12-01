@@ -27,6 +27,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * This Fragment representing the Entrant Join Page, allowing users to view and join events.
+ * This fragment is responsible for displaying event details retrieved from a Firestore database,
+ * handling user interactions such as joining an event's waitlist, and managing UI elements for
+ * navigation and event description toggling.
+ */
 public class entrantJoinPage extends Fragment {
 
     private String eventID;
