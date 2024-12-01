@@ -31,7 +31,8 @@
             android:id="@+id/button_show_accepted"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:text="Accept" />
+            android:text="Accept"
+            android:textSize="11sp"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +40,8 @@
             android:id="@+id/button_show_waitlist"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:text="Request" />
+            android:text="Request"
+            android:textSize="11sp"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +49,8 @@
             android:id="@+id/button_show_selected"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:text="Select" />
+            android:text="Select"
+            android:textSize="11sp"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +58,8 @@
             android:id="@+id/button_show_cancelled"
             android:backgroundTint="@color/white"
             android:textColor="@color/black"
-            android:text="Decline" />
+            android:text="Decline"
+            android:textSize="11sp"/>
     </LinearLayout>
 
     <ListView
