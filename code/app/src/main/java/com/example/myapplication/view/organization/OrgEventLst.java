@@ -125,7 +125,7 @@ public class OrgEventLst extends Fragment {
                         Log.d("test", "onSuccess: " + events.get(i).get("price"));
                         Event event = new Event(eventName, events.get(i).getString("eventDescription"), ((Timestamp) events.get(i).get("eventStart")).toDate(), ((Timestamp) events.get(i).get("eventEnd")).toDate(),
                                 ((Timestamp) events.get(i).get("registrationStart")).toDate(), ((Timestamp) events.get(i).get("registrationEnd")).toDate(), events.get(i).getString("location"), capacity, ((Number) events.get(i).get("price")).intValue(),
-                                events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"), events.get(i).getBoolean("geolocationRequired"));
+                                events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"), Boolean.TRUE.equals(events.get(i).getBoolean("geolocationRequired")));
 
 
                         // I set the event description as the doc ID to make it easier to pass when clicked
