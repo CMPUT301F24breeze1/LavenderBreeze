@@ -19,10 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
-            android:text="Cancel" />
+            android:text="Cancel"
+            android:backgroundTint="#ff0000"
+            android:textColor="#FFFFFF"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,10 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
-            android:text="Save" />
+            android:text="Save"
+            android:backgroundTint="#007f00"
+            android:textColor="#FFFFFF"/>
 
         <ImageView
             android:id="@+id/imageViewEditPoster"
@@ -117,9 +115,6 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/editEventStart"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
             android:text="Select Date" />
 
         <EditText
@@ -142,9 +137,6 @@
             android:layout_toRightOf="@+id/editEventEnd"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="15dp"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
             android:text="Select Date"/>
 
 
@@ -170,9 +162,6 @@
             android:layout_toEndOf="@+id/editRegistrationStart"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="15dp"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
             android:text="Select Date"/>
 
 
@@ -197,9 +186,6 @@
             android:layout_toEndOf="@+id/editRegistrationEnd"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="15dp"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
             android:text="Select Date"/>
 
 

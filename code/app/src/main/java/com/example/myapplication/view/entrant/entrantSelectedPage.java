@@ -21,12 +21,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.myapplication.R;
+import com.example.myapplication.controller.NotificationHelper;
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class entrantSelectedPage extends Fragment {
 
     private Event event; // Store the event object
     private User user;
-    private User winner;
+
     /**
      * Initializes the fragment, retrieves the Event data from arguments if available,
      * and sets up the User object.
@@ -72,21 +74,32 @@ public class entrantSelectedPage extends Fragment {
         ImageButton backButton = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
         ImageView eventImageView = view.findViewById(R.id.eventImageView);
-        TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
-        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
+        TextView eventNameTextView = view.findViewById(R.id.eventNameTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
+        TextView eventCapacityTextView = view.findViewById(R.id.eventCapacityTextView);
+        TextView eventPriceTextView = view.findViewById(R.id.eventPriceTextView);
+        TextView eventRegistrationTextView = view.findViewById(R.id.eventRegistrationTextView);
+        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
         Button acceptButton = view.findViewById(R.id.AcceptButton);
         Button declineButton = view.findViewById(R.id.DeclineButton);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         // Populate UI with event details
         if (event != null) {
             Glide.with(requireContext())
                     .load(event.getPosterUrl())
-                    .transform(new CircleCrop())            // Make image circular
                     .into(eventImageView);
-            organizerNameTextView.setText("Event: " + event.getEventName());
+            String eventStart = sdf.format(event.getEventStart());
+            String eventEnd = sdf.format(event.getEventEnd());
+            String registrationStart = sdf.format(event.getRegistrationStart());
+            String registrationEnd = sdf.format(event.getRegistrationEnd());
+            eventNameTextView.setText(event.getEventName());
+            eventDateTextView.setText("Schedule: " + eventStart + " to " + eventEnd);
+            eventCapacityTextView.setText("Capacity: " + event.getCapacity());
+            eventPriceTextView.setText("Price: " + String.format("$%.2f", event.getPrice()));
+            eventRegistrationTextView.setText("Registration Period: " + registrationStart + " to " + registrationEnd);
             eventDescriptionTextView.setText(event.getEventDescription());
-            eventDateTextView.setText("Date: " + event.getEventStart()); // Format the date if needed
         }
 
         // Back button to navigate to the event list
@@ -145,32 +158,39 @@ public class entrantSelectedPage extends Fragment {
             int capacity = event.getCapacity();
             String eventId = event.getEventId();
 
-            if (waitlist.isEmpty()) {
-                //Toast.makeText(getActivity(), "No remaining entrants", Toast.LENGTH_LONG).show();
-                Log.d("Lucas", "No more waitlisted entrants");
-                return;
-            }
-            //Select new entrant
-            Collections.shuffle(waitlist);
-                winner = new User(waitlist.get(0), null);
+            if (!waitlist.isEmpty()) {
+                //Select new entrant
+                Collections.shuffle(waitlist);
+                User winner = new User(waitlist.get(0), null);
                 winner.addSelectedEvent(eventId);
                 winner.removeRequestedEvent(eventId);
 
+                List<String> notifyUser = new ArrayList<>();
+                notifyUser.add(waitlist.get(0));
+
                 // Move entrants in event lists
                 selected.add(waitlist.remove(0));
-            // Update Firestore
-            Map<String, Object> eventData = new HashMap<>();
-            eventData.put("waitlist", waitlist);
-            eventData.put("selectedEntrants", selected);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference eventsRef = db.collection("events");
-            eventsRef.document(eventId).update(eventData)
-                    .addOnSuccessListener(aVoid -> Log.d("Lucas", "Event updated successfully in Firestore."))
-                    .addOnFailureListener(e -> {
-                        Log.e("Lucas", "Error updating event in Firestore", e);
-                        Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
-                    });
+                // Update Firestore
+                Map<String, Object> eventData = new HashMap<>();
+                eventData.put("waitlist", waitlist);
+                eventData.put("selectedEntrants", selected);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference eventsRef = db.collection("events");
+                eventsRef.document(eventId).update(eventData)
+                        .addOnSuccessListener(aVoid -> Log.d("Lucas", "Event updated successfully in Firestore."))
+                        .addOnFailureListener(e -> {
+                            Log.e("Lucas", "Error updating event in Firestore", e);
+                            Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
+                        });
 
+                // Send new selected a notification
+                NotificationHelper notificationHelper = new NotificationHelper();
+                notificationHelper.sendNotification(
+                        notifyUser,             // List containing only the new selected person's device ID
+                        "Congratulations!",     // Notification title
+                        "You won the lottery! Claim your prize now." // Notification message
+                );
+            }
             // Navigate back to the event list after declining
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantSelectedPage_to_entrantEventsList);
         }

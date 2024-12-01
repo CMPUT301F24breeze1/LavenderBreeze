@@ -41,9 +41,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * Fragment that allow organizers to create an event details they wish to have.
- * Prompting the organizer to add Event Name, Details, Location, Capacity, Price, Poster URl
- * Event Start and End Date, Registration Start and End Date
+ * The OrgAddEvent class is a Fragment that provides a user interface for event organizers to create new events.
+ * It allows organizers to input event details such as name, description, date, location, capacity, price,
+ * poster image, and other settings. The event details are validated and saved to Firestore, and the associated
+ * facility is updated accordingly.
  */
 public class OrgAddEvent extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -54,28 +55,27 @@ public class OrgAddEvent extends Fragment {
     private EditText editTextEventName, editTextEventDescription, editTextLocation, editTextCapacity, editTextPrice;
     private EditText editTextEventStart, editTextEventEnd, editTextRegistrationStart, editTextRegistrationEnd;
     private EditText editWaitingListCap;
-    public EditText editTextEventStartTime, editTextEventEndTime, editTextRegistrationStartTime, editTextRegistrationEndTime;
     public Button eventPickStartDate, eventPickEndDate, registrationPickStartDate, registrationPickEndDate;
-    public Button eventPickStartTime, eventPickEndTime, registrationPickStartTime, registrationPickEndTime;
     private ImageView posterImageView;
     private FirebaseFirestore database;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private SwitchCompat geoSwitch;
 
+    /**
+     * Default constructor for OrgAddEvent.
+     */
     public OrgAddEvent() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Factory method to create a new instance of this fragment using provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment org_add_event.
+     * @return A new instance of fragment OrgAddEvent.
      */
-    // TODO: Rename and change types and number of parameters
     public static OrgAddEvent newInstance(String param1, String param2) {
         OrgAddEvent fragment = new OrgAddEvent();
         Bundle args = new Bundle();
@@ -86,9 +86,9 @@ public class OrgAddEvent extends Fragment {
     }
 
     /**
-     * Initializes fragment
-     * @param savedInstanceState If the fragment is being re-created from
-     * a previous saved state, this is the state.
+     * Called when the fragment is created. Initializes Firebase Firestore and the image picker.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,19 +108,13 @@ public class OrgAddEvent extends Fragment {
     }
 
     /**
-     * Inflates the view, sets up UI elements, and configures click listeners for navigation
-     * Allows organizer to enter information about the event, including uploading a poster
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
+     * Called to initialize the fragment's UI components and event handlers.
      *
-     * @return view
+     * @param inflater           LayoutInflater to inflate the fragment's layout.
+     * @param container          ViewGroup that contains the fragment's UI.
+     * @param savedInstanceState Previous saved state, if any.
+     * @return The root View of the fragment.
      */
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,6 +133,12 @@ public class OrgAddEvent extends Fragment {
 
         return view;
     }
+
+    /**
+     * Binds UI elements in the fragment's view to their respective variables.
+     *
+     * @param view The root view of the fragment.
+     */
     private void bindUIElements(View view) {
         editTextEventName = view.findViewById(R.id.editTextEventName);
         editTextEventDescription = view.findViewById(R.id.editTextEventDescription);
@@ -159,6 +159,12 @@ public class OrgAddEvent extends Fragment {
         registrationPickEndDate = view.findViewById(R.id.selectRegistrationEndDateButton);
         geoSwitch = view.findViewById(R.id.geolocationSwitch);
     }
+
+    /**
+     * Sets up event handlers for various UI interactions, such as button clicks.
+     *
+     * @param view The root view of the fragment.
+     */
     private void setupEventHandlers(View view) {
         Button createEventButton = view.findViewById(R.id.buttonAddEvent);
         Button cancelButton = view.findViewById(R.id.buttonCancel);
@@ -186,6 +192,10 @@ public class OrgAddEvent extends Fragment {
             pickImageLauncher.launch(Intent.createChooser(intent, "Select Event Poster"));
         });
     }
+
+    /**
+     * Initializes the image picker for selecting a poster image.
+     */
     private void initializeImagePicker() {
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -200,8 +210,9 @@ public class OrgAddEvent extends Fragment {
     }
 
     /**
-     * Validates the fields to make sure the information entered are safe
-     * @return true
+     * Validates the fields entered by the user to ensure they meet the required conditions.
+     *
+     * @return {@code true} if all fields are valid; {@code false} otherwise.
      */
     public boolean validateFields() {
         // added validation if waiting list is set
@@ -219,7 +230,8 @@ public class OrgAddEvent extends Fragment {
 
 
     /**
-     * Allows the upload of Poster image and URL
+     * Uploads the selected poster image to Firebase Storage and retrieves its URL.
+     * Once uploaded, proceeds to create the event.
      */
     private void uploadPosterImage() {
         if (imageUri != null) {
@@ -235,7 +247,10 @@ public class OrgAddEvent extends Fragment {
         }
     }
 
-
+    /**
+     * Fetches the facility name associated with the organizer's ID from Firestore
+     * and updates the location field accordingly.
+     */
     private void fetchFacilityName() {
         String organizerID = DeviceUtils.getDeviceId(requireContext());
 
@@ -265,8 +280,10 @@ public class OrgAddEvent extends Fragment {
     }
 
     /**
-     * To create the event, generate QR Code, save to Facility if possible, and save to Firestore Firebase
-     * @param posterUrl
+     * Creates an event in Firestore using the provided details, generates a QR code,
+     * and associates the event with the organizer's facility.
+     *
+     * @param posterUrl The URL of the uploaded poster image.
      */
     private void createEvent(String posterUrl) {
         String organizerID = DeviceUtils.getDeviceId(requireContext());
@@ -334,11 +351,10 @@ public class OrgAddEvent extends Fragment {
     }
 
     /**
-     * Save the generated eventId to the events array in the facility document.
-     * This method adds only the eventId (not the full event object) to the facility's events list.
+     * Updates the "events" array in the specified facility document by adding the new event ID.
      *
      * @param facilityId The ID of the facility.
-     * @param eventId The ID of the newly created event.
+     * @param eventId    The ID of the newly created event.
      */
     private void saveEventToFacility(String facilityId, String eventId) {
         // Update the "events" array in the facility document with the eventId
@@ -353,10 +369,22 @@ public class OrgAddEvent extends Fragment {
                 });
     }
 
+    /**
+     * Checks if the given EditText field is empty.
+     *
+     * @param input The EditText field to check.
+     * @return {@code true} if the field is empty; {@code false} otherwise.
+     */
     private boolean isEmpty(EditText input) {
         return input.getText().toString().trim().isEmpty();
     }
 
+    /**
+     * Validates whether the provided string represents a positive integer.
+     *
+     * @param value The string to validate.
+     * @return {@code true} if the string is a positive integer; {@code false} otherwise.
+     */
     private boolean isPositiveInteger(String value) {
         try {
             return Integer.parseInt(value) > 0;
@@ -365,7 +393,12 @@ public class OrgAddEvent extends Fragment {
         }
     }
 
-    // New helper method to validate positive double values
+    /**
+     * Validates whether the provided string represents a positive double.
+     *
+     * @param value The string to validate.
+     * @return {@code true} if the string is a positive double; {@code false} otherwise.
+     */
     private boolean isPositiveDouble(String value) {
         try {
             return Double.parseDouble(value) > 0;
@@ -375,9 +408,10 @@ public class OrgAddEvent extends Fragment {
     }
 
     /**
-     * To turn a String into a Date data type
-     * @param dateString
-     * @return
+     * Parses a date string into a Date object using the format "yyyy-MM-dd HH:mm".
+     *
+     * @param dateString The date string to parse.
+     * @return A Date object if parsing succeeds; {@code null} otherwise.
      */
     public Date parseDate(String dateString) {
         try {
@@ -388,14 +422,30 @@ public class OrgAddEvent extends Fragment {
             return null; // Return null if parsing fails
         }
     }
+
+    /**
+     * Navigates the user to the event list screen.
+     *
+     * @param view The current view.
+     */
     private void navigateToEventList(View view) {
         Navigation.findNavController(view).navigate(R.id.action_org_add_event_to_org_event_lst);
     }
 
+    /**
+     * Displays a Toast message to the user.
+     *
+     * @param message The message to display.
+     */
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Saves the generated QR code for the event in Firestore.
+     *
+     * @param eventId The ID of the event.
+     */
     private void saveQRCodeToEvent(String eventId) {
         QRCodeGenerator qrCode = new QRCodeGenerator(eventId);
         String eventQRCode = qrCode.getQRCodeAsBase64();
@@ -409,6 +459,13 @@ public class OrgAddEvent extends Fragment {
                     Log.e("OrgAddEvent", "Error adding QR code to event", e);
                 });
     }
+
+    /**
+     * Displays a DatePicker and TimePicker dialog for selecting a date and time,
+     * then sets the result on the specified EditText field.
+     *
+     * @param targetEditText The EditText field to set the selected date and time.
+     */
     private void showDateTimePicker(EditText targetEditText) {
         // Get the current date and time
         final Calendar calendar = Calendar.getInstance();

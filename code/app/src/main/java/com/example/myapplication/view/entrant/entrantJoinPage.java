@@ -25,8 +25,15 @@ import com.example.myapplication.model.Event;
 import com.example.myapplication.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * This Fragment representing the Entrant Join Page, allowing users to view and join events.
+ * This fragment is responsible for displaying event details retrieved from a Firestore database,
+ * handling user interactions such as joining an event's waitlist, and managing UI elements for
+ * navigation and event description toggling.
+ */
 public class entrantJoinPage extends Fragment {
 
     private String eventID;
@@ -41,7 +48,8 @@ public class entrantJoinPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventID = (String) getArguments().getSerializable("eventID");
+            //eventID = (String) getArguments().getSerializable("eventID");
+            eventID = getArguments().getString("eventID");
         }
         user = new User(requireContext(), null); // Initialize user and load data
 
@@ -66,10 +74,15 @@ public class entrantJoinPage extends Fragment {
         ImageButton eventList = view.findViewById(R.id.backArrowButton);
         ImageButton expandDescriptionButton = view.findViewById(R.id.expandDescriptionButton);
         ImageView eventImageView = view.findViewById(R.id.eventImageView);
-        TextView organizerNameTextView = view.findViewById(R.id.organizerNameTextView);
-        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
+        TextView eventNameTextView = view.findViewById(R.id.eventNameTextView);
         TextView eventDateTextView = view.findViewById(R.id.eventDateTextView);
+        TextView eventCapacityTextView = view.findViewById(R.id.eventCapacityTextView);
+        TextView eventPriceTextView = view.findViewById(R.id.eventPriceTextView);
+        TextView eventRegistrationTextView = view.findViewById(R.id.eventRegistrationTextView);
+        TextView eventDescriptionTextView = view.findViewById(R.id.eventDescriptionTextView);
         Button addButton = view.findViewById(R.id.addButton);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Event temp = new Event(eventID, loadedEvent -> { // Means of loading the event asynchronously
             if (loadedEvent != null) {
@@ -77,11 +90,17 @@ public class entrantJoinPage extends Fragment {
                 // Populate information for event on page.
                 Glide.with(requireContext())
                         .load(loadedEvent.getPosterUrl())
-                        .transform(new CircleCrop())            // Make image circular
                         .into(eventImageView);
-                organizerNameTextView.setText(loadedEvent.getEventName());
+                String eventStart = sdf.format(loadedEvent.getEventStart());
+                String eventEnd = sdf.format(loadedEvent.getEventEnd());
+                String registrationStart = sdf.format(loadedEvent.getRegistrationStart());
+                String registrationEnd = sdf.format(loadedEvent.getRegistrationEnd());
+                eventNameTextView.setText(loadedEvent.getEventName());
+                eventDateTextView.setText("Schedule: " + eventStart + " to " + eventEnd);
+                eventCapacityTextView.setText("Capacity: " + loadedEvent.getCapacity());
+                eventPriceTextView.setText("Price: " + String.format("$%.2f", loadedEvent.getPrice()));
+                eventRegistrationTextView.setText("Registration Period: " + registrationStart + " to " + registrationEnd);
                 eventDescriptionTextView.setText(loadedEvent.getEventDescription());
-                eventDateTextView.setText("Date: " + loadedEvent.getEventStart());
                 // Call function to add user to waitlist for event, and event to the requested list of user. (On join button press)
                 addButton.setOnClickListener(v -> {
                     if (loadedEvent.getSelectedEntrants().isEmpty()) {
@@ -146,6 +165,7 @@ public class entrantJoinPage extends Fragment {
                 } else {
                     // Waitlist is full
                     Toast.makeText(requireContext(), "Waitlist is full. You cannot join.", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_entrantJoinPage_to_entrantEventsList);
                 }
             } else {
                 // Unlimited waitlist, allow user to join

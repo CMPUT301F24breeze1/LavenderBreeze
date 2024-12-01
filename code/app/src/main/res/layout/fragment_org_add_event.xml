@@ -5,271 +5,271 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:orientation="vertical">
-    <RelativeLayout
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#303030"
+    android:padding="16dp"
+    tools:context=".view.organization.OrgAddEvent">
+
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload a Poster"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/imageViewPoster"/>
+    <Button
+        android:id="@+id/buttonAddEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="Create"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/kennyBlue"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+    <ImageView
+        android:id="@+id/imageViewPoster"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/buttonCancel"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="Event Poster"
+        android:scaleType="centerCrop" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonAddPoster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/imageViewPoster"
+        android:layout_alignBottom="@id/imageViewPoster"
+        android:layout_margin="8dp"
+        android:contentDescription="Add Poster"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white" />
+
+    <EditText
+        android:id="@+id/editTextEventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#303030"
-        android:padding="16dp"
-        tools:context=".view.organization.OrgAddEvent">
+        android:layout_below="@id/imageViewPoster"
+        android:layout_marginTop="16dp"
+        android:hint="Event Name"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Event Description -->
+    <EditText
+        android:id="@+id/editTextEventDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextEventName"
+        android:layout_marginTop="8dp"
+        android:hint="Event Description: max 450 characters"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:maxLength="450"/>
+
+    <!-- Event Start Date -->
+    <EditText
+        android:id="@+id/editTextEventStart"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextEventDescription"
+        android:layout_marginTop="8dp"
+        android:hint="Event Start Date"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectStartDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextEventDescription"
+        android:layout_toRightOf="@+id/editTextEventStart"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"/>
 
 
-        <!-- Back Button -->
-        <Button
-            android:id="@+id/buttonCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+
+    <!-- Event End Date -->
+    <EditText
+        android:id="@+id/editTextEventEnd"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextEventStart"
+        android:layout_marginTop="8dp"
+        android:hint="Event End Date"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectEndDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectStartDateButton"
+        android:layout_toRightOf="@+id/editTextEventEnd"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"/>
+
+
+
+    <!-- Registration Start Date -->
+    <EditText
+        android:id="@+id/editTextRegistrationStart"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextEventEnd"
+        android:layout_marginTop="8dp"
+        android:hint="Registration Start Date"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectRegistrationStartDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectEndDateButton"
+        android:layout_toEndOf="@+id/editTextRegistrationStart"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"/>
+
+
+    <!-- Registration End Date -->
+    <EditText
+        android:id="@+id/editTextRegistrationEnd"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextRegistrationStart"
+        android:layout_marginTop="8dp"
+        android:hint="Registration End Date"
+        android:inputType="datetime"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+    <Button
+        android:id="@+id/selectRegistrationEndDateButton"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextRegistrationStart"
+        android:layout_toEndOf="@+id/editTextRegistrationEnd"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"
+        android:text="Select Date"/>
+
+
+    <!-- Location -->
+    <EditText
+        android:id="@+id/editTextLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextRegistrationEnd"
+        android:layout_marginTop="8dp"
+        android:hint="Location"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:enabled="false"/>
+
+    <!-- Capacity -->
+    <EditText
+        android:id="@+id/editTextCapacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextLocation"
+        android:layout_marginTop="8dp"
+        android:hint="Capacity"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Price -->
+    <EditText
+        android:id="@+id/editTextPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextCapacity"
+        android:layout_marginTop="8dp"
+        android:hint="Price"
+        android:inputType="numberDecimal"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+    <EditText
+        android:id="@+id/editTextWaitingList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextPrice"
+        android:layout_marginTop="8dp"
+        android:hint="Optional: Waiting List Entrant Limit"
+        android:inputType="numberDecimal"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"/>
+
+    <!-- Create Event Button at the Bottom Center -->
+    <LinearLayout
+        android:id="@+id/optionalGeolocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextWaitingList"
+        android:background="@drawable/edit_text_border"
+        android:layout_marginTop="8dp">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upload a Poster"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:text="Enable Geolocation?"
             android:padding="12dp"
-            android:textColor="#FFFFFF"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@id/imageViewPoster"/>
-        <Button
-            android:id="@+id/buttonAddEvent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:text="Create"
-            android:drawableTint="@color/white"
-            android:backgroundTint="@color/kennyBlue"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-        <ImageView
-            android:id="@+id/imageViewPoster"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_below="@id/buttonCancel"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_centerHorizontal="true"
-            android:background="@android:color/darker_gray"
-            android:contentDescription="Event Poster"
-            android:scaleType="centerCrop" />
+            />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/geolocationSwitch"
+            android:gravity="center"
+            android:layout_width="175dp"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/buttonAddPoster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/imageViewPoster"
-            android:layout_alignBottom="@id/imageViewPoster"
-            android:layout_margin="8dp"
-            android:contentDescription="Add Poster"
-            android:src="@android:drawable/ic_input_add"
-            android:tint="@android:color/white" />
-
-        <EditText
-            android:id="@+id/editTextEventName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/imageViewPoster"
-            android:layout_marginTop="16dp"
-            android:hint="Event Name"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-
-        <!-- Event Description -->
-        <EditText
-            android:id="@+id/editTextEventDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextEventName"
-            android:layout_marginTop="8dp"
-            android:hint="Event Description: max 450 characters"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"
-            android:maxLength="450"/>
-
-        <!-- Event Start Date -->
-        <EditText
-            android:id="@+id/editTextEventStart"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextEventDescription"
-            android:layout_marginTop="8dp"
-            android:hint="Event Start Date"
-            android:inputType="datetime"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-        <Button
-            android:id="@+id/selectStartDateButton"
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextEventDescription"
-            android:layout_toRightOf="@+id/editTextEventStart"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="15dp"
-            android:text="Select Date"/>
-
-
-
-        <!-- Event End Date -->
-        <EditText
-            android:id="@+id/editTextEventEnd"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextEventStart"
-            android:layout_marginTop="8dp"
-            android:hint="Event End Date"
-            android:inputType="datetime"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-        <Button
-            android:id="@+id/selectEndDateButton"
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/selectStartDateButton"
-            android:layout_toRightOf="@+id/editTextEventEnd"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="15dp"
-            android:text="Select Date"/>
-
-
-
-        <!-- Registration Start Date -->
-        <EditText
-            android:id="@+id/editTextRegistrationStart"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextEventEnd"
-            android:layout_marginTop="8dp"
-            android:hint="Registration Start Date"
-            android:inputType="datetime"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-        <Button
-            android:id="@+id/selectRegistrationStartDateButton"
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/selectEndDateButton"
-            android:layout_toEndOf="@+id/editTextRegistrationStart"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="15dp"
-            android:text="Select Date"/>
-
-
-        <!-- Registration End Date -->
-        <EditText
-            android:id="@+id/editTextRegistrationEnd"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextRegistrationStart"
-            android:layout_marginTop="8dp"
-            android:hint="Registration End Date"
-            android:inputType="datetime"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-        <Button
-            android:id="@+id/selectRegistrationEndDateButton"
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextRegistrationStart"
-            android:layout_toEndOf="@+id/editTextRegistrationEnd"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="15dp"
-            android:text="Select Date"/>
-
-
-        <!-- Location -->
-        <EditText
-            android:id="@+id/editTextLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextRegistrationEnd"
-            android:layout_marginTop="8dp"
-            android:hint="Location"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"
-            android:enabled="false"/>
-
-        <!-- Capacity -->
-        <EditText
-            android:id="@+id/editTextCapacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextLocation"
-            android:layout_marginTop="8dp"
-            android:hint="Capacity"
-            android:inputType="number"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-
-        <!-- Price -->
-        <EditText
-            android:id="@+id/editTextPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextCapacity"
-            android:layout_marginTop="8dp"
-            android:hint="Price"
-            android:inputType="numberDecimal"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-        <EditText
-            android:id="@+id/editTextWaitingList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextPrice"
-            android:layout_marginTop="8dp"
-            android:hint="Optional: Waiting List Entrant Limit"
-            android:inputType="numberDecimal"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/edit_text_border"
-            android:padding="12dp"/>
-
-        <!-- Create Event Button at the Bottom Center -->
-        <LinearLayout
-            android:id="@+id/optionalGeolocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextWaitingList"
-            android:background="@drawable/edit_text_border"
-            android:layout_marginTop="8dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#FFFFFF"
-                android:textSize="18dp"
-                android:gravity="center"
-                android:text="Enable Geolocation?"
-                android:padding="12dp"
-                />
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/geolocationSwitch"
-                android:gravity="center"
-                android:layout_width="175dp"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-
-    </RelativeLayout>
+</RelativeLayout>
 </ScrollView>
