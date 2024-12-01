@@ -47,7 +47,8 @@ public class entrantJoinPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventID = (String) getArguments().getSerializable("eventID");
+            //eventID = (String) getArguments().getSerializable("eventID");
+            eventID = getArguments().getString("eventID");
         }
         user = new User(requireContext(), null); // Initialize user and load data
 

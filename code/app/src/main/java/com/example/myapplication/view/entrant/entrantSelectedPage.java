@@ -146,43 +146,39 @@ public class entrantSelectedPage extends Fragment {
             int capacity = event.getCapacity();
             String eventId = event.getEventId();
 
-            if (waitlist.isEmpty()) {
-                //Toast.makeText(getActivity(), "No remaining entrants", Toast.LENGTH_LONG).show();
-                Log.d("Lucas", "No more waitlisted entrants");
-                return;
+            if (!waitlist.isEmpty()) {
+                //Select new entrant
+                Collections.shuffle(waitlist);
+                User winner = new User(waitlist.get(0), null);
+                winner.addSelectedEvent(eventId);
+                winner.removeRequestedEvent(eventId);
+
+                List<String> notifyUser = new ArrayList<>();
+                notifyUser.add(waitlist.get(0));
+
+                // Move entrants in event lists
+                selected.add(waitlist.remove(0));
+                // Update Firestore
+                Map<String, Object> eventData = new HashMap<>();
+                eventData.put("waitlist", waitlist);
+                eventData.put("selectedEntrants", selected);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference eventsRef = db.collection("events");
+                eventsRef.document(eventId).update(eventData)
+                        .addOnSuccessListener(aVoid -> Log.d("Lucas", "Event updated successfully in Firestore."))
+                        .addOnFailureListener(e -> {
+                            Log.e("Lucas", "Error updating event in Firestore", e);
+                            Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
+                        });
+
+                // Send new selected a notification
+                NotificationHelper notificationHelper = new NotificationHelper();
+                notificationHelper.sendNotification(
+                        notifyUser,             // List containing only the new selected person's device ID
+                        "Congratulations!",     // Notification title
+                        "You won the lottery! Claim your prize now." // Notification message
+                );
             }
-            //Select new entrant
-            Collections.shuffle(waitlist);
-            User winner = new User(waitlist.get(0), null);
-            winner.addSelectedEvent(eventId);
-            winner.removeRequestedEvent(eventId);
-
-            List<String> notifyUser = new ArrayList<>();
-            notifyUser.add(waitlist.get(0));
-
-            // Move entrants in event lists
-            selected.add(waitlist.remove(0));
-            // Update Firestore
-            Map<String, Object> eventData = new HashMap<>();
-            eventData.put("waitlist", waitlist);
-            eventData.put("selectedEntrants", selected);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference eventsRef = db.collection("events");
-            eventsRef.document(eventId).update(eventData)
-                    .addOnSuccessListener(aVoid -> Log.d("Lucas", "Event updated successfully in Firestore."))
-                    .addOnFailureListener(e -> {
-                        Log.e("Lucas", "Error updating event in Firestore", e);
-                        Toast.makeText(getActivity(), "Failed to update event in Firestore.", Toast.LENGTH_LONG).show();
-                    });
-
-            // Send new selected a notification
-            NotificationHelper notificationHelper = new NotificationHelper();
-            notificationHelper.sendNotification(
-                    notifyUser,             // List containing only the new selected person's device ID
-                    "Congratulations!",     // Notification title
-                    "You won the lottery! Claim your prize now." // Notification message
-            );
-
             // Navigate back to the event list after declining
             Navigation.findNavController(requireView()).navigate(R.id.action_entrantSelectedPage_to_entrantEventsList);
         }
