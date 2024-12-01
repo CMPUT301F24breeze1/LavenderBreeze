@@ -23,7 +23,9 @@ import com.journeyapps.barcodescanner.ScanOptions;
  * (Upon successful QR code scan)
  */
 public class EntrantQrScan extends Fragment {
-
+    /**
+     * Default constructor required for instantiating the fragment.
+     */
     public EntrantQrScan() {
         // Required empty public constructor?
     }

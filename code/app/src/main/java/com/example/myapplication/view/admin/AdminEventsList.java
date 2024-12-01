@@ -159,7 +159,7 @@ public class AdminEventsList extends Fragment {
                             events.get(i).getString("location"),capacity, ((Number)events.get(i).get("price")).intValue(),
                             events.get(i).getString("posterUrl"), events.get(i).getString("qrCodeHash"), events.get(i).getString("organizerId"),
                             (List<String>) events.get(i).get("acceptedEntrants"), (List<String>) events.get(i).get("selectedEntrants"),
-                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist"), events.get(i).getBoolean("geolocationRequired")));
+                            (List<String>) events.get(i).get("declinedEntrants"), (List<String>) events.get(i).get("waitlist"), Boolean.TRUE.equals(events.get(i).getBoolean("geolocationRequired"))));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }

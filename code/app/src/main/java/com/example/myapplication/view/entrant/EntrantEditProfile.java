@@ -66,7 +66,7 @@ public class EntrantEditProfile extends Fragment {
     private User user;
     private static final int PICK_IMAGE_REQUEST = 1;
     private StorageReference storageRef;
-    ImageButton homeButton, profileButton, eventsButton;
+    private ImageButton homeButton, profileButton, eventsButton;
 
     /**
      * Default constructor required for instantiating the fragment.
@@ -263,7 +263,9 @@ public class EntrantEditProfile extends Fragment {
                 }
             }
     );
-
+    // From chatgpt, openai, "write a java implementation with java documentation for uploadImageToFirebase
+    // methods to upload the user's profile picture to the database and update User information
+    // given here is the xml code for it and current java class", 2024-11-27
     /**
      * Uploads the selected image to Firebase Storage.
      * @param imageUri the URI of the selected image
@@ -283,6 +285,9 @@ public class EntrantEditProfile extends Fragment {
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to upload picture.", Toast.LENGTH_SHORT).show());
     }
+    // From chatgpt, openai, "write a java implementation with java documentation for deletePicture
+    // methods to delete the user's profile picture from the database and update profile information
+    // given here is the xml code for it and current java class", 2024-11-27
     /**
      * Deletes the user's profile picture from Firebase Storage.
      */

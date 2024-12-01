@@ -167,6 +167,9 @@ public class OrgEventSelectedLst extends Fragment {
         });
     }
 
+    /**
+     * This updates the list data for the event
+     */
     private void updateListData() {
         event = new Event(eventId);
         event.loadEventDataAsync(new Event.OnEventDataLoadedListener() {
