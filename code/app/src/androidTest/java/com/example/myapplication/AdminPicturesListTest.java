@@ -4,9 +4,11 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+import android.media.Image;
 import android.util.Log;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -14,6 +16,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.permission.UiAutomationPermissionGranter;
 
+import com.bumptech.glide.Glide;
+import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
 import com.example.myapplication.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,6 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +44,18 @@ public class AdminPicturesListTest {
     public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
 
+
     @Before
+    public void navigate() throws InterruptedException {
+        // Perform navigation to the required screen before each test
+        Thread.sleep(3000);
+        onView(withId(R.id.button_go_to_admin)).perform(click());
+        Thread.sleep(1000);
+        onView(withId(R.id.images)).perform(click());
+        Thread.sleep(1000);
+    }
+
+    @Test
     public void CreateUser() throws InterruptedException {
         // Perform navigation to the required screen before each test
         HashMap<String, Object> userData = new HashMap<>();
@@ -65,41 +81,15 @@ public class AdminPicturesListTest {
         });
         Thread.sleep(1000);
 
-        Map<String, Object> eventData = new HashMap<>();
-        eventData.put("eventName", "UITest");
-        eventData.put("eventDescription", "eventDescription");
-        eventData.put("eventStart", Date.getDefaultInstance());
-        eventData.put("eventEnd", Date.getDefaultInstance());
-        eventData.put("registrationStart", Date.getDefaultInstance());
-        eventData.put("registrationEnd", Date.getDefaultInstance());
-        eventData.put("location", "UITest");
-        eventData.put("capacity", 1);
-        eventData.put("price", 1);
-        eventData.put("posterUrl", "posterUrl");
-        eventData.put("qrCodeHash", "https://firebasestorage.googleapis.com/v0/b/lottery-breeze.appspot.com/o/event_posters%2F1732930373725.jpg?alt=media&token=1638502d-b5cf-49e7-927a-1a7aa7c7e77c");
-        eventData.put("organizerId", "UITest");
-        eventData.put("waitlist", new ArrayList<>());
-        eventData.put("selectedEntrants", new ArrayList<>());
-        eventData.put("acceptedEntrants", new ArrayList<>());
-        eventData.put("declinedEntrants", new ArrayList<>());
-        eventData.put("geolocationRequired", false);
+        Event event = new Event("String eventId", "String eventName", "String eventDescription", java.util.Date.from(Instant.now()), java.util.Date.from(Instant.now()),
+                java.util.Date.from(Instant.now()), java.util.Date.from(Instant.now()), "", 5, 5,
+                "\"https://firebasestorage.googleapis.com/v0/b/lottery-breeze.appspot.com/o/event_posters%2F1732930373725.jpg?alt=media&token=1638502d-b5cf-49e7-927a-1a7aa7c7e77c\"", "", "", new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false);
 
-        FirebaseFirestore.getInstance().collection("events").add(eventData).addOnSuccessListener(documentReference -> {
-            String eventId = documentReference.getId();  // Get the new event ID
-            Log.d("Event", "Event created with ID: " + eventId);
-        }).addOnFailureListener(e -> {
-            Log.e("Event", "Error creating event", e);
-        });
-    }
+        FirebaseFirestore.getInstance().collection("events").add(event.toMap());
 
-    @Before
-    public void navigate() throws InterruptedException {
-        // Perform navigation to the required screen before each test
-        Thread.sleep(1000);
-        onView(withId(R.id.button_go_to_admin)).perform(click());
         Thread.sleep(1000);
     }
-
 
     @Test
     public void filterButtonTest() throws InterruptedException {
@@ -110,16 +100,23 @@ public class AdminPicturesListTest {
     }
 
     @Test
-    public void navigateToPicture(){
-        onData(is(instanceOf(User.class)))
-                .inAdapterView(withId(R.id.adminPicturesList))
+    public void navigateToPicture() throws InterruptedException {
+        onData(anything())
+                .inAdapterView(withId(R.id.photo_list_view))
                 .atPosition(0)
                 .perform(click());
+        Thread.sleep(1000);
+        onView(withId(R.id.back_to_list_button)).perform(click());
     }
 
     @Test
     public void deleteImageTest() throws InterruptedException {
-        onView(withId(R.id.button_delete_photo)).perform(click());
+        onData(anything())
+                .inAdapterView(withId(R.id.photo_list_view))
+                .atPosition(0)
+                .perform(click());
+        Thread.sleep(1000);
+        onView(withId(R.id.delete_image_button)).perform(click());
         Thread.sleep(1000);
         onView(withId(R.id.back_to_list_button)).perform(click());
     }

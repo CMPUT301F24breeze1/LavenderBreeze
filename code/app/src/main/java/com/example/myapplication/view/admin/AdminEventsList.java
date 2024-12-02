@@ -272,14 +272,15 @@ public class AdminEventsList extends Fragment {
         }
 
 
-        Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
-        List<String> eventsAtLocation = eventLocation.getEvents();
-        Log.d("Kenny", eventsAtLocation.toString());
-        eventsAtLocation.remove(event.getEventId());
-        eventLocation.setEvents(eventsAtLocation);
-        Log.d("Kenny", eventLocation.getEvents().toString());
-        eventLocation.updateFirestore();
-
+        if(!(event.getOrganizerId().isEmpty())) {
+            Facility eventLocation = facilityDataList.get(facilityOrganizerIds.indexOf(event.getOrganizerId()));
+            List<String> eventsAtLocation = eventLocation.getEvents();
+            Log.d("Kenny", eventsAtLocation.toString());
+            eventsAtLocation.remove(event.getEventId());
+            eventLocation.setEvents(eventsAtLocation);
+            Log.d("Kenny", eventLocation.getEvents().toString());
+            eventLocation.updateFirestore();
+        }
 
 
         eventsRef.document(event.getEventId())
