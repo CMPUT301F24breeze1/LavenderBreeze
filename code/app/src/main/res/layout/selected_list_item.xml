@@ -43,7 +43,7 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/delete_event"
+        android:id="@+id/arrowImageView"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentEnd="true"
