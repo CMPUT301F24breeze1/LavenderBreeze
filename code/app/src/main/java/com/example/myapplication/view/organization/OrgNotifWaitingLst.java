@@ -11,9 +11,7 @@ import android.view.ViewGroup;
 import com.example.myapplication.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrgNotifWaitingLst#newInstance} factory method to
- * create an instance of this fragment.
+ * Unused class
  */
 public class OrgNotifWaitingLst extends Fragment {
 
