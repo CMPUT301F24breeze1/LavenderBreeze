@@ -71,4 +71,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+    testImplementation("junit:junit:4.13.2")
+//    testImplementation("org.mockito:mockito-core:5.5.0")
+//    testImplementation("org.mockito:mockito-inline:5.5.0")
 }

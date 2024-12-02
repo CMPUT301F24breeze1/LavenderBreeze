@@ -200,7 +200,7 @@ public class OrgEventSelectedLst extends Fragment {
             userIdsToDisplay.addAll(canceledList);
             notifyList = 2;
         } else {
-            userIdsToDisplay.addAll(canceledList);
+            userIdsToDisplay.addAll(selectedList);
             notifyList = 3;
         }
         Log.d("OrgEventSelectedLst", "User Ids to Display: " + userIdsToDisplay);
@@ -227,21 +227,21 @@ public class OrgEventSelectedLst extends Fragment {
 
             if (notifyList == 1) {
                 notificationHelper.sendNotification(
-                        selectedList,              // List of device IDs based on current filter
-                        "Event Update",          // Notification title
-                        "You've been selected"                  // Notification message
-                );
-            } else if (notifyList == 2) {
-                notificationHelper.sendNotification(
                         acceptedList,              // List of device IDs based on current filter
                         "Event Update",          // Notification title
                         "You've been accepted"                  // Notification message
                 );
-            } else if (notifyList == 3){
+            } else if (notifyList == 2) {
                 notificationHelper.sendNotification(
                         canceledList,              // List of device IDs based on current filter
                         "Event Update",          // Notification title
                         "You've been cancelled"                  // Notification message
+                );
+            } else if (notifyList == 3){
+                notificationHelper.sendNotification(
+                        selectedList,              // List of device IDs based on current filter
+                        "Event Update",          // Notification title
+                        "You've been selected"                  // Notification message
                 );
             }
 

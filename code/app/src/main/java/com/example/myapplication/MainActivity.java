@@ -20,8 +20,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.myapplication.controller.DeviceUtils;
 import com.example.myapplication.controller.PermissionHelper;
 import com.example.myapplication.controller.PollingService;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
