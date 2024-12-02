@@ -30,4 +30,4 @@ determining which entrants on the waitlist get to enroll.
 
 ### Wiki Page
 
-For more detailed information about the app, please refer to our wiki page linked [here]([url](https://github.com/CMPUT301F24breeze1/LavenderBreeze/wiki)):
+For more detailed information about the app, please refer to our wiki page linked [here](https://github.com/CMPUT301F24breeze1/LavenderBreeze/wiki):
