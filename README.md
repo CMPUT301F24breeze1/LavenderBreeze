@@ -95,3 +95,7 @@ determining which entrants on the waitlist get to enroll.
 - Create/Manage your facility profile
 - Lottery to select entrants from the waitlist for exclusive events
 - Automatic drawing of a new entrant if an invitee takes too long to respond
+
+### Wiki Page
+
+For more detailed information about the app, please refer to our wiki page linked [here]([url](https://github.com/CMPUT301F24breeze1/LavenderBreeze/wiki)):
