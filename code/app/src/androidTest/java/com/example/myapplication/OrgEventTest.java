@@ -26,8 +26,9 @@ public class OrgEventTest {
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<>(MainActivity.class);
     private void navigate() throws InterruptedException {
         onView(withId(R.id.button_go_to_add_facility)).perform(click());
+        Thread.sleep(2000);
         onView(withId(R.id.buttonCreateFacility)).perform(click());
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         onData(is(instanceOf(Event.class))).inAdapterView(withId(R.id.event_list_view
         )).atPosition(0).perform(click());
         Thread.sleep(1000);

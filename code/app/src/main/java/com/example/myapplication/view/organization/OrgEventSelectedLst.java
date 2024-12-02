@@ -35,7 +35,7 @@ public class OrgEventSelectedLst extends Fragment {
     private List<String> selectedList;
     private List<String> acceptedList;
     private List<String> canceledList;
-    private List<String> notifyList;
+    private int notifyList = 0;
     private List<User> displayedUsers = new ArrayList<>();
     private ListView userListView;
     private UserAdapter userAdapter;  // Use EventAdapter instead of ArrayAdapter;
@@ -195,13 +195,13 @@ public class OrgEventSelectedLst extends Fragment {
         List<String> userIdsToDisplay = new ArrayList<>();
         if ("Accepted".equals(filter)) {
             userIdsToDisplay.addAll(acceptedList);
-            notifyList = acceptedList;
+            notifyList = 1;
         } else if ("Canceled".equals(filter)) {
             userIdsToDisplay.addAll(canceledList);
-            notifyList = canceledList;
+            notifyList = 2;
         } else {
             userIdsToDisplay.addAll(selectedList);
-            notifyList = selectedList;
+            notifyList = 3;
         }
         Log.d("OrgEventSelectedLst", "User Ids to Display: " + userIdsToDisplay);
 
@@ -222,24 +222,30 @@ public class OrgEventSelectedLst extends Fragment {
      * This sends notification to the desired list (selected or canceled)
      */
     private void sendNotification() {
-        if (notifyList != null && !notifyList.isEmpty()) {
+        if (notifyList != 0) {
             NotificationHelper notificationHelper = new NotificationHelper();
 
-            String message;
-            if (notifyList == canceledList) {
-                message = "We're sorry, but your registration has been declined.";
-            } else if (notifyList == selectedList) {
-                message = "You've been selected for the event!";
-            } else {
-                // For canceled list or other cases, set an appropriate message
-                message = "We're sorry, but your registration has been declined.";
+            if (notifyList == 1) {
+                notificationHelper.sendNotification(
+                        acceptedList,              // List of device IDs based on current filter
+                        "Event Update",          // Notification title
+                        "You've been accepted"                  // Notification message
+                );
+            } else if (notifyList == 2) {
+                notificationHelper.sendNotification(
+                        canceledList,              // List of device IDs based on current filter
+                        "Event Update",          // Notification title
+                        "You've been cancelled"                  // Notification message
+                );
+            } else if (notifyList == 3){
+                notificationHelper.sendNotification(
+                        selectedList,              // List of device IDs based on current filter
+                        "Event Update",          // Notification title
+                        "You've been selected"                  // Notification message
+                );
             }
 
-            notificationHelper.sendNotification(
-                notifyList,              // List of device IDs based on current filter
-                "Event Update",          // Notification title
-                message                  // Notification message
-            );
+
             Toast.makeText(getActivity(), "Notification sent!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "No users to notify in this list.", Toast.LENGTH_SHORT).show();

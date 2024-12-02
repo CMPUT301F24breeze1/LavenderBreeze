@@ -11,6 +11,7 @@ import android.util.Log;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.permission.UiAutomationPermissionGranter;
 
 import com.example.myapplication.model.Facility;
@@ -28,15 +29,10 @@ import java.util.Map;
 public class AdminFacilitiesListTest {
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<>(MainActivity.class);
-
-//    @Rule
-//    public UiAutomationPermissionGranter permissionGranter = new UiAutomationPermissionGranter();
-//
-//    @Rule
-//    public void setPermissionGranter(UiAutomationPermissionGranter permissionGranter) {
-//        this.permissionGranter = permissionGranter;
-//        permissionGranter.addPermissions("Manifest.permissions.ACCESS_FINE_LOCATION","Manifest.permissions.CAMERA");
-//    }
+    @Rule
+    public GrantPermissionRule permissionLocation = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
     @Before
     public void CreateUser() throws InterruptedException {
@@ -62,7 +58,7 @@ public class AdminFacilitiesListTest {
     @Before
     public void navigate() throws InterruptedException {
         // Perform navigation to the required screen before each test
-        Thread.sleep(1000);
+        Thread.sleep(10000);
         onView(withId(R.id.button_go_to_admin)).perform(click());
         onView((withId(R.id.facilities))).perform(click());
         Thread.sleep(1000);

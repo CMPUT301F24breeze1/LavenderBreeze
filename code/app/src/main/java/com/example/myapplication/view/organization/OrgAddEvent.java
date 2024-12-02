@@ -385,7 +385,7 @@ public class OrgAddEvent extends Fragment {
      * @param value The string to validate.
      * @return {@code true} if the string is a positive integer; {@code false} otherwise.
      */
-    private boolean isPositiveInteger(String value) {
+    public boolean isPositiveInteger(String value) {
         try {
             return Integer.parseInt(value) > 0;
         } catch (NumberFormatException e) {
@@ -399,7 +399,7 @@ public class OrgAddEvent extends Fragment {
      * @param value The string to validate.
      * @return {@code true} if the string is a positive double; {@code false} otherwise.
      */
-    private boolean isPositiveDouble(String value) {
+    public boolean isPositiveDouble(String value) {
         try {
             return Double.parseDouble(value) > 0;
         } catch (NumberFormatException e) {
@@ -418,8 +418,8 @@ public class OrgAddEvent extends Fragment {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(dateString);
         } catch (ParseException e) {
             Log.e("org_add_event", "Date parsing error", e);
-            showToast("Invalid date format. Please use yyyy-MM-dd HH:mm");
-            return null; // Return null if parsing fails
+            //showToast("Invalid date format. Please use yyyy-MM-dd HH:mm");
+            return null;
         }
     }
 
