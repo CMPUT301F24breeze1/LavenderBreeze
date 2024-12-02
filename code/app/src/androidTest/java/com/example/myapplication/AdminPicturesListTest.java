@@ -83,7 +83,7 @@ public class AdminPicturesListTest {
 
         Event event = new Event("String eventId", "String eventName", "String eventDescription", java.util.Date.from(Instant.now()), java.util.Date.from(Instant.now()),
                 java.util.Date.from(Instant.now()), java.util.Date.from(Instant.now()), "", 5, 5,
-                "\"https://firebasestorage.googleapis.com/v0/b/lottery-breeze.appspot.com/o/event_posters%2F1732930373725.jpg?alt=media&token=1638502d-b5cf-49e7-927a-1a7aa7c7e77c\"", "", "", new ArrayList<>(),
+                "https://firebasestorage.googleapis.com/v0/b/lottery-breeze.appspot.com/o/event_posters%2F1732930373725.jpg?alt=media&token=1638502d-b5cf-49e7-927a-1a7aa7c7e77c", "", "", new ArrayList<>(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false);
 
         FirebaseFirestore.getInstance().collection("events").add(event.toMap());

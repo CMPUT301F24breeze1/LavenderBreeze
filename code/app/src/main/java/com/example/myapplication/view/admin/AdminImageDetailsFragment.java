@@ -62,7 +62,7 @@ public class AdminImageDetailsFragment extends Fragment {
             // Fetch the name and set type text accordingly
             String displayText;
             if (currentType.equals("users")) {
-                String userName = document.getString("userName"); // Assuming there's a "userName" field
+                String userName = document.getString("name"); // Assuming there's a "userName" field
                 displayText = "Profile Picture\nUser Name: " + userName;
             } else if (currentType.equals("events")) {
                 String eventName = document.getString("eventName"); // Assuming there's an "eventName" field
