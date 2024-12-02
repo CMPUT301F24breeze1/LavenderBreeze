@@ -31,9 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrgEventLst#newInstance} factory method to
- * create an instance of this fragment.
+ * The OrgEventLst class represents a fragment that displays a list of events
+ * organized by the current user. It allows navigation to other parts of the
+ * application such as adding a new event, managing facilities, and viewing event
+ * details.
  */
 public class OrgEventLst extends Fragment {
 
@@ -55,10 +56,9 @@ public class OrgEventLst extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Factory method to create a new instance of OrgEventLst fragment.
      *
-     * @return A new instance of fragment OrgEventLst.
+     * @return A new instance of OrgEventLst.
      */
     public static OrgEventLst newInstance() {
         OrgEventLst fragment = new OrgEventLst();
@@ -67,7 +67,10 @@ public class OrgEventLst extends Fragment {
         return fragment;
     }
     /**
-     * This method assigns passed arguments to declared variables if any are passed
+     * Called to perform initial creation of the fragment.
+     * This method is used to assign passed arguments to declared variables, if any are provided.
+     *
+     * @param savedInstanceState Bundle containing the saved state of the fragment.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,11 +80,14 @@ public class OrgEventLst extends Fragment {
     }
 
     /**
-     * Inflates the view for the fragment, sets up the ListView and buttons.
-     * @param inflater LayoutInflater to inflate the view
-     * @param container ViewGroup container for the fragment
-     * @param savedInstanceState Bundle with saved instance state
-     * @return the inflated view for the fragment
+     * Inflates the view for the fragment and initializes components such as the ListView
+     * and navigation buttons. Sets up event fetching from Firestore and populates the
+     * ListView with event data.
+     *
+     * @param inflater LayoutInflater used to inflate the fragment's layout.
+     * @param container ViewGroup container for the fragment.
+     * @param savedInstanceState Bundle containing the saved state of the fragment.
+     * @return The inflated view for this fragment.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
