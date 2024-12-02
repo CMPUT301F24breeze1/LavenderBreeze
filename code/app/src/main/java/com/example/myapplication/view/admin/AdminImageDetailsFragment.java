@@ -18,10 +18,23 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * A fragment that displays the detail of an image,
+ * showing whether it is an event poster or profile, and which event/user it comes from
+ * It also has an option for admin to delete the image.
+ */
 public class AdminImageDetailsFragment extends Fragment {
     private String documentId;
     private String currentType;
 
+
+    /**
+     * Inflates the view for the fragment, sets up the ListView and buttons.
+     * @param inflater LayoutInflater to inflate the view
+     * @param container ViewGroup container for the fragment
+     * @param savedInstanceState Bundle with saved instance state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_image_details, container, false);
@@ -70,6 +83,10 @@ public class AdminImageDetailsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This deletes the image based on the type of the image (user or event)
+     * and sets the value to null in Firestore
+     */
     private void deleteImage() {
         String collection = currentType.equals("users") ? "users" : "events";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
