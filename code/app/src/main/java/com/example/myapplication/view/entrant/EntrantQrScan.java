@@ -63,6 +63,7 @@ public class EntrantQrScan extends Fragment {
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result->{
         if (result.getContents() != null) { //Waits until results are gathered, a.k.a. a QR is scanned.
             if (result.getContents().length() == 20) {
+                Log.d("QR", "Result:" + result.getContents());
                 switchPage(result.getContents());
             }
             else {
