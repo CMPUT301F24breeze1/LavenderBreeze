@@ -41,7 +41,17 @@ public class AdminUsersListTest {
     public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
 
+
+
     @Before
+    public void navigate() throws InterruptedException {
+        // Perform navigation to the required screen before each test
+        Thread.sleep(3000);
+        onView(withId(R.id.button_go_to_admin)).perform(click());
+        Thread.sleep(1000);
+    }
+
+    @Test
     public void CreateUser() throws InterruptedException {
         // Perform navigation to the required screen before each test
         HashMap<String, Object> userData = new HashMap<>();
@@ -67,15 +77,6 @@ public class AdminUsersListTest {
         });
         Thread.sleep(1000);
     }
-
-    @Before
-    public void navigate() throws InterruptedException {
-        // Perform navigation to the required screen before each test
-        Thread.sleep(1000);
-        onView(withId(R.id.button_go_to_admin)).perform(click());
-        Thread.sleep(1000);
-    }
-
 
 
     @Test

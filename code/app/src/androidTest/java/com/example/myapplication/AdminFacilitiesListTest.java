@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,37 +35,33 @@ public class AdminFacilitiesListTest {
     @Rule
     public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
-    @Before
-    public void CreateUser() throws InterruptedException {
-        // Perform navigation to the required screen before each test
-        Map<String, Object> facilityData = new HashMap<>();
-        facilityData.put("facilityName", "UITest");
-        facilityData.put("facilityAddress", "facilityAddress");
-        facilityData.put("facilityEmail", "facilityEmail"); // Consistent key
-        facilityData.put("facilityPhoneNumber", "9999999999");
-        facilityData.put("organizerId", "UITest");
 
-        FirebaseFirestore.getInstance().collection("facilities").add(facilityData)
-                .addOnSuccessListener(documentReference -> {
-                    String facilityId = documentReference.getId();
-                    Log.d("Firestore", "Facility added with ID: " + facilityId);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Database Error", "Failed to store to database", e);
-                });
-        Thread.sleep(1000);
-    }
 
     @Before
     public void navigate() throws InterruptedException {
         // Perform navigation to the required screen before each test
-        Thread.sleep(10000);
+        Thread.sleep(3000);
         onView(withId(R.id.button_go_to_admin)).perform(click());
         onView((withId(R.id.facilities))).perform(click());
         Thread.sleep(1000);
     }
 
 
+    @Test
+    public void CreateFacility() throws InterruptedException {
+        // Perform navigation to the required screen before each test
+        Map<String, Object> facilityData = new HashMap<>();
+        facilityData.put("facilityName", "facilityName");
+        facilityData.put("facilityAddress", "facilityAddress");
+        facilityData.put("facilityEmail", "facilityEmail"); // Consistent key
+        facilityData.put("facilityPhoneNumber", "0000000000");
+        facilityData.put("organizerId", "organizerId");
+        facilityData.put("events", new ArrayList<>());
+        facilityData.put("profileImageUrl",null);
+        FirebaseFirestore.getInstance().collection("facilities")
+                .add(facilityData);
+        Thread.sleep(1000);
+    }
 
     @Test
     public void FacilityDeletionTest(){

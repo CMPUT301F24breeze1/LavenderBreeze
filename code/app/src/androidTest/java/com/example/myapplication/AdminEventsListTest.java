@@ -7,6 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+import android.app.AlertDialog;
 import android.util.Log;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -16,15 +17,17 @@ import androidx.test.runner.permission.UiAutomationPermissionGranter;
 
 import com.example.myapplication.model.Event;
 import com.example.myapplication.model.Facility;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.type.Date;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,54 +42,47 @@ public class AdminEventsListTest {
     @Rule
     public GrantPermissionRule permissionRead = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS);
 
-    @Before
-    public void CreateUser() throws InterruptedException {
-        // Perform navigation to the required screen before each test
-        Map<String, Object> eventData = new HashMap<>();
-        eventData.put("eventName", "UITest");
-        eventData.put("eventDescription", "eventDescription");
-        eventData.put("eventStart", Date.getDefaultInstance());
-        eventData.put("eventEnd", Date.getDefaultInstance());
-        eventData.put("registrationStart", Date.getDefaultInstance());
-        eventData.put("registrationEnd", Date.getDefaultInstance());
-        eventData.put("location", "UITest");
-        eventData.put("capacity", 1);
-        eventData.put("price", 1);
-        eventData.put("posterUrl", "posterUrl");
-        eventData.put("qrCodeHash", "");
-        eventData.put("organizerId", "UITest");
-        eventData.put("waitlist", new ArrayList<>());
-        eventData.put("selectedEntrants", new ArrayList<>());
-        eventData.put("acceptedEntrants", new ArrayList<>());
-        eventData.put("declinedEntrants", new ArrayList<>());
-        eventData.put("geolocationRequired", false);
 
-        FirebaseFirestore.getInstance().collection("events").add(eventData).addOnSuccessListener(documentReference -> {
-            String eventId = documentReference.getId();  // Get the new event ID
-            Log.d("Event", "Event created with ID: " + eventId);
-        }).addOnFailureListener(e -> {
-            Log.e("Event", "Error creating event", e);
-        });
-
-        Thread.sleep(1000);
-    }
 
     @Before
     public void navigate() throws InterruptedException {
         // Perform navigation to the required screen before each test
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         onView(withId(R.id.button_go_to_admin)).perform(click());
+        Thread.sleep(1000);
         onView((withId(R.id.events))).perform(click());
         Thread.sleep(1000);
     }
 
+    @Test
+    public void CreateEvent() throws InterruptedException {
+        // Perform navigation to the required screen before each test
 
+
+        Event event = new Event("String eventId", "String eventName", "String eventDescription", Date.from(Instant.now()), Date.from(Instant.now()),
+                Date.from(Instant.now()), Date.from(Instant.now()), "", 5, 5,
+                "", "", "", new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false);
+
+        FirebaseFirestore.getInstance().collection("events").add(event.toMap());
+
+        Thread.sleep(1000);
+
+
+
+        onView((withId(R.id.facilities))).perform(click());
+        Thread.sleep(500);
+        onView((withId(R.id.events))).perform(click());
+        Thread.sleep(1000);
+    }
 
     @Test
-    public void EventDeletionTest(){
+    public void EventDeletionTest() throws InterruptedException {
         onData(is(instanceOf(Event.class)))
                 .inAdapterView(withId(R.id.list_view_admin_events_list))
                 .atPosition(0)
                 .perform(click());
+        Thread.sleep(1000);
+        onView(withId(android.R.id.button1)).perform(click());
     }
 }
