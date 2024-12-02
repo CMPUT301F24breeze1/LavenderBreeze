@@ -53,9 +53,6 @@ public class entrantJoinPage extends Fragment {
         }
         user = new User(requireContext(), null); // Initialize user and load data
 
-        // Check and request permissions
-        permissionHelper = new PermissionHelper(requireActivity());
-        permissionHelper.fetchAndStoreLocation(FirebaseFirestore.getInstance(), eventID);
     }
 
     /**
@@ -108,7 +105,12 @@ public class entrantJoinPage extends Fragment {
                             new AlertDialog.Builder(getContext())
                                     .setTitle("Location Required")
                                     .setMessage("This event requires you to share your location")
-                                    .setPositiveButton("I would like to join anyway", (dialog, which) -> addEvent(loadedEvent))
+                                    .setPositiveButton("I would like to join anyway", (dialog, which) -> {
+                                        // Check and request permissions
+                                        permissionHelper = new PermissionHelper(requireActivity());
+                                        permissionHelper.fetchAndStoreLocation(FirebaseFirestore.getInstance(), eventID);
+                                        addEvent(loadedEvent);
+                                    })
                                     .setNegativeButton("Cancel", null)
                                     .show();
                         }
