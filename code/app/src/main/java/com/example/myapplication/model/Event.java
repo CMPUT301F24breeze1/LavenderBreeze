@@ -47,8 +47,8 @@ public class Event implements java.io.Serializable {
     private int waitingListCount;
     private boolean geolocationRequired;
 
-    private FirebaseFirestore database;
-    private CollectionReference events;
+    private transient FirebaseFirestore database;
+    private transient CollectionReference events;
 
 
     /**
