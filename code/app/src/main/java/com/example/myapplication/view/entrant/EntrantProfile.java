@@ -33,7 +33,8 @@ public class EntrantProfile extends Fragment {
     private TextView personName, emailAddress, contactPhoneNumber;
     private ImageButton edit;
     private ImageView profilePicture;
-    private SwitchCompat notifSwitch;
+    //private SwitchCompat notifSwitch;
+    private TextView notifText;
     ImageButton homeButton, profileButton, eventsButton;
     /**
      * Default constructor required for instantiating the fragment.
@@ -83,7 +84,8 @@ public class EntrantProfile extends Fragment {
         personName = view.findViewById(R.id.personName);
         emailAddress = view.findViewById(R.id.emailAddress);
         contactPhoneNumber = view.findViewById(R.id.contactPhoneNumber);
-        notifSwitch = view.findViewById(R.id.emailNotificationSwitch);
+        //notifSwitch = view.findViewById(R.id.emailNotificationSwitch);
+        notifText = view.findViewById(R.id.notificationPreference);
         profilePicture = view.findViewById(R.id.profilePicture);
 
         // Find the button and set an onClickListener to navigate to org_event_lst.xml
@@ -110,7 +112,13 @@ public class EntrantProfile extends Fragment {
             Log.d("User", "Deterministic Picture " + user.getDeterministicPicture());
             if (!user.getDeterministicPicture()) user.loadProfilePictureInto(profilePicture,requireContext());
             else user.loadDeterministicProfilePictureInto(profilePicture,requireContext());
-            notifSwitch.setChecked(user.isToggleNotif());
+            //notifSwitch.setChecked(user.isToggleNotif());
+            if (user.isToggleNotif()) {
+                notifText.setText("ENABLED");
+            }
+            else {
+                notifText.setText("DISABLED");
+            }
         }
     }
     /**
